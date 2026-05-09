@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 
 import preloaderVideo from "@/assets/tideo-logo-preloader.webm";
 
-const EXIT_DELAY = 4600;
-const UNMOUNT_DELAY = 850;
+const FALLBACK_EXIT_DELAY = 9000;
+const UNMOUNT_DELAY = 2850;
+const EXIT_BEFORE_END_SECONDS = 2;
 
 export function Preloader() {
   const [isLeaving, setIsLeaving] = useState(false);
@@ -13,7 +14,7 @@ export function Preloader() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const exitTimer = window.setTimeout(() => {
       setIsLeaving(true);
-    }, reduceMotion ? 350 : EXIT_DELAY);
+    }, reduceMotion ? 350 : FALLBACK_EXIT_DELAY);
 
     return () => window.clearTimeout(exitTimer);
   }, []);
@@ -38,6 +39,17 @@ export function Preloader() {
         muted
         playsInline
         preload="auto"
+        onTimeUpdate={(event) => {
+          const video = event.currentTarget;
+          if (
+            Number.isFinite(video.duration) &&
+            video.duration - video.currentTime <= EXIT_BEFORE_END_SECONDS
+          ) {
+            setIsLeaving(true);
+          }
+        }}
+        onEnded={() => setIsLeaving(true)}
+        onError={() => setIsLeaving(true)}
       >
         <source src={preloaderVideo} type="video/webm" />
       </video>
