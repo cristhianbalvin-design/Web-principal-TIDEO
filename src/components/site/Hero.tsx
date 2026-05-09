@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-tideo.jpg";
+import heroVideo from "@/assets/hero-tideo-animated.webm";
 
 export function Hero() {
   return (
@@ -7,7 +8,7 @@ export function Hero() {
       <div className="absolute inset-0 grid-bg opacity-60 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
       <div
         aria-hidden
-        className="absolute inset-0 -z-0 opacity-70"
+        className="absolute inset-0 opacity-75"
         style={{
           backgroundImage: `url(${heroImg})`,
           backgroundSize: "cover",
@@ -15,6 +16,19 @@ export function Hero() {
           maskImage: "linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%)",
         }}
       />
+      <video
+        aria-hidden
+        className="hero-bg-video absolute inset-0 h-full w-full object-cover opacity-80"
+        autoPlay
+        loop
+        muted
+        playsInline
+        poster={heroImg}
+      >
+        <source src={heroVideo} type="video/webm" />
+      </video>
+      <div aria-hidden className="hero-cyan-pulse pointer-events-none absolute inset-0" />
+      <div aria-hidden className="absolute inset-0 bg-background/10" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24">
