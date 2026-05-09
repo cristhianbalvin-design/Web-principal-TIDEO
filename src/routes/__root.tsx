@@ -73,15 +73,39 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#080B12" },
       { title: "TIDEO Tech & Strategy | Tecnología que entiende tu negocio" },
       { name: "description", content: "TIDEO diseña, automatiza y construye soluciones digitales para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología, IA y desarrollo ágil." },
       { name: "author", content: "TIDEO Tech & Strategy" },
       { property: "og:title", content: "TIDEO Tech & Strategy" },
       { property: "og:description", content: "Tecnología que entiende tu negocio." },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "/og-image.png" },
+      { name: "apple-mobile-web-app-title", content: "TIDEO" },
+      { name: "application-name", content: "TIDEO" },
     ],
     links: [
+      {
+        rel: "shortcut icon",
+        href: "/favicon.ico",
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "32x32",
+        href: "/favicon-32x32.png",
+      },
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon.png",
+      },
+      {
+        rel: "manifest",
+        href: "/site.webmanifest",
+      },
       {
         rel: "stylesheet",
         href: appCss,
