@@ -86,6 +86,7 @@
   --gradient-text: linear-gradient(180deg, oklch(0.99 0 0) 0%, oklch(0.75 0.04 250) 100%);
   --shadow-elegant: 0 30px 80px -20px oklch(0 0 0 / 0.6);
   --shadow-glow: 0 0 60px -10px oklch(0.78 0.12 200 / 0.35);
+  --preloader-video-background: #050912;
 }
 
 .dark {
@@ -162,6 +163,39 @@
   .shadow-glow { box-shadow: var(--shadow-glow); }
 }
 
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--preloader-video-background);
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    background-color 620ms ease,
+    opacity 700ms ease,
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 700ms ease;
+}
+
+.preloader-video {
+  position: relative;
+  z-index: 1;
+  width: min(42vw, 24rem);
+  max-width: 78vw;
+  height: auto;
+}
+
+.preloader-leaving {
+  pointer-events: none;
+  background: var(--color-background);
+  opacity: 0;
+  transform: scale(1.035);
+  filter: blur(12px);
+}
+
 @keyframes hero-cyan-breathe {
   0%, 100% {
     opacity: 0.34;
@@ -185,6 +219,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .preloader {
+    transition-duration: 180ms;
+  }
+
   .hero-bg-video {
     display: none;
   }
