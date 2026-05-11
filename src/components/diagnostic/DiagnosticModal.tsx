@@ -6,7 +6,8 @@ import {
   isModuleComplete, countCompleted,
   calcRadarScores, radarPolygonPoints, nodePos, buildDiagPayload,
 } from "./data";
-import { getDiagnosis } from "@/server-fns/diagnostic";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
 type View = "welcome" | "map" | "questions" | "final" | "final-done" | "capture" | "result";
 
@@ -660,17 +661,24 @@ export function DiagnosticModal({
       //   }),
       // });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res = await getDiagnosis({ data: {
-        allAnswers: payload.prompt,
-        moduleScores: payload.moduleScores,
-        maturityPercentage: payload.maturityPercentage,
-        criticalAreas: payload.criticalAreas,
-        companySizeContext: payload.companySizeContext,
-        userName: payload.userName,
-        companyName: payload.companyName,
-      } as any });
-      setDiagnosis(res.text);
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/get-diagnostic`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          allAnswers: payload.prompt,
+          moduleScores: payload.moduleScores,
+          maturityPercentage: payload.maturityPercentage,
+          criticalAreas: payload.criticalAreas,
+          companySizeContext: payload.companySizeContext,
+          userName: payload.userName,
+          companyName: payload.companyName,
+        }),
+      });
+      const json = await res.json() as { diagnostic?: string; error?: string };
+      setDiagnosis(json.diagnostic ?? json.error ?? "Sin resultado");
     } catch {
       setDiagnosis("No pudimos generar el diagnóstico. Por favor contáctanos directamente.");
     } finally {
