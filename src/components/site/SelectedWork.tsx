@@ -1,6 +1,34 @@
+import { useState } from "react";
 import { FocusCards } from "@/components/ui/focus-cards";
 import { SectionHeader } from "./SectionHeader";
 import type { CSSProperties } from "react";
+
+function DiagButton({ color, onClick }: { color: string; onClick?: () => void }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="w-full rounded-xl px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider transition-all duration-200"
+      style={{
+        border: `1px solid color-mix(in oklab, ${color} ${hovered ? "90%" : "45%"}, transparent)`,
+        background: `color-mix(in oklab, ${color} ${hovered ? "22%" : "10%"}, transparent)`,
+        color: hovered ? color : undefined,
+        boxShadow: hovered ? `0 0 16px color-mix(in oklab, ${color} 20%, transparent)` : "none",
+        transform: hovered ? "translateY(-1px)" : "none",
+      }}
+    >
+      Realizar diagnóstico de la empresa
+      <span
+        className="ml-1.5 inline-block transition-transform duration-200"
+        style={{ transform: hovered ? "translateX(3px)" : "none", opacity: hovered ? 1 : 0.7 }}
+      >
+        →
+      </span>
+    </button>
+  );
+}
 
 const cards = [
   {
@@ -110,26 +138,18 @@ export function SelectedWork({ onDiagnostic }: { onDiagnostic?: () => void }) {
                   </div>
                   <p className="mt-2 text-sm">{c.impact}</p>
 
-                  <div className="mt-6 flex flex-col gap-2">
-                    <button
-                      onClick={onDiagnostic}
-                      className="w-full rounded-xl px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider transition-all duration-200 hover:brightness-110"
-                      style={{
-                        border: "1px solid color-mix(in oklab, var(--focus-card-color) 45%, transparent)",
-                        background: "color-mix(in oklab, var(--focus-card-color) 10%, transparent)",
-                      }}
-                    >
-                      Realizar diagnóstico de la empresa
-                      <span className="ml-1.5 opacity-70">→</span>
-                    </button>
-                    <button className="flex items-center gap-2 px-1 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground">
-                      <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
-                        <circle cx="8.5" cy="8.5" r="7.5" stroke="currentColor" strokeWidth="1.2" />
-                        <path d="M7 6.2l5 2.3-5 2.3V6.2z" fill="currentColor" />
-                      </svg>
-                      Ver video
-                    </button>
-                  </div>
+                  {c.n === "01" && (
+                    <div className="mt-6 flex flex-col gap-2">
+                      <DiagButton color={cardColors[c.n]} onClick={onDiagnostic} />
+                      <button className="flex items-center gap-2 px-1 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+                          <circle cx="8.5" cy="8.5" r="7.5" stroke="currentColor" strokeWidth="1.2" />
+                          <path d="M7 6.2l5 2.3-5 2.3V6.2z" fill="currentColor" />
+                        </svg>
+                        Ver video
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div
                   aria-hidden
