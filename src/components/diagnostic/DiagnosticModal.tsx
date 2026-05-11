@@ -644,6 +644,11 @@ export function DiagnosticModal({
   const handleGenerate = async (userData: UserData) => {
     setLoading(true);
     setView("result");
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      setDiagnosis("⚠ Variables de entorno no configuradas. Revisa VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en Vercel y haz un nuevo deploy.");
+      setLoading(false);
+      return;
+    }
     try {
       const payload = buildDiagPayload(answers, finalAnswers, { ...userData, companySizeContext });
 
@@ -679,8 +684,9 @@ export function DiagnosticModal({
       });
       const json = await res.json() as { diagnostic?: string; error?: string };
       setDiagnosis(json.diagnostic ?? json.error ?? "Sin resultado");
-    } catch {
-      setDiagnosis("No pudimos generar el diagnóstico. Por favor contáctanos directamente.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setDiagnosis(`Error al conectar con el servidor de diagnóstico: ${msg}`);
     } finally {
       setLoading(false);
     }
