@@ -163,6 +163,322 @@
   .shadow-glow { box-shadow: var(--shadow-glow); }
 }
 
+.hover-border-gradient {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  padding: 1px;
+  isolation: isolate;
+}
+
+.hover-border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: -120%;
+  z-index: -1;
+  background: conic-gradient(
+    from 180deg,
+    transparent 0deg,
+    oklch(0.78 0.12 200 / 0.18) 80deg,
+    oklch(0.72 0.17 145 / 0.95) 135deg,
+    oklch(0.78 0.12 200 / 1) 205deg,
+    oklch(0.6 0.22 320 / 0.82) 275deg,
+    transparent 360deg
+  );
+  opacity: 0;
+  transform: rotate(0deg) scale(0.72);
+  transition:
+    opacity 220ms ease,
+    transform 650ms ease;
+}
+
+.hover-border-gradient:hover::before,
+.hover-border-gradient:focus-within::before {
+  opacity: 1;
+  transform: rotate(160deg) scale(1);
+}
+
+.hover-border-gradient-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.final-cta-gradient {
+  padding: 1.5px;
+  box-shadow: 0 22px 58px -34px var(--primary);
+}
+
+.final-cta-gradient::before {
+  opacity: 0.95;
+  transform: rotate(150deg) scale(1);
+}
+
+.final-cta-gradient:hover::before,
+.final-cta-gradient:focus-within::before {
+  opacity: 1;
+  transform: rotate(310deg) scale(1.08);
+}
+
+.final-cta-button {
+  min-width: 250px;
+  justify-content: center;
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in oklab, var(--color-studio) 36%, transparent), transparent 34%),
+    radial-gradient(circle at 88% 100%, color-mix(in oklab, var(--color-consulting) 34%, transparent), transparent 36%),
+    linear-gradient(135deg, color-mix(in oklab, var(--surface) 82%, var(--color-labs) 18%), color-mix(in oklab, var(--background) 68%, var(--color-studio) 32%));
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.16),
+    inset 0 0 36px color-mix(in oklab, var(--primary) 16%, transparent),
+    0 14px 34px -24px var(--primary);
+}
+
+.final-cta-button:hover,
+.final-cta-button:focus-visible {
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in oklab, var(--color-studio) 46%, transparent), transparent 34%),
+    radial-gradient(circle at 88% 100%, color-mix(in oklab, var(--color-consulting) 44%, transparent), transparent 36%),
+    linear-gradient(135deg, color-mix(in oklab, var(--surface) 74%, var(--color-labs) 26%), color-mix(in oklab, var(--background) 60%, var(--color-studio) 40%));
+}
+
+.hero-highlight-word {
+  display: inline-block;
+  border: 1px solid oklch(0.78 0.12 200 / 0.34);
+  border-radius: 0.16em;
+  background: oklch(0.78 0.12 200 / 0.28);
+  box-decoration-break: clone;
+  margin-top: 0.08em;
+  padding: 0.03em 0.08em 0.1em;
+  line-height: 0.86;
+  box-shadow:
+    inset 0 0 0 1px oklch(1 0 0 / 0.06),
+    0 0 36px -18px oklch(0.78 0.12 200 / 0.7);
+}
+
+.card-3d-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.card-3d-body {
+  transform:
+    rotateX(var(--card-rotate-x, 0deg))
+    rotateY(var(--card-rotate-y, 0deg));
+  transform-style: preserve-3d;
+  transition:
+    transform 180ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+  will-change: transform;
+}
+
+.card-3d-container:hover .card-3d-body {
+  box-shadow: 0 34px 90px -52px oklch(0.78 0.12 200 / 0.55);
+}
+
+.card-3d-item {
+  transform: translateZ(var(--card-item-z, 0px));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease;
+}
+
+.focus-cards {
+  isolation: isolate;
+}
+
+.focus-product-card {
+  --focus-card-color: var(--color-primary);
+}
+
+.focus-product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 18% 16%, var(--focus-card-color), transparent 28%),
+    radial-gradient(circle at 88% 12%, var(--focus-card-color), transparent 34%),
+    linear-gradient(135deg, transparent 12%, color-mix(in oklab, var(--focus-card-color) 18%, transparent), transparent 62%);
+  opacity: 0.08;
+  transition: opacity 260ms ease;
+}
+
+.focus-product-card:hover::before,
+.focus-product-card:focus-visible::before {
+  opacity: 0.22;
+}
+
+.focus-product-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.focus-product-index,
+.focus-product-tag {
+  color: var(--focus-card-color);
+}
+
+.focus-product-tag {
+  opacity: 0.86;
+}
+
+.card-hover-effect {
+  position: relative;
+}
+
+.card-hover-effect-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 260ms ease,
+    background-color 260ms ease,
+    border-color 260ms ease;
+}
+
+.card-hover-effect-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at var(--hover-x, 50%) var(--hover-y, 50%), oklch(0.78 0.12 200 / 0.2), transparent 34%),
+    linear-gradient(115deg, transparent 8%, oklch(0.78 0.12 200 / 0.08), transparent 58%);
+  opacity: 0;
+  transform: translate3d(-16%, 0, 0);
+  transition:
+    opacity 260ms ease,
+    transform 420ms ease;
+}
+
+.card-hover-effect-card:hover,
+.card-hover-effect-card:focus-within {
+  border-color: oklch(0.78 0.12 200 / 0.22);
+  transform: translateY(-6px);
+}
+
+.card-hover-effect-card:hover::before,
+.card-hover-effect-card:focus-within::before {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.insight-card {
+  --insight-color: var(--color-primary);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.insight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 16% 14%, color-mix(in oklab, var(--insight-color) 42%, transparent), transparent 30%),
+    linear-gradient(135deg, color-mix(in oklab, var(--insight-color) 18%, transparent), transparent 48%);
+  opacity: 0.18;
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.insight-card::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--insight-color), transparent);
+  opacity: 0.35;
+  transition: opacity 260ms ease;
+}
+
+.insight-card:hover::before,
+.insight-card:focus-visible::before {
+  opacity: 0.36;
+  transform: scale(1.04);
+}
+
+.insight-card:hover::after,
+.insight-card:focus-visible::after {
+  opacity: 0.9;
+}
+
+.insight-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.insight-card-label,
+.insight-card-number,
+.insight-card-link {
+  color: var(--insight-color);
+}
+
+.insight-card-label {
+  opacity: 0.9;
+}
+
+.footer-brand-logo {
+  display: block;
+  width: min(100%, 180px);
+  height: auto;
+  max-height: 130px;
+  object-fit: contain;
+}
+
+.tracing-beam {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.tracing-beam-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: max(1rem, calc((100vw - 80rem) / 2 - 2.25rem));
+  z-index: -1;
+  display: none;
+  width: 1px;
+  pointer-events: none;
+}
+
+.tracing-beam-line {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    oklch(1 0 0 / 0.08) 12%,
+    oklch(1 0 0 / 0.08) 88%,
+    transparent
+  );
+}
+
+.tracing-beam-glow {
+  position: sticky;
+  top: 5.5rem;
+  width: 1px;
+  height: min(34vh, 22rem);
+  transform: translateY(var(--tracing-progress, 0%));
+  background: linear-gradient(
+    180deg,
+    transparent,
+    oklch(0.78 0.12 200 / 0.2),
+    oklch(0.78 0.12 200 / 0.95),
+    oklch(0.72 0.17 145 / 0.55),
+    transparent
+  );
+  box-shadow:
+    0 0 18px oklch(0.78 0.12 200 / 0.55),
+    0 0 42px oklch(0.78 0.12 200 / 0.22);
+  transition: transform 120ms linear;
+}
+
 .preloader {
   position: fixed;
   inset: 0;
@@ -188,12 +504,55 @@
   height: auto;
 }
 
+.preloader-stack {
+  display: grid;
+  justify-items: center;
+  gap: 1.35rem;
+}
+
 .preloader-leaving {
   pointer-events: none;
   background: var(--color-background);
   opacity: 0;
   transform: scale(1.035);
   filter: blur(12px);
+}
+
+.loader-one {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  height: 1rem;
+}
+
+.loader-one span {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  opacity: 0.38;
+  transform: scale(0.72);
+  animation: loader-one-pulse 1.05s ease-in-out infinite;
+}
+
+.loader-one span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.loader-one span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes loader-one-pulse {
+  0%, 100% {
+    opacity: 0.32;
+    transform: translateY(0) scale(0.72);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateY(-0.18rem) scale(1);
+  }
 }
 
 @keyframes hero-cyan-breathe {
@@ -218,9 +577,21 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .tracing-beam-track {
+    display: block;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .preloader {
     transition-duration: 180ms;
+  }
+
+  .loader-one span {
+    animation: none;
+    opacity: 0.75;
+    transform: none;
   }
 
   .hero-bg-video {
@@ -231,5 +602,16 @@
     animation: none;
     transform: none;
     will-change: auto;
+  }
+
+  .focus-cards article {
+    filter: none;
+    transform: none;
+    transition: opacity 180ms ease;
+  }
+
+  .tracing-beam-glow {
+    transform: none;
+    transition: none;
   }
 }

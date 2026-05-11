@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import isotipo from "@/assets/tideo-isotipo.png";
 
 const links = [
   { to: "/", label: "Inicio" },
@@ -27,8 +29,13 @@ export function Nav() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="inline-block w-2 h-2 rounded-full bg-primary shadow-glow" />
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <img
+            src={isotipo}
+            alt=""
+            aria-hidden
+            className="h-6 w-6 object-contain drop-shadow-[0_0_12px_rgba(70,220,230,0.18)]"
+          />
           <span className="font-semibold tracking-tight text-foreground">
             TIDEO
             <span className="text-muted-foreground font-normal"> / Tech & Strategy</span>
@@ -57,12 +64,14 @@ export function Nav() {
             ),
           )}
         </nav>
-        <Link
+        <HoverBorderGradient
+          as={Link}
           to="/contacto"
-          className="hidden sm:inline-flex items-center rounded-full border border-hairline px-4 py-2 text-sm hover:bg-surface transition-colors"
+          containerClassName="hidden sm:inline-flex rounded-full"
+          className="inline-flex items-center rounded-full bg-background/70 px-4 py-2 text-sm transition-colors hover:bg-surface"
         >
           Cuéntanos tu proceso →
-        </Link>
+        </HoverBorderGradient>
       </div>
     </header>
   );

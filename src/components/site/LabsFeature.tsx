@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 const pillars = [
   { t: "Proceso antes que software", d: "Mapeamos cómo trabaja tu empresa, qué decisiones se toman y qué información necesita cada rol." },
@@ -29,12 +30,14 @@ export function LabsFeature() {
           <p className="mt-8 text-lg font-medium">
             El código viene después. Primero entendemos el proceso.
           </p>
-          <Link
+          <HoverBorderGradient
+            as={Link}
             to="/contacto"
-            className="mt-10 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:opacity-90 transition shadow-glow"
+            containerClassName="mt-10 rounded-full"
+            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium transition shadow-glow"
           >
             Solicitar auditoría gratuita →
-          </Link>
+          </HoverBorderGradient>
         </div>
 
         <div className="lg:col-span-7">

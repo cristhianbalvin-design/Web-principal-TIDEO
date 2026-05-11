@@ -1,10 +1,27 @@
+import type { CSSProperties } from "react";
 import { SectionHeader } from "./SectionHeader";
 
 const articles = [
-  { cat: "Procesos", title: "Por qué digitalizar no es automatizar el caos" },
-  { cat: "Software empresarial", title: "ERP estándar vs ERP a medida: cómo elegir sin perder flexibilidad" },
-  { cat: "Inteligencia artificial", title: "Cómo usar IA en procesos administrativos sin perder control" },
-  { cat: "Datos & BI", title: "El rol de Power BI cuando se quiere decidir con datos" },
+  {
+    cat: "Procesos",
+    title: "Por qué digitalizar no es automatizar el caos",
+    color: "var(--color-consulting)",
+  },
+  {
+    cat: "Software empresarial",
+    title: "ERP estándar vs ERP a medida: cómo elegir sin perder flexibilidad",
+    color: "var(--color-labs)",
+  },
+  {
+    cat: "Inteligencia artificial",
+    title: "Cómo usar IA en procesos administrativos sin perder control",
+    color: "var(--color-studio)",
+  },
+  {
+    cat: "Datos & BI",
+    title: "El rol de Power BI cuando se quiere decidir con datos",
+    color: "var(--color-academy)",
+  },
 ];
 
 export function Insights() {
@@ -27,17 +44,18 @@ export function Insights() {
             <a
               key={a.title}
               href="#"
-              className="group block bg-background p-8 md:p-10 transition-colors hover:bg-surface/60"
+              className="insight-card group block bg-background p-8 md:p-10 transition-colors hover:bg-surface/60"
+              style={{ "--insight-color": a.color } as CSSProperties}
             >
               <div className="flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
-                <span>{a.cat}</span>
-                <span className="font-mono">0{i + 1}</span>
+                <span className="insight-card-label">{a.cat}</span>
+                <span className="insight-card-number font-mono">0{i + 1}</span>
               </div>
               <h3 className="mt-8 text-2xl md:text-3xl font-semibold tracking-tight leading-snug max-w-md">
                 {a.title}
               </h3>
-              <div className="mt-8 inline-flex items-center gap-2 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                Leer artículo →
+              <div className="insight-card-link mt-8 inline-flex items-center gap-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                Leer artículo -&gt;
               </div>
             </a>
           ))}

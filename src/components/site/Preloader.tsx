@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import preloaderVideo from "@/assets/tideo-logo-preloader.webm";
+import { LoaderOne } from "@/components/ui/loader";
 
 const FALLBACK_EXIT_DELAY = 9000;
 const UNMOUNT_DELAY = 2850;
@@ -33,26 +34,29 @@ export function Preloader() {
 
   return (
     <div className={`preloader ${isLeaving ? "preloader-leaving" : ""}`} aria-hidden>
-      <video
-        className="preloader-video"
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        onTimeUpdate={(event) => {
-          const video = event.currentTarget;
-          if (
-            Number.isFinite(video.duration) &&
-            video.duration - video.currentTime <= EXIT_BEFORE_END_SECONDS
-          ) {
-            setIsLeaving(true);
-          }
-        }}
-        onEnded={() => setIsLeaving(true)}
-        onError={() => setIsLeaving(true)}
-      >
-        <source src={preloaderVideo} type="video/webm" />
-      </video>
+      <div className="preloader-stack">
+        <video
+          className="preloader-video"
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          onTimeUpdate={(event) => {
+            const video = event.currentTarget;
+            if (
+              Number.isFinite(video.duration) &&
+              video.duration - video.currentTime <= EXIT_BEFORE_END_SECONDS
+            ) {
+              setIsLeaving(true);
+            }
+          }}
+          onEnded={() => setIsLeaving(true)}
+          onError={() => setIsLeaving(true)}
+        >
+          <source src={preloaderVideo} type="video/webm" />
+        </video>
+        <LoaderOne />
+      </div>
     </div>
   );
 }

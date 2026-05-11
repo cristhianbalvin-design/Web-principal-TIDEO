@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 export function FinalCTA() {
   return (
@@ -14,18 +15,14 @@ export function FinalCTA() {
           en una solución digital funcional.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link
+          <HoverBorderGradient
+            as={Link}
             to="/contacto"
-            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:opacity-90 transition shadow-glow"
+            containerClassName="final-cta-gradient rounded-full"
+            className="final-cta-button inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold transition"
           >
-            Cuéntanos tu proceso →
-          </Link>
-          <Link
-            to="/contacto"
-            className="inline-flex items-center gap-2 rounded-full border border-hairline px-6 py-3 text-sm font-medium hover:bg-surface transition"
-          >
-            Agenda una auditoría gratuita
-          </Link>
+            Cuéntanos tu proceso -&gt;
+          </HoverBorderGradient>
         </div>
         <p className="mt-8 text-sm text-muted-foreground">
           Analizamos tu operación, identificamos oportunidades y te mostramos cómo

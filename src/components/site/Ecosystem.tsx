@@ -1,3 +1,4 @@
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { SectionHeader } from "./SectionHeader";
 
 const units = [
@@ -48,33 +49,46 @@ export function Ecosystem() {
 
         <div className="mt-16 grid gap-6 md:grid-cols-2">
           {units.map((u) => (
-            <div
-              key={u.n}
-              className="group relative rounded-2xl border border-hairline bg-surface/40 p-8 md:p-10 overflow-hidden transition hover:bg-surface/70"
-            >
-              <div
-                aria-hidden
-                className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-20 blur-3xl transition-opacity group-hover:opacity-40"
-                style={{ background: u.color }}
-              />
-              <div className="relative flex items-baseline gap-4">
-                <span
-                  className="text-sm font-mono"
-                  style={{ color: u.color }}
+            <CardContainer key={u.n}>
+              <CardBody className="group/card relative h-full overflow-hidden rounded-2xl border border-hairline bg-surface/40 p-8 transition hover:border-primary/20 hover:bg-surface/70 md:p-10">
+                <div
+                  aria-hidden
+                  className="absolute -top-20 -right-20 h-64 w-64 rounded-full opacity-20 blur-3xl transition-opacity group-hover/card:opacity-40"
+                  style={{ background: u.color }}
+                />
+                <div className="relative flex items-baseline gap-4">
+                  <CardItem
+                    as="span"
+                    translateZ={48}
+                    className="text-sm font-mono"
+                    style={{ color: u.color }}
+                  >
+                    {u.n}
+                  </CardItem>
+                  <CardItem
+                    as="h3"
+                    translateZ={64}
+                    className="text-2xl font-semibold tracking-tight md:text-3xl"
+                  >
+                    TIDEO {u.name}
+                  </CardItem>
+                </div>
+                <CardItem
+                  as="p"
+                  translateZ={42}
+                  className="relative mt-4 text-sm uppercase tracking-widest text-muted-foreground"
                 >
-                  {u.n}
-                </span>
-                <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">
-                  TIDEO {u.name}
-                </h3>
-              </div>
-              <p className="relative mt-4 text-sm uppercase tracking-widest text-muted-foreground">
-                {u.title}
-              </p>
-              <p className="relative mt-6 text-base leading-relaxed text-foreground/85">
-                {u.desc}
-              </p>
-            </div>
+                  {u.title}
+                </CardItem>
+                <CardItem
+                  as="p"
+                  translateZ={34}
+                  className="relative mt-6 text-base leading-relaxed text-foreground/85"
+                >
+                  {u.desc}
+                </CardItem>
+              </CardBody>
+            </CardContainer>
           ))}
         </div>
       </div>

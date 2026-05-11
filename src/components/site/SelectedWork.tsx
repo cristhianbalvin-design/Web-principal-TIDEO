@@ -1,4 +1,6 @@
+import { FocusCards } from "@/components/ui/focus-cards";
 import { SectionHeader } from "./SectionHeader";
+import type { CSSProperties } from "react";
 
 const cards = [
   {
@@ -51,6 +53,15 @@ const cards = [
   },
 ];
 
+const cardColors: Record<string, string> = {
+  "01": "var(--color-consulting)",
+  "02": "var(--color-labs)",
+  "03": "var(--color-academy)",
+  "04": "var(--color-labs)",
+  "05": "var(--color-consulting)",
+  "06": "var(--color-studio)",
+};
+
 export function SelectedWork() {
   return (
     <section id="trabajo" className="py-28 md:py-36">
@@ -66,36 +77,51 @@ export function SelectedWork() {
           description="Cada solución nace de un proceso de negocio concreto: ventas, operaciones, logística, mantenimiento, finanzas, capacitación o gestión comercial."
         />
 
-        <div className="mt-16 grid gap-px bg-hairline border border-hairline rounded-2xl overflow-hidden md:grid-cols-2 lg:grid-cols-3">
-          {cards.map((c) => (
-            <article
-              key={c.n}
-              className="group relative bg-background p-8 md:p-10 transition-colors hover:bg-surface/60"
-            >
-              <div className="flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
-                <span className="text-primary">{c.n}</span>
-                <span>{c.tag}</span>
-              </div>
-              <h3 className="mt-8 text-2xl font-semibold tracking-tight leading-snug">
-                {c.title}
-              </h3>
-              <p className="mt-3 text-sm text-muted-foreground">{c.rubro}</p>
-              <p className="mt-6 text-sm leading-relaxed text-foreground/80">
-                {c.enfoque}
-              </p>
-              <div className="mt-8 pt-6 border-t border-hairline">
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  Resultado esperado
+        <FocusCards className="mt-16 grid gap-px bg-hairline border border-hairline rounded-2xl overflow-hidden md:grid-cols-2 lg:grid-cols-3">
+          {({ focusedIndex, setFocusedIndex }) =>
+            cards.map((c, index) => (
+              <article
+                key={c.n}
+                onMouseEnter={() => setFocusedIndex(index)}
+                onFocus={() => setFocusedIndex(index)}
+                onBlur={() => setFocusedIndex(null)}
+                tabIndex={0}
+                className={`focus-product-card group relative bg-background p-8 outline-none transition-all duration-300 hover:bg-surface/60 focus-visible:bg-surface/60 md:p-10 ${
+                  focusedIndex !== null && focusedIndex !== index
+                    ? "scale-[0.98] opacity-45 blur-[1.5px]"
+                    : "scale-100 opacity-100 blur-0"
+                }`}
+                style={{ "--focus-card-color": cardColors[c.n] } as CSSProperties}
+              >
+                <div className="flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
+                  <span className="focus-product-index">{c.n}</span>
+                  <span className="focus-product-tag">{c.tag}</span>
                 </div>
-                <p className="mt-2 text-sm">{c.impact}</p>
-              </div>
-              <div
-                aria-hidden
-                className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
-              />
-            </article>
-          ))}
-        </div>
+                <h3 className="mt-8 text-2xl font-semibold tracking-tight leading-snug">
+                  {c.title}
+                </h3>
+                <p className="mt-3 text-sm text-muted-foreground">{c.rubro}</p>
+                <p className="mt-6 text-sm leading-relaxed text-foreground/80">
+                  {c.enfoque}
+                </p>
+                <div className="mt-8 pt-6 border-t border-hairline">
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Resultado esperado
+                  </div>
+                  <p className="mt-2 text-sm">{c.impact}</p>
+                </div>
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-px opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, var(--focus-card-color), transparent)",
+                  }}
+                />
+              </article>
+            ))
+          }
+        </FocusCards>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import heroImg from "@/assets/hero-tideo.jpg";
 import heroVideo from "@/assets/hero-tideo-animated.webm";
 
@@ -39,7 +40,7 @@ export function Hero() {
 
         <h1 className="mt-8 text-5xl sm:text-7xl md:text-8xl font-semibold tracking-tight leading-[0.95] max-w-5xl text-gradient">
           Tecnología que entiende tu{" "}
-          <span className="font-serif-italic text-primary">negocio</span>.
+          <span className="hero-highlight-word font-serif-italic text-primary">negocio</span>.
         </h1>
 
         <p className="mt-8 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed">
@@ -48,18 +49,22 @@ export function Hero() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4">
-          <a
+          <HoverBorderGradient
+            as="a"
             href="#trabajo"
-            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:opacity-90 transition shadow-glow"
+            containerClassName="rounded-full"
+            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium transition shadow-glow"
           >
             Ver soluciones <span aria-hidden>→</span>
-          </a>
-          <Link
+          </HoverBorderGradient>
+          <HoverBorderGradient
+            as={Link}
             to="/contacto"
-            className="inline-flex items-center gap-2 rounded-full border border-hairline px-6 py-3 text-sm font-medium hover:bg-surface transition"
+            containerClassName="rounded-full"
+            className="inline-flex items-center gap-2 rounded-full bg-background/70 px-6 py-3 text-sm font-medium transition hover:bg-surface"
           >
             Cuéntanos tu proceso
-          </Link>
+          </HoverBorderGradient>
         </div>
 
         <p className="mt-16 max-w-xl text-sm text-muted-foreground">
