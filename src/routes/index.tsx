@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { Nav } from "@/components/site/Nav";
@@ -11,6 +12,7 @@ import { Methodology } from "@/components/site/Methodology";
 import { Differential } from "@/components/site/Differential";
 import { Insights } from "@/components/site/Insights";
 import { FinalCTA } from "@/components/site/FinalCTA";
+import { DiagnosticModal } from "@/components/diagnostic/DiagnosticModal";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -32,6 +34,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const [diagOpen, setDiagOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
@@ -39,7 +43,7 @@ function Index() {
         <TracingBeam>
           <Hero />
           <TrustBar />
-          <SelectedWork />
+          <SelectedWork onDiagnostic={() => setDiagOpen(true)} />
           <Ecosystem />
           <LabsFeature />
           <Methodology />
@@ -49,6 +53,8 @@ function Index() {
         </TracingBeam>
       </main>
       <Footer />
+
+      <DiagnosticModal isOpen={diagOpen} onClose={() => setDiagOpen(false)} />
 
       <span
         aria-label="WhatsApp"
