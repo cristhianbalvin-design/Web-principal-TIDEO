@@ -9,6 +9,25 @@ import {
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
+const URGENCIA_OPTS = [
+  "Estoy explorando, sin urgencia",
+  "Queremos hacerlo este año",
+  "Es una prioridad para este semestre",
+  "Necesito una solución ya",
+];
+
+function getMaturityLevel(pct: number): string {
+  if (pct <= 25) return "Inicial";
+  if (pct <= 50) return "En desarrollo";
+  if (pct <= 75) return "Avanzado";
+  return "Líder digital";
+}
+
+function extractRecommendedService(text: string): string {
+  const match = text.match(/\*\*Primer paso recomendado:\*\*\s*\n?([^\n*]+)/);
+  return match ? match[1].trim() : "TIDEO Labs — ERP personalizado";
+}
+
 type View = "welcome" | "map" | "questions" | "final" | "final-done" | "capture" | "result";
 
 interface UserData {
@@ -533,6 +552,68 @@ function CaptureForm({ onSubmit, loading }: { onSubmit: (data: UserData) => void
   );
 }
 
+// ── LoadingScreen ─────────────────────────────────────────────────────────────
+
+const LOADING_MESSAGES = [
+  "Analizando tus respuestas...",
+  "Identificando áreas críticas en tu operación...",
+  "Calculando tu nivel de madurez digital...",
+  "Evaluando el impacto de las brechas detectadas...",
+  "Preparando recomendaciones personalizadas...",
+  "Construyendo tu plan de acción estratégico...",
+  "Redactando tu diagnóstico con IA...",
+  "Revisando cada detalle de tu perfil...",
+  "Ya casi está listo tu informe...",
+];
+
+function LoadingScreen() {
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIndex((i) => (i + 1) % LOADING_MESSAGES.length);
+        setVisible(true);
+      }, 400);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full gap-8 animate-in fade-in-0 duration-300 px-8">
+      <div className="relative w-16 h-16">
+        <div className="absolute inset-0 rounded-full animate-spin"
+          style={{ border: "2px solid #1A2B4A", borderTopColor: "#00BCD4" }} />
+        <div className="absolute inset-2 rounded-full animate-spin"
+          style={{ border: "1.5px solid #1A2B4A", borderBottomColor: "#00BCD4", animationDirection: "reverse", animationDuration: "1.5s" }} />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-2 h-2 rounded-full" style={{ background: "#00BCD4" }} />
+        </div>
+      </div>
+      <div className="text-center max-w-sm">
+        <p className="text-base font-medium transition-opacity duration-400"
+          style={{ color: "#F7F8FA", opacity: visible ? 1 : 0 }}>
+          {LOADING_MESSAGES[index]}
+        </p>
+        <p className="text-xs mt-3" style={{ color: "#607D8B" }}>
+          Nuestro consultor IA está procesando tu diagnóstico
+        </p>
+      </div>
+      <div className="flex gap-1.5">
+        {LOADING_MESSAGES.map((_, i) => (
+          <div key={i} className="h-1 rounded-full transition-all duration-500"
+            style={{
+              width: i === index ? "24px" : "6px",
+              background: i === index ? "#00BCD4" : "#1A2B4A",
+            }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── DiagnosisResult ───────────────────────────────────────────────────────────
 
 function DiagnosisResult({
@@ -683,7 +764,31 @@ export function DiagnosticModal({
         }),
       });
       const json = await res.json() as { diagnostic?: string; error?: string };
-      setDiagnosis(json.diagnostic ?? json.error ?? "Sin resultado");
+      const diagnosticText = json.diagnostic ?? json.error ?? "Sin resultado";
+      setDiagnosis(diagnosticText);
+
+      // Fire-and-forget: send emails without blocking the UI
+      if (json.diagnostic && SUPABASE_URL && SUPABASE_ANON_KEY) {
+        fetch(`${SUPABASE_URL}/functions/v1/send-diagnostic-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            userName: payload.userName,
+            companyName: payload.companyName,
+            userEmail: payload.userEmail,
+            userPhone: payload.userPhone,
+            diagnosticResult: diagnosticText,
+            maturityLevel: getMaturityLevel(payload.maturityPercentage),
+            maturityPercentage: payload.maturityPercentage,
+            criticalAreas: payload.criticalAreas,
+            recommendedService: extractRecommendedService(diagnosticText),
+            urgencia: finalAnswers[2] ? URGENCIA_OPTS[finalAnswers[2] - 1] : "No especificada",
+          }),
+        }).catch((e) => console.error("send-diagnostic-email failed:", e));
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       setDiagnosis(`Error al conectar con el servidor de diagnóstico: ${msg}`);
@@ -792,11 +897,7 @@ export function DiagnosticModal({
           )}
           {view === "result" && (
             loading && !diagnosis ? (
-              <div className="flex flex-col items-center justify-center h-full gap-5 animate-in fade-in-0 duration-300">
-                <div className="w-12 h-12 border-2 border-t-transparent rounded-full animate-spin"
-                  style={{ borderColor: "#00BCD4", borderTopColor: "transparent" }} />
-                <p className="text-sm" style={{ color: "#607D8B" }}>Analizando tu diagnóstico con IA...</p>
-              </div>
+              <LoadingScreen />
             ) : diagnosis ? (
               <DiagnosisResult text={diagnosis} onClose={handleClose} />
             ) : null
