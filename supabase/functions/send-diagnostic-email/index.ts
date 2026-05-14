@@ -211,6 +211,27 @@ serve(async (req) => {
   try {
     const p = await req.json() as EmailPayload;
     const apiKey = Deno.env.get("RESEND_API_KEY") ?? "";
+    const makeWebhookUrl = Deno.env.get("MAKE_WEBHOOK_URL");
+
+    if (makeWebhookUrl) {
+      fetch(makeWebhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userName: p.userName,
+          companyName: p.companyName,
+          userEmail: p.userEmail,
+          userPhone: p.userPhone,
+          diagnosticResult: p.diagnosticResult,
+          maturityLevel: p.maturityLevel,
+          maturityPercentage: p.maturityPercentage,
+          criticalAreas: p.criticalAreas,
+          recommendedService: p.recommendedService,
+          urgencia: p.urgencia,
+          timestamp: new Date().toISOString(),
+        }),
+      }).catch((err) => console.error("Make webhook error:", err));
+    }
 
     const sendEmail = (payload: {
       from: string;
@@ -236,7 +257,7 @@ serve(async (req) => {
       }),
       sendEmail({
         from: "TIDEO <hola@tideo.tech>",
-        to: ["cristhianbalvin@gmail.com", "camilo.sinche@gmail.com"],
+        to: "cristhian@tideo.tech",
         subject: `Nuevo lead — ${p.companyName} | ${p.maturityLevel}`,
         html: buildInternalEmail(p),
       }),

@@ -22,7 +22,7 @@ export interface RadarAxis {
 }
 
 // SVG node map dimensions
-export const CX = 290, CY = 280, MAP_R = 195;
+export const CX = 290, CY = 280, MAP_R = 210;
 
 export const MODULES: Module[] = [
   { id: "crm",         label: "CRM & Marketing",        lines: ["CRM &", "Marketing"],  angle: -90  },
@@ -108,6 +108,15 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
         "Integrado al ERP (nómina, costos, proyectos)",
       ],
     },
+    {
+      q: "¿Cómo gestionas el reclutamiento y onboarding de nuevos colaboradores?",
+      opts: [
+        "Todo por correo, WhatsApp y papel",
+        "Hojas de cálculo y documentos compartidos",
+        "Proceso definido pero en herramientas desconectadas",
+        "Sistema integrado con seguimiento, evaluaciones y firma digital",
+      ],
+    },
   ],
   logistica: [
     {
@@ -117,6 +126,15 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
         "Actualizamos manualmente al final del día",
         "Casi siempre, hay desfases",
         "Sí, cada movimiento actualiza el stock",
+      ],
+    },
+    {
+      q: "¿Cómo gestionas la trazabilidad de tus entregas o despachos?",
+      opts: [
+        "No tenemos seguimiento formal de entregas",
+        "Actualizamos manualmente y notificamos por WhatsApp",
+        "Sistema básico de seguimiento, sin integración al resto",
+        "Trazabilidad completa integrada al sistema, con alertas automáticas al cliente",
       ],
     },
   ],
@@ -130,6 +148,15 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
         "Workflow digital con trazabilidad completa",
       ],
     },
+    {
+      q: "¿Tienes visibilidad del desempeño de tus proveedores e historial de compras?",
+      opts: [
+        "No llevamos registro formal de proveedores",
+        "Tenemos una lista básica en Excel",
+        "Evaluamos proveedores pero de forma manual y esporádica",
+        "Sistema con historial, evaluaciones y alertas automáticas de proveedores",
+      ],
+    },
   ],
   admin: [
     {
@@ -139,6 +166,15 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
         "2–3 semanas",
         "1–2 semanas",
         "Menos de 5 días",
+      ],
+    },
+    {
+      q: "¿Tienes visibilidad en tiempo real del flujo de caja y las cuentas por cobrar/pagar?",
+      opts: [
+        "No, lo sabemos solo cuando el contador entrega el reporte",
+        "Lo revisamos manualmente en Excel cada semana",
+        "Tenemos reportes pero con varios días de retraso",
+        "Dashboard en tiempo real con alertas automáticas",
       ],
     },
   ],
@@ -155,12 +191,21 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
   ],
   ia: [
     {
-      q: "¿Tu empresa usa herramientas como Power BI, Power Automate, Make o n8n?",
+      q: "¿Tu empresa usa herramientas de analítica de datos o agentes de IA?",
       opts: [
         "No usamos ninguna",
         "Tenemos alguna pero casi nadie sabe usarla bien",
         "Las usamos pero de forma básica y sin metodología",
         "Las dominamos y generamos valor real con ellas",
+      ],
+    },
+    {
+      q: "¿Has implementado automatizaciones en tus procesos operativos?",
+      opts: [
+        "No, todo se hace manualmente",
+        "Tenemos alguna automatización puntual, pero no es sistemático",
+        "Automatizamos algunos procesos clave con herramientas como Make, n8n o Power Automate",
+        "Programa de automatización robusto que cubre múltiples áreas del negocio",
       ],
     },
     {
@@ -256,6 +301,16 @@ export function calcRadarScores(answers: Record<string, number[]>): number[] {
     if (!done.length) return 0;
     const avg = done.reduce((s, m) => s + moduleAvg(m, answers), 0) / done.length;
     return avg / 4;
+  });
+}
+
+export function calcModuleScores(answers: Record<string, number[]>): number[] {
+  return MODULES.map((m) => {
+    const ans = answers[m.id];
+    if (!ans?.length) return 0;
+    const maxScore = 3 * QUESTIONS[m.id].length;
+    if (!maxScore) return 0;
+    return Math.min(1, ans.reduce((s, v) => s + v, 0) / maxScore);
   });
 }
 

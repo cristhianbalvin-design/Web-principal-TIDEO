@@ -1,10 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import {
-  MODULES, QUESTIONS, FINAL_QUESTIONS, RADAR_AXES,
-  CX, CY,
+  MODULES, QUESTIONS, FINAL_QUESTIONS,
   type ModuleId,
   isModuleComplete, countCompleted,
-  calcRadarScores, radarPolygonPoints, nodePos, buildDiagPayload,
+  calcModuleScores, buildDiagPayload,
 } from "./data";
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
@@ -28,63 +27,13 @@ function extractRecommendedService(text: string): string {
   return match ? match[1].trim() : "TIDEO Labs — ERP personalizado";
 }
 
-type View = "welcome" | "map" | "questions" | "final" | "final-done" | "capture" | "result";
+type View = "welcome" | "map" | "questions" | "final" | "radar-preview" | "final-done" | "capture" | "result";
 
 interface UserData {
   userName: string;
   companyName: string;
   userPhone: string;
   userEmail: string;
-}
-
-// ── RadarChart ────────────────────────────────────────────────────────────────
-
-function RadarChart({ answers }: { answers: Record<string, number[]> }) {
-  const RCX = 110, RCY = 110, RR = 82;
-  const scores = useMemo(() => calcRadarScores(answers), [answers]);
-  const hasScore = scores.some((s) => s > 0);
-  const polyPts = radarPolygonPoints(scores, RCX, RCY, RR);
-  const gridLevels = [0.25, 0.5, 0.75, 1];
-
-  return (
-    <svg viewBox="0 0 220 220" className="w-full max-w-[200px] mx-auto">
-      {gridLevels.map((lv) => (
-        <circle key={lv} cx={RCX} cy={RCY} r={RR * lv}
-          fill="none" stroke="#1A2B4A" strokeWidth={1} strokeOpacity={lv === 1 ? 0.9 : 0.45} />
-      ))}
-      {RADAR_AXES.map((axis) => {
-        const rad = (axis.angle * Math.PI) / 180;
-        const ex = RCX + RR * Math.cos(rad);
-        const ey = RCY + RR * Math.sin(rad);
-        const lx = RCX + (RR + 22) * Math.cos(rad);
-        const ly = RCY + (RR + 22) * Math.sin(rad);
-        return (
-          <g key={axis.label}>
-            <line x1={RCX} y1={RCY} x2={ex} y2={ey} stroke="#1A2B4A" strokeWidth={1} />
-            <text x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
-              fill="#607D8B" fontSize={8} fontFamily="Inter, sans-serif">
-              {axis.short}
-            </text>
-          </g>
-        );
-      })}
-      {hasScore && (
-        <polygon points={polyPts}
-          fill="rgba(0,188,212,0.22)" stroke="#00BCD4" strokeWidth={1.5}
-          style={{ transition: "all 500ms ease" }} />
-      )}
-      {scores.map((s, i) => {
-        if (s === 0) return null;
-        const rad = (RADAR_AXES[i].angle * Math.PI) / 180;
-        return (
-          <circle key={i}
-            cx={RCX + s * RR * Math.cos(rad)}
-            cy={RCY + s * RR * Math.sin(rad)}
-            r={3} fill="#00BCD4" />
-        );
-      })}
-    </svg>
-  );
 }
 
 // ── ModuleList ────────────────────────────────────────────────────────────────
@@ -102,9 +51,9 @@ function ModuleList({
         const partial = !done && (answers[m.id]?.length ?? 0) > 0;
         return (
           <button key={m.id} onClick={() => onSelect(m.id)}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-[11px] transition-colors hover:bg-white/5"
-            style={{ color: done ? "#4CAF50" : partial ? "#F7F8FA" : "#607D8B" }}>
-            <span className="w-3.5 h-3.5 flex-shrink-0 flex items-center justify-center rounded-full text-[9px]"
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-sm transition-colors hover:bg-white/5"
+            style={{ color: done ? "#4CAF50" : partial ? "#F7F8FA" : "#8A9BB0" }}>
+            <span className="w-4 h-4 flex-shrink-0 flex items-center justify-center rounded-full text-[10px]"
               style={{
                 background: done ? "rgba(76,175,80,0.2)" : partial ? "rgba(0,188,212,0.15)" : "#1A2B4A",
                 color: done ? "#4CAF50" : partial ? "#00BCD4" : "#607D8B",
@@ -167,44 +116,9 @@ function WelcomeScreen({ onComplete }: { onComplete: (size: string) => void }) {
   );
 }
 
-// Returns the point on the rect border (centered at x2,y2, half-dims w×h)
-// where the line from (x1,y1) enters, plus the hub circle edge as start point.
-function lineEndpoints(
-  x1: number, y1: number, hubR: number,
-  x2: number, y2: number, w = 62, h = 24
-): { x1: number; y1: number; x2: number; y2: number } {
-  const dx = x2 - x1, dy = y2 - y1;
-  const angle = Math.atan2(dy, dx);
-  const sx = x1 + hubR * Math.cos(angle);
-  const sy = y1 + hubR * Math.sin(angle);
+// ── RadarMap ──────────────────────────────────────────────────────────────────
 
-  const candidates: { t: number; x: number; y: number }[] = [];
-  if (dx !== 0) {
-    for (const ex of [x2 - w, x2 + w]) {
-      const t = (ex - x1) / dx;
-      if (t > 0 && t <= 1) {
-        const ey = y1 + t * dy;
-        if (ey >= y2 - h && ey <= y2 + h) candidates.push({ t, x: ex, y: ey });
-      }
-    }
-  }
-  if (dy !== 0) {
-    for (const ey of [y2 - h, y2 + h]) {
-      const t = (ey - y1) / dy;
-      if (t > 0 && t <= 1) {
-        const ex = x1 + t * dx;
-        if (ex >= x2 - w && ex <= x2 + w) candidates.push({ t, x: ex, y: ey });
-      }
-    }
-  }
-  candidates.sort((a, b) => b.t - a.t);
-  const end = candidates[0] ?? { x: x2, y: y2 };
-  return { x1: sx, y1: sy, x2: end.x, y2: end.y };
-}
-
-// ── NodeMap ───────────────────────────────────────────────────────────────────
-
-function NodeMap({
+function RadarMap({
   answers, onSelect,
 }: {
   answers: Record<string, number[]>;
@@ -212,85 +126,171 @@ function NodeMap({
 }) {
   const [hovered, setHovered] = useState<ModuleId | null>(null);
   const completed = countCompleted(answers);
+  const RCX = 350, RCY = 350, RR = 230, LABEL_R = 295;
+  const gridLevels = [0.25, 0.5, 0.75, 1.0];
+
+  const scores = useMemo(() => calcModuleScores(answers), [answers]);
+  const hasScore = scores.some((s) => s > 0);
+
+  const polyPts = MODULES.map((m, i) => {
+    const r = scores[i] * RR;
+    const rad = (m.angle * Math.PI) / 180;
+    return `${RCX + r * Math.cos(rad)},${RCY + r * Math.sin(rad)}`;
+  }).join(" ");
 
   return (
-    <div className="flex flex-col items-center justify-center h-full p-4 select-none">
-      <svg viewBox="0 0 580 560" className="w-full" style={{ maxHeight: "calc(100vh - 180px)" }}>
-        {/* Hub */}
-        <circle cx={CX} cy={CY} r={50} fill="#090F1C" stroke="#1A2B4A" strokeWidth={1.5} />
-        <text x={CX} y={CY - 8} textAnchor="middle" fill="#00BCD4" fontSize={13} fontWeight="700" fontFamily="Inter, sans-serif">TIDEO</text>
-        <text x={CX} y={CY + 10} textAnchor="middle" fill="#607D8B" fontSize={9} fontFamily="Inter, sans-serif">{completed}/10 módulos</text>
+    <div className="h-full overflow-hidden">
 
-        {/* Lines */}
-        {MODULES.map((m) => {
-          const { x, y } = nodePos(m.angle);
-          const done = isModuleComplete(m.id, answers);
-          const isHov = hovered === m.id;
-          const ep = lineEndpoints(CX, CY, 50, x, y);
-          return (
-            <line key={`l-${m.id}`} x1={ep.x1} y1={ep.y1} x2={ep.x2} y2={ep.y2}
-              stroke={done ? "#4CAF50" : isHov ? "#00BCD4" : "#1A2B4A"}
-              strokeWidth={isHov || done ? 1.5 : 1}
-              strokeOpacity={isHov || done ? 0.7 : 0.35}
-              style={{ transition: "all 300ms ease" }} />
-          );
-        })}
+      {/* ── Mobile: grid 2 columnas ── */}
+      <div className="lg:hidden flex flex-col h-full overflow-auto p-4 gap-3">
+        <div className="grid grid-cols-2 gap-2">
+          {MODULES.map((m) => {
+            const done = isModuleComplete(m.id, answers);
+            const partial = !done && (answers[m.id]?.length ?? 0) > 0;
+            return (
+              <button key={m.id} onClick={() => onSelect(m.id)}
+                className="flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all active:scale-95"
+                style={{
+                  background: done ? "rgba(76,175,80,0.12)" : partial ? "rgba(0,188,212,0.08)" : "rgba(6,11,20,0.92)",
+                  border: `1px solid ${done ? "#4CAF50" : partial ? "#00BCD4" : "#1A2B4A"}`,
+                  color: done ? "#4CAF50" : partial ? "#00BCD4" : "#C8D6E5",
+                  minHeight: "64px",
+                }}>
+                <span className="text-sm font-medium leading-tight">{m.label}</span>
+                {done && <span className="text-[11px] mt-1" style={{ color: "#4CAF50" }}>✓ Completo</span>}
+                {partial && <span className="text-[11px] mt-1" style={{ color: "#00BCD4" }}>En progreso</span>}
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-center text-xs" style={{ color: "#607D8B" }}>
+          Toca un módulo para comenzar
+        </p>
+      </div>
 
-        {/* Nodes */}
-        {MODULES.map((m) => {
-          const { x, y } = nodePos(m.angle);
-          const done = isModuleComplete(m.id, answers);
-          const isHov = hovered === m.id;
-          const twoLine = m.lines.length === 2;
+      {/* ── Desktop: radar interactivo ── */}
+      <div className="hidden lg:flex flex-col items-center justify-center h-full p-4 select-none">
+        <svg viewBox="0 0 700 700" className="w-full" style={{ maxHeight: "calc(100vh - 180px)" }}>
 
-          const strokeColor = done ? "#4CAF50" : isHov ? "#00BCD4" : "#1A2B4A";
-          const fillColor = done
-            ? "rgba(76,175,80,0.12)"
-            : isHov
-            ? "rgba(0,188,212,0.12)"
-            : "rgba(6,11,20,0.92)";
-          const textColor = done ? "#4CAF50" : isHov ? "#00BCD4" : "#C8D6E5";
+          {/* Grid */}
+          {gridLevels.map((lv) => {
+            const pts = MODULES.map((m) => {
+              const rad = (m.angle * Math.PI) / 180;
+              return `${RCX + lv * RR * Math.cos(rad)},${RCY + lv * RR * Math.sin(rad)}`;
+            }).join(" ");
+            return (
+              <polygon key={lv} points={pts} fill="none"
+                stroke="#2A4A70" strokeWidth={1}
+                strokeOpacity={lv === 1 ? 0.8 : 0.4} />
+            );
+          })}
 
-          return (
-            <g key={m.id} transform={`translate(${x},${y})`}
-              onClick={() => onSelect(m.id)}
-              onMouseEnter={() => setHovered(m.id)}
-              onMouseLeave={() => setHovered(null)}
-              style={{ cursor: "pointer" }}>
-              <rect x={-62} y={-24} width={124} height={48} rx={9}
-                fill={fillColor} stroke={strokeColor}
+          {/* Ejes */}
+          {MODULES.map((m) => {
+            const rad = (m.angle * Math.PI) / 180;
+            const ex = RCX + RR * Math.cos(rad);
+            const ey = RCY + RR * Math.sin(rad);
+            const done = isModuleComplete(m.id, answers);
+            const isHov = hovered === m.id;
+            return (
+              <line key={`ax-${m.id}`} x1={RCX} y1={RCY} x2={ex} y2={ey}
+                stroke={done ? "#4CAF50" : isHov ? "#00BCD4" : "#2A4A70"}
                 strokeWidth={isHov || done ? 1.5 : 1}
-                style={{ transition: "all 250ms ease" }} />
-              {twoLine ? (
-                <>
-                  <text x={0} y={-6} textAnchor="middle" fill={textColor}
-                    fontSize={10.5} fontFamily="Inter, sans-serif" style={{ transition: "fill 250ms ease" }}>
+                strokeOpacity={isHov || done ? 0.85 : 0.55}
+                style={{ transition: "stroke 300ms ease" }} />
+            );
+          })}
+
+          {/* Polígono de datos */}
+          {hasScore && (
+            <polygon points={polyPts}
+              fill="rgba(0,188,212,0.18)" stroke="#00BCD4" strokeWidth={2}
+              style={{ transition: "all 500ms ease" }} />
+          )}
+
+          {/* Puntos de datos */}
+          {MODULES.map((m, i) => {
+            if (!scores[i]) return null;
+            const rad = (m.angle * Math.PI) / 180;
+            const r = scores[i] * RR;
+            return (
+              <circle key={`dot-${m.id}`}
+                cx={RCX + r * Math.cos(rad)} cy={RCY + r * Math.sin(rad)}
+                r={4} fill="#00BCD4" opacity={0.9} />
+            );
+          })}
+
+          {/* Hub central */}
+          <circle cx={RCX} cy={RCY} r={42} fill="#090F1C" stroke="#1A2B4A" strokeWidth={1.5} />
+          <text x={RCX} y={RCY - 7} textAnchor="middle" fill="#00BCD4"
+            fontSize={14} fontWeight="700" fontFamily="Inter, sans-serif">TIDEO</text>
+          <text x={RCX} y={RCY + 10} textAnchor="middle" fill="#607D8B"
+            fontSize={10} fontFamily="Inter, sans-serif">{completed}/10</text>
+
+          {/* Cajas de módulo clickeables */}
+          {MODULES.map((m) => {
+            const rad = (m.angle * Math.PI) / 180;
+            const lx = RCX + LABEL_R * Math.cos(rad);
+            const ly = RCY + LABEL_R * Math.sin(rad);
+            const done = isModuleComplete(m.id, answers);
+            const isHov = hovered === m.id;
+            const twoLine = m.lines.length === 2;
+            const W = 108, H = twoLine ? 46 : 30;
+
+            const strokeColor = done ? "#4CAF50" : isHov ? "#00BCD4" : "#2A4A70";
+            const fillColor = done
+              ? "rgba(76,175,80,0.15)"
+              : isHov
+              ? "rgba(0,188,212,0.15)"
+              : "rgba(6,11,20,0.92)";
+            const textColor = done ? "#4CAF50" : isHov ? "#00BCD4" : "#C8D6E5";
+
+            return (
+              <g key={`lbl-${m.id}`} transform={`translate(${lx},${ly})`}
+                onClick={() => onSelect(m.id)}
+                onMouseEnter={() => setHovered(m.id)}
+                onMouseLeave={() => setHovered(null)}
+                style={{ cursor: "pointer" }}>
+                <rect x={-W / 2} y={-H / 2} width={W} height={H} rx={9}
+                  fill={fillColor} stroke={strokeColor}
+                  strokeWidth={isHov || done ? 1.5 : 1}
+                  style={{ transition: "all 250ms ease" }} />
+                {twoLine ? (
+                  <>
+                    <text x={0} y={-8} textAnchor="middle" fill={textColor}
+                      fontSize={12} fontFamily="Inter, sans-serif"
+                      style={{ transition: "fill 250ms ease" }}>
+                      {m.lines[0]}
+                    </text>
+                    <text x={0} y={9} textAnchor="middle" fill={textColor}
+                      fontSize={12} fontFamily="Inter, sans-serif"
+                      style={{ transition: "fill 250ms ease" }}>
+                      {m.lines[1]}
+                    </text>
+                  </>
+                ) : (
+                  <text x={0} y={0} textAnchor="middle" dominantBaseline="middle"
+                    fill={textColor} fontSize={12} fontFamily="Inter, sans-serif"
+                    style={{ transition: "fill 250ms ease" }}>
                     {m.lines[0]}
                   </text>
-                  <text x={0} y={10} textAnchor="middle" fill={textColor}
-                    fontSize={10.5} fontFamily="Inter, sans-serif" style={{ transition: "fill 250ms ease" }}>
-                    {m.lines[1]}
-                  </text>
-                </>
-              ) : (
-                <text x={0} y={4} textAnchor="middle" fill={textColor}
-                  fontSize={10.5} fontFamily="Inter, sans-serif" style={{ transition: "fill 250ms ease" }}>
-                  {m.lines[0]}
-                </text>
-              )}
-              {done && (
-                <g transform="translate(40,-18)">
-                  <circle r={8} fill="rgba(76,175,80,0.25)" />
-                  <text textAnchor="middle" y={4} fill="#4CAF50" fontSize={10}>✓</text>
-                </g>
-              )}
-            </g>
-          );
-        })}
-      </svg>
-      <p className="mt-2 text-xs" style={{ color: "#607D8B" }}>
-        Haz clic en un módulo para comenzar
-      </p>
+                )}
+                {done && (
+                  <g transform={`translate(${W / 2 - 9},${-H / 2 + 9})`}>
+                    <circle r={7} fill="rgba(76,175,80,0.3)" />
+                    <text textAnchor="middle" dominantBaseline="middle"
+                      fill="#4CAF50" fontSize={9}>✓</text>
+                  </g>
+                )}
+              </g>
+            );
+          })}
+        </svg>
+        <p className="mt-2 text-xs" style={{ color: "#607D8B" }}>
+          Haz clic en un módulo para comenzar
+        </p>
+      </div>
+
     </div>
   );
 }
@@ -719,8 +719,14 @@ export function DiagnosticModal({
 
   const handleFinalComplete = (fa: number[]) => {
     setFinalAnswers(fa);
-    setView("final-done");
+    setView("radar-preview");
   };
+
+  useEffect(() => {
+    if (view !== "radar-preview") return;
+    const t = setTimeout(() => setView("final-done"), 2000);
+    return () => clearTimeout(t);
+  }, [view]);
 
   const handleGenerate = async (userData: UserData) => {
     setLoading(true);
@@ -851,7 +857,7 @@ export function DiagnosticModal({
               ← Mapa
             </button>
           )}
-          {canFinal && !["welcome","capture","final","final-done","result"].includes(view) && (
+          {canFinal && !["welcome","capture","final","radar-preview","final-done","result"].includes(view) && (
             <button onClick={() => setView("final")}
               className="px-3 py-1.5 text-xs rounded-lg font-medium transition-all"
               style={{ background: "rgba(0,188,212,0.12)", color: "#00BCD4", border: "1px solid rgba(0,188,212,0.3)" }}>
@@ -876,7 +882,7 @@ export function DiagnosticModal({
             <WelcomeScreen onComplete={(size) => { setCompanySizeContext(size); setView("map"); }} />
           )}
           {view === "map" && (
-            <NodeMap answers={answers} onSelect={handleSelectModule} />
+            <RadarMap answers={answers} onSelect={handleSelectModule} />
           )}
           {view === "questions" && activeModule && (
             <QuestionPanel
@@ -888,6 +894,11 @@ export function DiagnosticModal({
           )}
           {view === "final" && (
             <FinalBlock onComplete={handleFinalComplete} />
+          )}
+          {view === "radar-preview" && (
+            <div className="h-full pointer-events-none">
+              <RadarMap answers={answers} onSelect={() => {}} />
+            </div>
           )}
           {view === "final-done" && (
             <FinalDone onNext={() => setView("capture")} />
@@ -906,21 +917,14 @@ export function DiagnosticModal({
 
         {/* Sidebar — desktop only */}
         {showSidebar && (
-          <div className="hidden lg:flex w-64 flex-col border-l flex-shrink-0 overflow-auto"
+          <div className="hidden lg:flex w-56 flex-col border-l flex-shrink-0 overflow-auto"
             style={{ borderColor: "#1A2B4A" }}>
-            <div className="p-4 border-b" style={{ borderColor: "#1A2B4A" }}>
-              <p className="text-[10px] uppercase tracking-widest mb-3" style={{ color: "#607D8B" }}>
-                Radar de madurez
-              </p>
-              <RadarChart answers={answers} />
-            </div>
             <div className="p-4 flex-1">
               <p className="text-[10px] uppercase tracking-widest mb-3" style={{ color: "#607D8B" }}>
                 Módulos
               </p>
               <ModuleList answers={answers} onSelect={handleSelectModule} />
             </div>
-
           </div>
         )}
       </div>
