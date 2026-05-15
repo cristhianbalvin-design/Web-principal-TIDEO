@@ -1,7 +1,16 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FocusCards } from "@/components/ui/focus-cards";
 import { SectionHeader } from "./SectionHeader";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { CSSProperties } from "react";
+
+// Coloca el archivo de video en /public/demo-tideo.mp4
+// O reemplaza esta ruta por tu embed de YouTube si lo prefieres
+const VIDEO_SRC = "/demo-tideo.mp4";
 
 function DiagButton({ color, onClick }: { color: string; onClick?: () => void }) {
   const [hovered, setHovered] = useState(false);
@@ -91,6 +100,20 @@ const cardColors: Record<string, string> = {
 };
 
 export function SelectedWork({ onDiagnostic }: { onDiagnostic?: () => void }) {
+  const [videoOpen, setVideoOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  function handleOpenVideo() {
+    setVideoOpen(true);
+  }
+
+  function handleCloseVideo(open: boolean) {
+    if (!open) {
+      videoRef.current?.pause();
+    }
+    setVideoOpen(open);
+  }
+
   return (
     <section id="trabajo" className="py-28 md:py-36">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -141,7 +164,10 @@ export function SelectedWork({ onDiagnostic }: { onDiagnostic?: () => void }) {
                   {c.n === "01" && (
                     <div className="mt-6 flex flex-col gap-2">
                       <DiagButton color={cardColors[c.n]} onClick={onDiagnostic} />
-                      <button className="flex items-center gap-2 px-1 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                      <button
+                        onClick={handleOpenVideo}
+                        className="flex items-center gap-2 px-1 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                      >
                         <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
                           <circle cx="8.5" cy="8.5" r="7.5" stroke="currentColor" strokeWidth="1.2" />
                           <path d="M7 6.2l5 2.3-5 2.3V6.2z" fill="currentColor" />
@@ -164,6 +190,19 @@ export function SelectedWork({ onDiagnostic }: { onDiagnostic?: () => void }) {
           }
         </FocusCards>
       </div>
+
+      <Dialog open={videoOpen} onOpenChange={handleCloseVideo}>
+        <DialogContent className="max-w-3xl p-0 overflow-hidden border-hairline bg-black">
+          <DialogTitle className="sr-only">Demo Tideo</DialogTitle>
+          <video
+            ref={videoRef}
+            src={VIDEO_SRC}
+            controls
+            autoPlay
+            className="w-full aspect-video"
+          />
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
