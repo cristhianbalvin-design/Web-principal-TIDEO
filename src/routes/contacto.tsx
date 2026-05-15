@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
 export const Route = createFileRoute("/contacto")({
   component: Contacto,
@@ -24,15 +27,43 @@ const urgencias = [
   "Quiero una auditoría inicial",
 ];
 
+const DIAGNOSTIC_CONTACT_STORAGE_KEY = "tideo:diagnostic-contact-prefill";
+
+type ContactFormState = {
+  nombre: string;
+  empresa: string;
+  cargo: string;
+  correo: string;
+  whatsapp: string;
+  rubro: string;
+  proceso: string;
+  herramientas: string;
+};
+
+const emptyForm: ContactFormState = {
+  nombre: "",
+  empresa: "",
+  cargo: "",
+  correo: "",
+  whatsapp: "",
+  rubro: "",
+  proceso: "",
+  herramientas: "",
+};
+
 function Field({
   label,
   name,
+  value,
+  onChange,
   type = "text",
   required,
   textarea,
 }: {
   label: string;
-  name: string;
+  name: keyof ContactFormState;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   type?: string;
   required?: boolean;
   textarea?: boolean;
@@ -45,9 +76,23 @@ function Field({
         {label} {required && <span className="text-primary">*</span>}
       </span>
       {textarea ? (
-        <textarea name={name} required={required} rows={3} className={cls} />
+        <textarea
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          rows={3}
+          className={cls}
+        />
       ) : (
-        <input name={name} type={type} required={required} className={cls} />
+        <input
+          name={name}
+          value={value}
+          onChange={onChange}
+          type={type}
+          required={required}
+          className={cls}
+        />
       )}
     </label>
   );
@@ -55,9 +100,58 @@ function Field({
 
 function Contacto() {
   const [sent, setSent] = useState(false);
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState<ContactFormState>(emptyForm);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("origen") !== "diagnostico") return;
+
+    const stored = window.sessionStorage.getItem(DIAGNOSTIC_CONTACT_STORAGE_KEY);
+    if (!stored) return;
+
+    try {
+      const prefill = JSON.parse(stored) as Partial<ContactFormState>;
+      setForm((current) => ({
+        ...current,
+        nombre: prefill.nombre ?? "",
+        empresa: prefill.empresa ?? "",
+        correo: prefill.correo ?? "",
+        whatsapp: prefill.whatsapp ?? "",
+      }));
+    } catch {
+      window.sessionStorage.removeItem(DIAGNOSTIC_CONTACT_STORAGE_KEY);
+    }
+  }, []);
+
+  const handleFieldChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.currentTarget;
+    setForm((current) => ({ ...current, [name]: value }));
+  };
+
+  const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    setLoading(true);
+    const urgencia = (e.currentTarget.elements.namedItem("urgencia") as HTMLInputElement)?.value ?? "";
+    try {
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        await fetch(`${SUPABASE_URL}/functions/v1/send-contact-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ ...form, urgencia }),
+        });
+      }
+    } catch (err) {
+      console.error("send-contact-email failed:", err);
+    } finally {
+      setLoading(false);
+      setSent(true);
+    }
   };
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -87,16 +181,18 @@ function Contacto() {
             </div>
           ) : (
             <form onSubmit={onSubmit} className="mt-16 grid gap-8 md:grid-cols-2">
-              <Field label="Nombre" name="nombre" required />
-              <Field label="Empresa" name="empresa" required />
-              <Field label="Cargo" name="cargo" />
-              <Field label="Correo" name="correo" type="email" required />
-              <Field label="WhatsApp" name="whatsapp" />
-              <Field label="Rubro de la empresa" name="rubro" />
+              <Field label="Nombre" name="nombre" value={form.nombre} onChange={handleFieldChange} required />
+              <Field label="Empresa" name="empresa" value={form.empresa} onChange={handleFieldChange} required />
+              <Field label="Cargo" name="cargo" value={form.cargo} onChange={handleFieldChange} />
+              <Field label="Correo" name="correo" value={form.correo} onChange={handleFieldChange} type="email" required />
+              <Field label="WhatsApp" name="whatsapp" value={form.whatsapp} onChange={handleFieldChange} />
+              <Field label="Rubro de la empresa" name="rubro" value={form.rubro} onChange={handleFieldChange} />
               <div className="md:col-span-2">
                 <Field
                   label="¿Qué proceso quieres mejorar?"
                   name="proceso"
+                  value={form.proceso}
+                  onChange={handleFieldChange}
                   textarea
                   required
                 />
@@ -105,6 +201,8 @@ function Contacto() {
                 <Field
                   label="¿Qué herramientas usas actualmente?"
                   name="herramientas"
+                  value={form.herramientas}
+                  onChange={handleFieldChange}
                   textarea
                 />
               </div>
@@ -134,14 +232,14 @@ function Contacto() {
 
               <div className="md:col-span-2 mt-4 flex items-center justify-between gap-6 flex-wrap">
                 <p className="text-sm text-muted-foreground max-w-md">
-                  Al enviar este formulario, recibirás respuesta directamente del
-                  equipo de TIDEO en menos de 48 horas hábiles.
+                  Te contactamos a la brevedad — habitualmente en menos de 2 horas.
                 </p>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-7 py-3 text-sm font-medium hover:opacity-90 transition shadow-glow"
+                  disabled={loading}
+                  className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-7 py-3 text-sm font-medium hover:opacity-90 transition shadow-glow disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Enviar proceso →
+                  {loading ? "Enviando…" : "Enviar proceso →"}
                 </button>
               </div>
             </form>

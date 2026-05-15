@@ -36,6 +36,8 @@ interface UserData {
   userEmail: string;
 }
 
+const DIAGNOSTIC_CONTACT_STORAGE_KEY = "tideo:diagnostic-contact-prefill";
+
 // ── ModuleList ────────────────────────────────────────────────────────────────
 
 function ModuleList({
@@ -617,12 +619,28 @@ function LoadingScreen() {
 // ── DiagnosisResult ───────────────────────────────────────────────────────────
 
 function DiagnosisResult({
-  text, onClose,
+  text, userData, onClose,
 }: {
   text: string;
+  userData: UserData | null;
   onClose: () => void;
 }) {
   const sections = text.split("\n").filter(Boolean);
+
+  const handleContactClick = () => {
+    if (typeof window !== "undefined" && userData) {
+      window.sessionStorage.setItem(
+        DIAGNOSTIC_CONTACT_STORAGE_KEY,
+        JSON.stringify({
+          nombre: userData.userName,
+          empresa: userData.companyName,
+          whatsapp: userData.userPhone,
+          correo: userData.userEmail,
+        }),
+      );
+    }
+    onClose();
+  };
 
   return (
     <div className="flex flex-col h-full overflow-auto p-6 lg:p-10 max-w-3xl mx-auto w-full animate-in fade-in-0 slide-in-from-bottom-4 duration-400">
@@ -661,7 +679,7 @@ function DiagnosisResult({
         </div>
       </div>
 
-      <a href="/contacto" onClick={onClose}
+      <a href="/contacto?origen=diagnostico" onClick={handleContactClick}
         className="flex items-center justify-center gap-2 w-full py-4 rounded-xl font-bold text-sm transition-all hover:opacity-90"
         style={{ background: "#00BCD4", color: "#060B14" }}>
         Agenda tu auditoría gratuita →
@@ -693,9 +711,10 @@ export function DiagnosticModal({
   const [diagnosis, setDiagnosis] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [companySizeContext, setCompanySizeContext] = useState("");
+  const [diagnosticUserData, setDiagnosticUserData] = useState<UserData | null>(null);
 
   const completed = useMemo(() => countCompleted(answers), [answers]);
-  const canFinal = completed >= 6;
+  const canFinal = completed === MODULES.length;
 
   useEffect(() => {
     if (completed === MODULES.length && view === "map") {
@@ -729,6 +748,7 @@ export function DiagnosticModal({
   }, [view]);
 
   const handleGenerate = async (userData: UserData) => {
+    setDiagnosticUserData(userData);
     setLoading(true);
     setView("result");
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
@@ -813,6 +833,7 @@ export function DiagnosticModal({
       setDiagnosis(null);
       setLoading(false);
       setCompanySizeContext("");
+      setDiagnosticUserData(null);
     }, 300);
   };
 
@@ -910,7 +931,11 @@ export function DiagnosticModal({
             loading && !diagnosis ? (
               <LoadingScreen />
             ) : diagnosis ? (
-              <DiagnosisResult text={diagnosis} onClose={handleClose} />
+              <DiagnosisResult
+                text={diagnosis}
+                userData={diagnosticUserData}
+                onClose={handleClose}
+              />
             ) : null
           )}
         </div>
