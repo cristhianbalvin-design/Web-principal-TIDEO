@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
+import { getWebRequest } from "@tanstack/react-start/server";
 import { OperaLandingPage } from "@/components/opera/OperaLandingPage";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { Nav } from "@/components/site/Nav";
@@ -18,7 +18,7 @@ import { FinalCTA } from "@/components/site/FinalCTA";
 import { DiagnosticModal } from "@/components/diagnostic/DiagnosticModal";
 
 const getServerHostname = createServerFn({ method: "GET" }).handler(async () => {
-  const request = getRequest();
+  const request = getWebRequest();
   return request?.headers.get("host") || "";
 });
 
