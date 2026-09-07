@@ -17,6 +17,9 @@ interface LeadPayload {
   campaña?: string;
   notas?: string;
   lead_ref?: string;
+  industria?: string;
+  urgencia?: string;
+  presupuesto_mayor_7000?: string;
 }
 
 serve(async (req) => {
@@ -46,6 +49,14 @@ serve(async (req) => {
       });
     }
 
+    let estado = "nuevo";
+    let motivo_descarte = undefined;
+
+    if (body.presupuesto_mayor_7000 === "No") {
+      estado = "descartado";
+      motivo_descarte = "presupuesto_insuficiente";
+    }
+
     // Mapeo hacia el formato que espera api-prospectos
     const erpPayload = {
       nombre_contacto: body.nombre,
@@ -56,6 +67,10 @@ serve(async (req) => {
       fuente: body.canal,
       notas: body.notas,
       campana_id: body.campaña,
+      industria: body.industria,
+      urgencia: body.urgencia,
+      estado: estado,
+      motivo_descarte: motivo_descarte,
     };
 
     // Llamada al ERP
@@ -78,7 +93,15 @@ serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    // Intentar extraer JSON de la respuesta del ERP
+    let responseData = {};
+    try {
+      responseData = await response.json();
+    } catch (e) {
+      console.error("No se pudo parsear el JSON del ERP:", e);
+    }
+
+    return new Response(JSON.stringify({ success: true, data: responseData }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
