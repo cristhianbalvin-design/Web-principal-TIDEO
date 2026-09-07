@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OperaIndexRouteImport } from './routes/opera/index'
 
 const ContactoRoute = ContactoRouteImport.update({
   id: '/contacto',
@@ -22,31 +23,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OperaIndexRoute = OperaIndexRouteImport.update({
+  id: '/opera/',
+  path: '/opera/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
+  '/opera/': typeof OperaIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
+  '/opera': typeof OperaIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
+  '/opera/': typeof OperaIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contacto'
+  fullPaths: '/' | '/contacto' | '/opera/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contacto'
-  id: '__root__' | '/' | '/contacto'
+  to: '/' | '/contacto' | '/opera'
+  id: '__root__' | '/' | '/contacto' | '/opera/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ContactoRoute: typeof ContactoRoute
+  OperaIndexRoute: typeof OperaIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/opera/': {
+      id: '/opera/'
+      path: '/opera'
+      fullPath: '/opera/'
+      preLoaderRoute: typeof OperaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ContactoRoute: ContactoRoute,
+  OperaIndexRoute: OperaIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

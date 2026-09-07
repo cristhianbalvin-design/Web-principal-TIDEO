@@ -16,6 +16,6 @@ export default defineConfig({
       enabled: true,
       crawlLinks: true,
     },
-    pages: [{ path: "/" }, { path: "/contacto" }],
+    pages: [{ path: "/" }, { path: "/contacto" }, { path: "/opera" }],
   },
 });
