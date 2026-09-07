@@ -14,8 +14,12 @@ export default defineConfig({
     server: { entry: "server" },
     prerender: {
       enabled: true,
-      crawlLinks: true,
+      crawlLinks: false,
     },
-    pages: [{ path: "/" }, { path: "/contacto" }, { path: "/opera" }],
+    pages: [
+      { path: "/", prerender: { enabled: false } },
+      { path: "/contacto" },
+      { path: "/opera" },
+    ],
   },
 });
