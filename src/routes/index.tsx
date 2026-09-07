@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { getWebRequest } from "@tanstack/react-start/server";
+import { OperaLandingPage } from "@/components/opera/OperaLandingPage";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
@@ -14,23 +17,50 @@ import { Insights } from "@/components/site/Insights";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { DiagnosticModal } from "@/components/diagnostic/DiagnosticModal";
 
+const getServerHostname = createServerFn({ method: "GET" }).handler(async () => {
+  const request = getWebRequest();
+  return request?.headers.get("host") || "";
+});
+
 export const Route = createFileRoute("/")({
-  component: Index,
-  head: () => ({
-    meta: [
-      { title: "TIDEO Tech & Strategy | Tecnología que entiende tu negocio" },
-      {
-        name: "description",
-        content:
-          "TIDEO diseña, automatiza y construye soluciones digitales para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología, IA y desarrollo ágil.",
-      },
-      { property: "og:title", content: "TIDEO Tech & Strategy" },
-      {
-        property: "og:description",
-        content: "Tecnología que entiende tu negocio. Procesos, datos e IA para empresas medianas.",
-      },
-    ],
-  }),
+  beforeLoad: async () => {
+    const isServer = typeof document === "undefined";
+    const hostname = isServer ? await getServerHostname() : window.location.host;
+    const isOpera = hostname === "opera.tideo.tech" || hostname === "www.opera.tideo.tech";
+    return { isOpera };
+  },
+  component: () => {
+    const { isOpera } = Route.useRouteContext();
+    return isOpera ? <OperaLandingPage /> : <Index />;
+  },
+  head: ({ context }) => {
+    if (context?.isOpera) {
+      return {
+        meta: [
+          { title: "OPERA | El ERP + MOM para activos intensivos" },
+          {
+            name: "description",
+            content: "OPERA es la plataforma que une el ERP y la operación de activos intensivos. Diseñada para alquiler de maquinaria, talleres y servicios en campo.",
+          },
+        ],
+      };
+    }
+    return {
+      meta: [
+        { title: "TIDEO Tech & Strategy | Tecnología que entiende tu negocio" },
+        {
+          name: "description",
+          content:
+            "TIDEO diseña, automatiza y construye soluciones digitales para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología, IA y desarrollo ágil.",
+        },
+        { property: "og:title", content: "TIDEO Tech & Strategy" },
+        {
+          property: "og:description",
+          content: "Tecnología que entiende tu negocio. Procesos, datos e IA para empresas medianas.",
+        },
+      ],
+    };
+  },
 });
 
 function Index() {
