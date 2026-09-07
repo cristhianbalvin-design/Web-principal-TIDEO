@@ -19,5 +19,7 @@ export default function middleware(request: Request) {
     return rewrite(new URL(newPath + url.search, request.url));
   }
 
-  return next();
+  return next({
+    headers: { 'x-debug-middleware': 'ejecutado', 'x-debug-hostname': hostname },
+  });
 }
