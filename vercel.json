@@ -4,16 +4,6 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "opera.tideo.tech" }],
-      "destination": "/opera/:path*"
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.opera.tideo.tech" }],
-      "destination": "/opera/:path*"
-    },
-    {
-      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
