@@ -35,6 +35,7 @@
 `Web-principal-TIDEO` es el código fuente de la **web comercial institucional** de **TIDEO Tech & Strategy**, una firma de transformación digital orientada a empresas medianas de Latinoamérica. El sitio combina:
 
 - Una **landing page premium** de una sola página (`/`) con estética *dark editorial*, construida para posicionar a TIDEO como una firma de estrategia y tecnología (no como una agencia de software genérica).
+- Una **landing dedicada para OPERA** (`/opera` a través de `opera.tideo.tech`) para vender el ERP como producto, integrada isomórficamente en el mismo proyecto.
 - Un **formulario de contacto** (`/contacto`) conectado a un backend serverless.
 - Un **módulo de diagnóstico digital interactivo** (el activo más sofisticado del proyecto): un cuestionario tipo "radar de madurez digital" que evalúa 10 áreas del negocio del visitante, calcula un puntaje de madurez y genera —vía la API de Anthropic (Claude)— un diagnóstico personalizado en lenguaje natural, con recomendación de servicios TIDEO. El resultado se envía por correo (Resend) y opcionalmente se reenvía a un CRM/automatización externa vía webhook de Make.
 
@@ -247,6 +248,16 @@ Botón flotante de WhatsApp (decorativo, sin `href` funcional — ver sección 1
 Formulario de contacto de una sola página. Ver detalle completo en sección 10.
 
 - Soporta **prefill automático** vía `sessionStorage` (`tideo:diagnostic-contact-prefill`) cuando el usuario llega desde el diagnóstico con `?origen=diagnostico` en la URL — es el puente entre el módulo de diagnóstico y el formulario de contacto tradicional.
+
+### 5.4 `src/routes/opera/index.tsx` — Landing de OPERA (`/opera`)
+
+Página dedicada exclusivamente a vender el ERP "OPERA". Sirve a los dominios `opera.tideo.tech` y `www.opera.tideo.tech`.
+- **Estructura de contenido:** Hero con parallax (capas de imágenes, en placeholder pendiente de maquinaria), problema del sector, qué es OPERA, tipos de operación objetivo, arquitectura ERP+MOM, diferenciador de integración nativa, comparativa vs alternativas, beneficios, pasos de implementación y un formulario final de calificación.
+- **Formulario de calificación y lógica de descarte:**
+  - **Campos:** Datos de contacto + tipo de operación + herramienta actual + presupuesto (>$7,000 USD: sí/no/aún no definido) + plazo de implementación.
+  - **Descarte automático:** Si el presupuesto es insuficiente, el botón de Calendly se oculta y el visitante ve el mensaje "te contactaremos". El lead se envía a la API con estado `"descartado"` y un `motivo_descarte`.
+  - **Prevención de duplicados:** La API devuelve el `lead_id` recién creado. El formulario lo captura y lo añade a la URL de Calendly como `salesforce_uuid`. Si el visitante agenda la cita, la integración de reservas (`api-reservas`) asocia el evento a este lead existente en vez de crear uno nuevo.
+  - Todo lead entrante desde aquí tiene `fuente: "opera_landing"`.
 
 ---
 
@@ -468,6 +479,11 @@ Las 3 funciones viven en `supabase/functions/`, corren en **Deno** (runtime de S
 
 Archivo de mapeo de imports de Deno compartido por las funciones (estándar de Supabase Edge Functions, define de dónde se resuelven los módulos remotos como `https://deno.land/std@0.177.0/http/server.ts`).
 
+### 9.5 Integración con ERP (`api-prospectos` y leads)
+
+- El formulario de la landing de OPERA se conecta con el backend principal de prospectos del ERP.
+- Se ajustó la API (`api-prospectos`) para respetar los campos `estado` y `motivo_descarte` en el payload entrante. Esto permite que la lógica de "descarte por presupuesto insuficiente" del frontend impacte correctamente en la base de datos de leads, manteniendo el fallback a estado "nuevo". (Catálogo validado: `nuevo`, `en_contacto`, `calificado`, `convertido`, `descartado`).
+
 ---
 
 ## 10. Formulario de contacto
@@ -510,6 +526,19 @@ Esta capa es poco visible funcionalmente pero es importante para la estabilidad 
 
 Este diseño es una solución de ingeniería a un problema conocido de TanStack Start sobre Cloudflare Workers (h3 "traga" errores de servidor y los convierte en JSON genérico); vale la pena que cualquier persona que dé mantenimiento entienda que **no es código redundante**, sino un workaround intencional documentado con comentarios en el propio código fuente.
 
+### 11.1 Lección operativa: Desafío técnico con subdominios isomórficos (`opera.tideo.tech`)
+
+**El problema:** Se requería que la aplicación (TanStack Start) mostrara la landing de OPERA en el subdominio `opera.tideo.tech`, haciendo que servidor y cliente coincidan en la ruta a procesar para evitar desajustes, a diferencia del ERP que vive en un proyecto separado de Vercel.
+
+- **Intento 1 (Descartado):** Usar `rewrites` con `has: [{ type: "host", ... }]` en `vercel.json`. Descartado por ser poco confiable (documentado por Vercel).
+- **Intento 2 (Causó incidente):** Mover la decisión a `beforeLoad` isomórfico con `getRequest()` del lado del servidor, excluyendo la ruta `/` del prerender estático para forzar SSR por solicitud. Esto rompió producción (~15 min caído) porque el proyecto no tiene el plugin `Nitro` activado, requisito de Vercel para SSR dinámico.
+- **Solución final (Exitosa):** Una combinación de dos piezas que evitan tocar el prerenderizado:
+  1. **Middleware de Edge de Vercel (`middleware.ts`)**: Reescribe la ruta a `/opera` en el borde (Edge) cuando el host es de OPERA, ignorando explícitamente recursos estáticos (JS, CSS) para no romperlos.
+  2. **Opción `rewrite` de TanStack Router**: En `src/router.tsx` se agregó una regla de `rewrite` (input/output) que replica la transformación de host a ruta durante la hidratación del cliente. Esto soluciona el `hydration mismatch` (React error #418). Requirió subir a `@tanstack/react-router ^1.170.33`.
+
+> **Patrón a replicar:** Para futuros subdominios dentro de este mismo proyecto, se debe agregar el hostname a `middleware.ts` y a las reglas en `src/router.tsx`, sin necesidad de reconstruir la solución.
+> **Pruebas locales:** Para probar localmente, usar `npm run preview`, editar `C:\Windows\System32\drivers\etc\hosts` (dominio apuntando a `127.0.0.1`), y habilitar `preview.allowedHosts` en Vite. Probar en Preview deployments de Vercel vía IP no funciona si el dominio ya está registrado para producción.
+
 ---
 
 ## 12. Variables de entorno requeridas
@@ -535,6 +564,7 @@ Este diseño es una solución de ingeniería a un problema conocido de TanStack 
 | `ANTHROPIC_API_KEY` | `get-diagnostic` | Autenticación con la API de Anthropic para generar el diagnóstico |
 | `RESEND_API_KEY` | `send-contact-email`, `send-diagnostic-email` | Autenticación con Resend para envío de correos |
 | `MAKE_WEBHOOK_URL` | `send-diagnostic-email` | (Opcional) URL del webhook de Make para reenviar leads a un CRM/automatización externa |
+| `CALENDLY_WEBHOOK_SECRET` | Backend ERP (`api-reservas`) | Valida la integridad del payload entrante desde Calendly a la infraestructura ERP. Rotado recientemente por exposición accidental en logs. Nueva URI de suscripción: `https://api.calendly.com/webhook_subscriptions/885706d3-2663-4f5d-a60b-6fbfd16e6017` |
 
 > **Checklist de despliegue:** si el diagnóstico o el formulario "no hacen nada" en producción, el primer punto a revisar es que las 4 variables `VITE_*` estén configuradas en la plataforma de hosting (Vercel/Cloudflare) **y** que los 3 secretos de Supabase estén configurados en el dashboard de Supabase → Edge Functions → Secrets. El propio código del modal ya muestra un mensaje de error en pantalla si faltan las variables del cliente, como ayuda de diagnóstico.
 
