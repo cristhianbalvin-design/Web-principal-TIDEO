@@ -1,4 +1,4 @@
-import { useRef } from "react";
+﻿import { useRef } from "react";
 import { useParallax } from "@/hooks/useParallax";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 

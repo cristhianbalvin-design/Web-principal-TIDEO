@@ -1,4 +1,4 @@
-import { SectionHeader } from "@/components/site/SectionHeader";
+﻿import { SectionHeader } from "@/components/site/SectionHeader";
 import { AlertTriangle, Database, Clock, ShieldAlert, FileText } from "lucide-react";
 
 const problems = [

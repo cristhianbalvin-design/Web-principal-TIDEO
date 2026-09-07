@@ -93,7 +93,15 @@ serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    // Intentar extraer JSON de la respuesta del ERP
+    let responseData = {};
+    try {
+      responseData = await response.json();
+    } catch (e) {
+      console.error("No se pudo parsear el JSON del ERP:", e);
+    }
+
+    return new Response(JSON.stringify({ success: true, data: responseData }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

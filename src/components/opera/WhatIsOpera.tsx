@@ -1,4 +1,4 @@
-import { SectionHeader } from "@/components/site/SectionHeader";
+﻿import { SectionHeader } from "@/components/site/SectionHeader";
 import { CheckCircle2 } from "lucide-react";
 
 export function WhatIsOpera() {

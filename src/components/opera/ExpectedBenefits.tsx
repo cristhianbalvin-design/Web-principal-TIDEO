@@ -1,4 +1,4 @@
-import { SectionHeader } from "@/components/site/SectionHeader";
+﻿import { SectionHeader } from "@/components/site/SectionHeader";
 import { Wrench, CircleDollarSign, TimerOff, ShieldCheck, FileCheck, TrendingUp } from "lucide-react";
 
 const benefits = [

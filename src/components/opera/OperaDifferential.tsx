@@ -1,4 +1,4 @@
-import { SectionHeader } from "@/components/site/SectionHeader";
+﻿import { SectionHeader } from "@/components/site/SectionHeader";
 
 const rows = [
   { feature: "Base de datos", erp: "Unificada", mom: "Separada por software", old: "Excel / Papel" },

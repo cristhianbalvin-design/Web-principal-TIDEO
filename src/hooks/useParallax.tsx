@@ -15,17 +15,12 @@ export function useParallax(ref: RefObject<HTMLElement | null>, speed: number = 
 
     const handleScroll = () => {
       if (!isIntersecting || !ref.current) return;
-      
-      const scrollY = window.scrollY;
-      const rect = ref.current.getBoundingClientRect();
-      const elementTopRelativeToDoc = scrollY + rect.top;
-      
-      // Calculate offset based on scroll position relative to the element
-      const diff = scrollY - elementTopRelativeToDoc;
-      const newOffset = diff * speed;
+      if (requestId) cancelAnimationFrame(requestId);
       
       requestId = requestAnimationFrame(() => {
-        setOffset(newOffset);
+        if (!ref.current) return;
+        const rect = ref.current.getBoundingClientRect();
+        setOffset(-rect.top * speed);
       });
     };
 

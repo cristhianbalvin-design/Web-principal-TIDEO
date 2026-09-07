@@ -23,6 +23,7 @@ export function QualificationForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isQualified, setIsQualified] = useState(true);
+  const [leadId, setLeadId] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -56,7 +57,7 @@ export function QualificationForm() {
       const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
       if (supabaseUrl && anonKey) {
-         await fetch(`${supabaseUrl}/functions/v1/submit-lead`, {
+         const res = await fetch(`${supabaseUrl}/functions/v1/submit-lead`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -64,6 +65,10 @@ export function QualificationForm() {
           },
           body: JSON.stringify(payload)
         });
+        const json = await res.json();
+        if (json.data?.lead_id) {
+          setLeadId(json.data.lead_id);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -104,7 +109,12 @@ export function QualificationForm() {
               </p>
               {isQualified && (
                 <Button 
-                  onClick={() => window.open("https://calendly.com/tideo/30min", "_blank")}
+                  onClick={() => {
+                    const calendlyUrl = leadId 
+                      ? `https://calendly.com/tideo/30min?salesforce_uuid=${leadId}` 
+                      : "https://calendly.com/tideo/30min";
+                    window.open(calendlyUrl, "_blank");
+                  }}
                   className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg rounded-full"
                 >
                   Agendar en Calendly

@@ -1,4 +1,4 @@
-import { SectionHeader } from "@/components/site/SectionHeader";
+﻿import { SectionHeader } from "@/components/site/SectionHeader";
 
 const momDomains = [
   { abv: "CMMS", name: "Mantenimiento", desc: "Órdenes, preventivos, fallas." },
