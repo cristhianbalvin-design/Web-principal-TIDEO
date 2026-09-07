@@ -1,4 +1,4 @@
-import { rewrite, next } from '@vercel/functions';
+﻿import { rewrite, next } from '@vercel/functions';
 
 export const config = {
   matcher: '/:path*',
@@ -19,7 +19,6 @@ export default function middleware(request: Request) {
     return rewrite(new URL(newPath + url.search, request.url));
   }
 
-  return next({
-    headers: { 'x-debug-middleware': 'ejecutado', 'x-debug-hostname': hostname },
-  });
+  return next();
 }
+
