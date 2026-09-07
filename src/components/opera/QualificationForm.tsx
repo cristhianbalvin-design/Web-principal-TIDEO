@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { Button } from "@/components/ui/button";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 interface FormData {
   nombre: string;
@@ -187,9 +188,15 @@ export function QualificationForm() {
                 </select>
               </div>
 
-              <Button disabled={loading} type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 rounded-md font-semibold text-lg">
+              <HoverBorderGradient
+                as="button"
+                disabled={loading} 
+                type="submit" 
+                containerClassName="final-cta-gradient w-full rounded-md"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 rounded-md font-semibold text-lg"
+              >
                 {loading ? "Enviando..." : "Evaluar mi caso"}
-              </Button>
+              </HoverBorderGradient>
             </form>
           )}
         </div>

@@ -1,5 +1,41 @@
-﻿import { SectionHeader } from "@/components/site/SectionHeader";
+import { useEffect, useRef, useState } from "react";
+import { SectionHeader } from "@/components/site/SectionHeader";
 import { CheckCircle2 } from "lucide-react";
+
+function AnimatedListItem({ children, delay }: { children: React.ReactNode; delay: number }) {
+  const ref = useRef<HTMLLIElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || isVisible) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [isVisible]);
+
+  return (
+    <li
+      ref={ref}
+      className={`flex items-start gap-3 text-foreground/90 font-medium transition-all duration-700 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </li>
+  );
+}
 
 export function WhatIsOpera() {
   return (
@@ -27,10 +63,10 @@ export function WhatIsOpera() {
                 "Gestión de almacenes, compras y activos 100% integrada.",
                 "Auditable y trazable de punta a punta."
               ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-foreground/90 font-medium">
+                <AnimatedListItem key={i} delay={i * 150}>
                   <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <span>{item}</span>
-                </li>
+                </AnimatedListItem>
               ))}
             </ul>
           </div>

@@ -1,4 +1,4 @@
-﻿import { SectionHeader } from "@/components/site/SectionHeader";
+import { SectionHeader } from "@/components/site/SectionHeader";
 
 const rows = [
   { feature: "Base de datos", erp: "Unificada", mom: "Separada por software", old: "Excel / Papel" },
@@ -31,7 +31,7 @@ export function OperaDifferential() {
             <div className="p-5">Status Quo</div>
           </div>
           {rows.map((r, i) => (
-            <div key={i} className="grid md:grid-cols-4 border-t border-hairline">
+            <div key={i} className="grid md:grid-cols-4 border-t border-hairline hover:bg-surface/40 transition-colors cursor-default">
               <div className="p-5 md:p-6 text-foreground/90 font-medium md:font-normal bg-surface/20 md:bg-transparent">{r.feature}</div>
               <div className="p-5 md:p-6 text-primary font-semibold bg-primary/5">{r.erp}</div>
               <div className="p-5 md:p-6 text-muted-foreground">{r.mom}</div>

@@ -1,5 +1,16 @@
-﻿import { SectionHeader } from "@/components/site/SectionHeader";
+import { MouseEvent } from "react";
+import { SectionHeader } from "@/components/site/SectionHeader";
+import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { AlertTriangle, Database, Clock, ShieldAlert, FileText } from "lucide-react";
+
+function handleCardPointer(event: MouseEvent<HTMLElement>) {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const x = ((event.clientX - rect.left) / rect.width) * 100;
+  const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+  event.currentTarget.style.setProperty("--hover-x", `${x}%`);
+  event.currentTarget.style.setProperty("--hover-y", `${y}%`);
+}
 
 const problems = [
   {
@@ -43,17 +54,21 @@ export function SectorProblem() {
           description="Los ERP tradicionales están hechos para contadores, no para jefes de mantenimiento ni supervisores de campo. Esto genera problemas críticos."
         />
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <HoverEffect className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {problems.map((problem, i) => (
-            <div key={i} className="p-6 rounded-2xl border border-hairline bg-background shadow-sm hover:shadow-md transition-shadow">
+            <article 
+              key={i} 
+              onMouseMove={handleCardPointer}
+              className="card-hover-effect-card rounded-2xl border border-hairline bg-background p-6 shadow-sm hover:shadow-md transition-shadow"
+            >
               <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
                 {problem.icon}
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">{problem.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{problem.description}</p>
-            </div>
+            </article>
           ))}
-        </div>
+        </HoverEffect>
       </div>
     </section>
   );

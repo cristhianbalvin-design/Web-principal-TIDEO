@@ -1,4 +1,4 @@
-﻿import { SectionHeader } from "@/components/site/SectionHeader";
+import { SectionHeader } from "@/components/site/SectionHeader";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 
 const models = [
@@ -27,13 +27,19 @@ export function TargetAudience() {
         <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {models.map((model, i) => (
             <CardContainer key={i} className="w-full">
-              <CardBody className="bg-background relative group/card border-hairline border w-full h-auto rounded-xl p-8 hover:shadow-glow hover:shadow-primary/10 transition-shadow">
-                <CardItem translateZ="20" className="text-xl font-bold text-foreground">
-                  {model.title}
-                </CardItem>
-                <CardItem as="p" translateZ="40" className="text-sm text-muted-foreground mt-4 leading-relaxed">
-                  {model.desc}
-                </CardItem>
+              <CardBody className="group/card relative overflow-hidden h-full rounded-2xl border border-hairline bg-surface/40 p-8 transition hover:border-primary/20 hover:bg-surface/70 w-full">
+                <div
+                  aria-hidden
+                  className="absolute -top-20 -right-20 h-64 w-64 rounded-full opacity-20 blur-3xl transition-opacity group-hover/card:opacity-40 bg-primary"
+                />
+                <div className="relative">
+                  <CardItem translateZ="20" className="text-xl font-bold text-foreground">
+                    {model.title}
+                  </CardItem>
+                  <CardItem as="p" translateZ="40" className="text-sm text-muted-foreground mt-4 leading-relaxed">
+                    {model.desc}
+                  </CardItem>
+                </div>
               </CardBody>
             </CardContainer>
           ))}

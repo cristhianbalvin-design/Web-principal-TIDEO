@@ -1,4 +1,4 @@
-﻿import { SectionHeader } from "@/components/site/SectionHeader";
+import { SectionHeader } from "@/components/site/SectionHeader";
 
 const momDomains = [
   { abv: "CMMS", name: "Mantenimiento", desc: "Órdenes, preventivos, fallas." },
@@ -37,7 +37,7 @@ export function ArchitectureOverview() {
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               {momDomains.map((dom, i) => (
-                <div key={i} className="p-4 rounded-xl border border-hairline bg-surface/30">
+                <div key={i} className="p-4 rounded-xl border border-hairline bg-surface/30 hover:bg-surface/70 hover:border-primary/20 transition-colors cursor-default">
                   <div className="font-mono text-xs font-bold text-primary mb-1">{dom.abv}</div>
                   <div className="font-semibold text-foreground mb-1">{dom.name}</div>
                   <div className="text-xs text-muted-foreground">{dom.desc}</div>
@@ -52,9 +52,9 @@ export function ArchitectureOverview() {
             </div>
             <div className="flex flex-col gap-3">
               {erpDomains.map((dom, i) => (
-                <div key={i} className="px-5 py-4 rounded-xl border border-hairline bg-background flex items-center justify-between">
-                   <span className="font-medium text-foreground/90">{dom}</span>
-                   <div className="w-2 h-2 rounded-full bg-primary/50" />
+                <div key={i} className="px-5 py-4 rounded-xl border border-hairline bg-background flex items-center justify-between hover:bg-surface/40 hover:border-primary/20 transition-colors cursor-default group">
+                   <span className="font-medium text-foreground/90 group-hover:text-primary transition-colors">{dom}</span>
+                   <div className="w-2 h-2 rounded-full bg-primary/50 group-hover:bg-primary transition-colors" />
                 </div>
               ))}
             </div>
