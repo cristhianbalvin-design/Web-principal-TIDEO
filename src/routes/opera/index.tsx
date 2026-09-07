@@ -28,10 +28,10 @@ export const Route = createFileRoute("/opera/")({
 
 function OperaLanding() {
   return (
-    <>
+    <div className="min-h-screen bg-background text-foreground">
       <Nav />
-      <main className="min-h-screen bg-background relative overflow-hidden">
-        <TracingBeam className="px-0">
+      <main>
+        <TracingBeam>
           <ParallaxHero />
           <SectorProblem />
           <WhatIsOpera />
@@ -45,6 +45,6 @@ function OperaLanding() {
         </TracingBeam>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

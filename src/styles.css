@@ -42,6 +42,7 @@
   --color-academy: var(--academy);
   --color-studio: var(--studio);
   --color-labs: var(--labs);
+  --color-amber: var(--amber);
 }
 
 :root {
@@ -78,6 +79,7 @@
   --academy: oklch(0.78 0.16 60);                  /* orange */
   --studio: oklch(0.6 0.22 320);                   /* purple */
   --labs: oklch(0.78 0.12 200);                    /* cyan */
+  --amber: oklch(0.80 0.16 85);                    /* industrial amber */
 
   /* Gradients & shadows */
   --gradient-hero: radial-gradient(ellipse at 30% 20%, oklch(0.3 0.08 240 / 0.55), transparent 60%),
@@ -441,7 +443,7 @@
   top: 0;
   bottom: 0;
   left: max(1rem, calc((100vw - 80rem) / 2 - 2.25rem));
-  z-index: -1;
+  z-index: 10;
   display: none;
   width: 1px;
   pointer-events: none;
@@ -453,8 +455,8 @@
   background: linear-gradient(
     180deg,
     transparent,
-    oklch(1 0 0 / 0.08) 12%,
-    oklch(1 0 0 / 0.08) 88%,
+    oklch(1 0 0 / 0.08) 4%,
+    oklch(1 0 0 / 0.08) 98%,
     transparent
   );
 }

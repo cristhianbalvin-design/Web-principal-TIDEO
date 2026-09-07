@@ -1,13 +1,55 @@
 import { SectionHeader } from "@/components/site/SectionHeader";
 
 const rows = [
-  { feature: "Base de datos", erp: "Unificada", mom: "Separada por software", old: "Excel / Papel" },
-  { feature: "Doble digitación", erp: "Cero", mom: "Constante", old: "Alta" },
-  { feature: "Costo real", erp: "En tiempo real", mom: "Estimado", old: "A fin de mes" },
-  { feature: "Trazabilidad de activos", erp: "Total", mom: "Parcial", old: "Nula" },
-  { feature: "Seguridad / HSE", erp: "Integrado", mom: "Software aparte", old: "Carpetas físicas" },
-  { feature: "Diseñado para activos", erp: "Nativo", mom: "Adaptado", old: "Improvisado" },
-  { feature: "Costo Total (TCO)", erp: "Eficiente", mom: "Alto (licencias multi)", old: "Oculto (reprocesos)" }
+  {
+    feature: "Base de datos",
+    opera: "Unificada",
+    niche: "Separada por software",
+    traditional: "Unificada (solo lado ERP)",
+    statusQuo: "Excel / Papel",
+  },
+  {
+    feature: "Doble digitación",
+    opera: "Cero",
+    niche: "Constante",
+    traditional: "Alta (sin módulo operativo nativo)",
+    statusQuo: "Alta",
+  },
+  {
+    feature: "Costo real",
+    opera: "En tiempo real",
+    niche: "Estimado",
+    traditional: "Estimado",
+    statusQuo: "A fin de mes",
+  },
+  {
+    feature: "Trazabilidad de activos",
+    opera: "Total",
+    niche: "Parcial",
+    traditional: "Parcial (contable, no operativa)",
+    statusQuo: "Nula",
+  },
+  {
+    feature: "Seguridad / HSE",
+    opera: "Integrado",
+    niche: "Software aparte",
+    traditional: "Módulo aparte (costo adicional)",
+    statusQuo: "Carpetas físicas",
+  },
+  {
+    feature: "Diseñado para activos",
+    opera: "Nativo",
+    niche: "Adaptado",
+    traditional: "Genérico (no especializado)",
+    statusQuo: "Improvisado",
+  },
+  {
+    feature: "Costo Total (TCO)",
+    opera: "Eficiente",
+    niche: "Alto (licencias multi)",
+    traditional: "Muy alto (licencias + consultoría)",
+    statusQuo: "Oculto (reprocesos)",
+  },
 ];
 
 export function OperaDifferential() {
@@ -24,20 +66,39 @@ export function OperaDifferential() {
         />
 
         <div className="mt-14 overflow-hidden rounded-2xl border border-hairline">
-          <div className="hidden md:grid grid-cols-4 bg-surface/60 text-xs uppercase tracking-widest text-muted-foreground">
-            <div className="p-5">Criterio</div>
-            <div className="p-5 text-primary font-bold">OPERA (ERP+MOM)</div>
-            <div className="p-5">Software nicho (Solo MOM)</div>
-            <div className="p-5">Status Quo</div>
-          </div>
-          {rows.map((r, i) => (
-            <div key={i} className="grid md:grid-cols-4 border-t border-hairline hover:bg-surface/40 transition-colors cursor-default">
-              <div className="p-5 md:p-6 text-foreground/90 font-medium md:font-normal bg-surface/20 md:bg-transparent">{r.feature}</div>
-              <div className="p-5 md:p-6 text-primary font-semibold bg-primary/5">{r.erp}</div>
-              <div className="p-5 md:p-6 text-muted-foreground">{r.mom}</div>
-              <div className="p-5 md:p-6 text-muted-foreground">{r.old}</div>
+          <div className="overflow-x-auto">
+            <div className="min-w-[860px] lg:min-w-full">
+              <div className="grid grid-cols-5 bg-surface/60 text-xs uppercase tracking-widest text-muted-foreground border-b border-hairline">
+                <div className="p-4 lg:p-5 font-semibold">Criterio</div>
+                <div className="p-4 lg:p-5 text-primary font-bold bg-primary/5">OPERA (ERP+MOM)</div>
+                <div className="p-4 lg:p-5 font-semibold">Software nicho (Solo MOM)</div>
+                <div className="p-4 lg:p-5 font-semibold">ERP Tradicional (SAP/Odoo)</div>
+                <div className="p-4 lg:p-5 font-semibold">Status Quo</div>
+              </div>
+              {rows.map((r, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-5 border-t border-hairline first:border-t-0 hover:bg-surface/40 transition-colors cursor-default"
+                >
+                  <div className="p-4 lg:p-5 text-foreground/90 font-medium text-sm">
+                    {r.feature}
+                  </div>
+                  <div className="p-4 lg:p-5 text-primary font-semibold text-sm bg-primary/5">
+                    {r.opera}
+                  </div>
+                  <div className="p-4 lg:p-5 text-muted-foreground text-sm leading-relaxed">
+                    {r.niche}
+                  </div>
+                  <div className="p-4 lg:p-5 text-muted-foreground text-sm leading-relaxed">
+                    {r.traditional}
+                  </div>
+                  <div className="p-4 lg:p-5 text-muted-foreground text-sm leading-relaxed">
+                    {r.statusQuo}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
