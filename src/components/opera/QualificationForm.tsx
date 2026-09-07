@@ -1,6 +1,6 @@
 import { useState, FormEvent } from "react";
 import { SectionHeader } from "@/components/site/SectionHeader";
-import { Button } from "@/components/ui/button";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 interface FormData {
   nombre: string;
@@ -83,7 +83,7 @@ export function QualificationForm() {
   };
 
   return (
-    <section id="calificacion" className="py-24 md:py-32 border-t border-hairline bg-background">
+    <section id="calificacion" className="py-24 md:py-32 border-t border-hairline">
       <div className="mx-auto max-w-3xl px-6 lg:px-10">
         <SectionHeader
           align="center"
@@ -108,17 +108,19 @@ export function QualificationForm() {
                   : "Nuestro equipo revisará tu información y te contactaremos pronto."}
               </p>
               {isQualified && (
-                <Button 
+                <HoverBorderGradient
+                  as="button"
                   onClick={() => {
                     const calendlyUrl = leadId 
                       ? `https://calendly.com/tideo/30min?salesforce_uuid=${leadId}` 
                       : "https://calendly.com/tideo/30min";
                     window.open(calendlyUrl, "_blank");
                   }}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg rounded-full"
+                  containerClassName="final-cta-gradient rounded-full"
+                  className="final-cta-button inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base md:text-lg font-semibold transition"
                 >
                   Agendar en Calendly
-                </Button>
+                </HoverBorderGradient>
               )}
             </div>
           ) : (
@@ -187,9 +189,15 @@ export function QualificationForm() {
                 </select>
               </div>
 
-              <Button disabled={loading} type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 rounded-md font-semibold text-lg">
+              <HoverBorderGradient
+                as="button"
+                disabled={loading}
+                type="submit"
+                containerClassName="final-cta-gradient w-full rounded-full"
+                className="final-cta-button inline-flex items-center justify-center gap-2 w-full rounded-full px-8 py-4 text-base md:text-lg font-semibold transition"
+              >
                 {loading ? "Enviando..." : "Evaluar mi caso"}
-              </Button>
+              </HoverBorderGradient>
             </form>
           )}
         </div>

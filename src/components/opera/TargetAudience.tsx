@@ -1,13 +1,49 @@
-﻿import { SectionHeader } from "@/components/site/SectionHeader";
+import { SectionHeader } from "@/components/site/SectionHeader";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 
 const models = [
-  { title: "Alquiler de maquinaria", desc: "Gestión de contratos, tarifas dinámicas, disponibilidad de flota y mantenimientos preventivos." },
-  { title: "Talleres de mantenimiento", desc: "Órdenes de trabajo, asignación de mecánicos, repuestos y control de tiempos." },
-  { title: "Metalmecánica", desc: "Control de producción, ruta de fabricación, costos de materiales y horas hombre." },
-  { title: "Servicios con flota", desc: "Despacho, rastreo, consumo de combustible, y gestión de choferes u operarios." },
-  { title: "Minería y Construcción", desc: "Control de activos pesados, HSE integrado, campamentos y valorizaciones." },
-  { title: "Contratistas de mantenimiento", desc: "Gestión de SLAs, técnicos en campo (FSM), liquidación y facturación al cliente final." }
+  {
+    n: "01",
+    title: "Alquiler de maquinaria",
+    subtitle: "Flota pesada y contratos",
+    desc: "Gestión de contratos, tarifas dinámicas, disponibilidad de flota y mantenimientos preventivos.",
+    color: "var(--color-amber)",
+  },
+  {
+    n: "02",
+    title: "Talleres de mantenimiento",
+    subtitle: "Servicio técnico y overhaul",
+    desc: "Órdenes de trabajo, asignación de mecánicos, repuestos y control de tiempos.",
+    color: "var(--color-labs)",
+  },
+  {
+    n: "03",
+    title: "Metalmecánica",
+    subtitle: "Manufactura y mecanizado",
+    desc: "Control de producción, ruta de fabricación, costos de materiales y horas hombre.",
+    color: "var(--color-academy)",
+  },
+  {
+    n: "04",
+    title: "Servicios con flota",
+    subtitle: "Despacho y logística operativa",
+    desc: "Despacho, rastreo, consumo de combustible, y gestión de choferes u operarios.",
+    color: "var(--color-consulting)",
+  },
+  {
+    n: "05",
+    title: "Minería y Construcción",
+    subtitle: "Operaciones en faena crítica",
+    desc: "Control de activos pesados, HSE integrado, campamentos y valorizaciones.",
+    color: "var(--color-destructive)",
+  },
+  {
+    n: "06",
+    title: "Contratistas de mantenimiento",
+    subtitle: "Field service y SLAs",
+    desc: "Gestión de SLAs, técnicos en campo (FSM), liquidación y facturación al cliente final.",
+    color: "var(--color-studio)",
+  },
 ];
 
 export function TargetAudience() {
@@ -18,20 +54,51 @@ export function TargetAudience() {
           eyebrow="¿Te reconoces?"
           title={
             <>
-              Modelos de negocio que <span className="font-serif-italic text-primary">transformamos</span>.
+              Modelos de negocio que{" "}
+              <span className="font-serif-italic text-primary">transformamos</span>.
             </>
           }
           description="Si tu negocio depende de activos físicos y su disponibilidad, OPERA está diseñado para ti."
         />
 
-        <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {models.map((model, i) => (
-            <CardContainer key={i} className="w-full">
-              <CardBody className="bg-background relative group/card border-hairline border w-full h-auto rounded-xl p-8 hover:shadow-glow hover:shadow-primary/10 transition-shadow">
-                <CardItem translateZ="20" className="text-xl font-bold text-foreground">
-                  {model.title}
+        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {models.map((model) => (
+            <CardContainer key={model.n} className="w-full">
+              <CardBody className="group/card relative h-full w-full overflow-hidden rounded-2xl border border-hairline bg-surface/40 p-8 transition hover:border-primary/20 hover:bg-surface/70 md:p-10">
+                <div
+                  aria-hidden
+                  className="absolute -top-20 -right-20 h-64 w-64 rounded-full opacity-20 blur-3xl transition-opacity group-hover/card:opacity-40"
+                  style={{ background: model.color }}
+                />
+                <div className="relative flex items-baseline gap-4">
+                  <CardItem
+                    as="span"
+                    translateZ={48}
+                    className="text-sm font-mono"
+                    style={{ color: model.color }}
+                  >
+                    {model.n}
+                  </CardItem>
+                  <CardItem
+                    as="h3"
+                    translateZ={64}
+                    className="text-2xl font-semibold tracking-tight md:text-3xl text-foreground"
+                  >
+                    {model.title}
+                  </CardItem>
+                </div>
+                <CardItem
+                  as="p"
+                  translateZ={42}
+                  className="relative mt-4 text-sm uppercase tracking-widest text-muted-foreground"
+                >
+                  {model.subtitle}
                 </CardItem>
-                <CardItem as="p" translateZ="40" className="text-sm text-muted-foreground mt-4 leading-relaxed">
+                <CardItem
+                  as="p"
+                  translateZ={34}
+                  className="relative mt-6 text-base leading-relaxed text-foreground/85"
+                >
                   {model.desc}
                 </CardItem>
               </CardBody>

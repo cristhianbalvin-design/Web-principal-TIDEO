@@ -25,9 +25,15 @@ export function TracingBeam({ children, className, ...props }: TracingBeamProps)
     window.addEventListener("scroll", updateBeam, { passive: true });
     window.addEventListener("resize", updateBeam);
 
+    const resizeObserver = new ResizeObserver(() => {
+      updateBeam();
+    });
+    resizeObserver.observe(element);
+
     return () => {
       window.removeEventListener("scroll", updateBeam);
       window.removeEventListener("resize", updateBeam);
+      resizeObserver.disconnect();
     };
   }, []);
 
