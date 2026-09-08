@@ -1,11 +1,33 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
-const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || "https://www.tideo.tech";
+const ALLOWED_ORIGINS = [
+  "https://www.tideo.tech",
+  "https://tideo.tech",
+  "https://opera.tideo.tech",
+  "https://www.opera.tideo.tech",
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:4173",
+];
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const isAllowed =
+    ALLOWED_ORIGINS.includes(origin) ||
+    origin.endsWith(".tideo.tech") ||
+    /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
+    /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin);
+
+  const allowedOrigin = isAllowed ? origin : (Deno.env.get("ALLOWED_ORIGIN") || "https://www.tideo.tech");
+
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  };
+}
 
 interface LeadPayload {
   nombre?: string;
@@ -23,6 +45,8 @@ interface LeadPayload {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Manejo de preflight (OPTIONS)
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
