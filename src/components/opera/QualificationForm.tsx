@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import { AlertCircle } from "lucide-react";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
@@ -24,9 +25,11 @@ export function QualificationForm() {
   const [submitted, setSubmitted] = useState(false);
   const [isQualified, setIsQualified] = useState(true);
   const [leadId, setLeadId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     setLoading(true);
 
     const qualified = formData.presupuesto !== "No";
@@ -56,25 +59,44 @@ export function QualificationForm() {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
-      if (supabaseUrl && anonKey) {
-         const res = await fetch(`${supabaseUrl}/functions/v1/submit-lead`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${anonKey}`
-          },
-          body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-        if (json.data?.lead_id) {
-          setLeadId(json.data.lead_id);
-        }
+      if (!supabaseUrl || !anonKey) {
+        throw new Error("Configuración del servidor no disponible.");
       }
+
+      const res = await fetch(`${supabaseUrl}/functions/v1/submit-lead`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${anonKey}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        let errorDetail = "No se pudo registrar la información.";
+        try {
+          const errJson = await res.json();
+          if (errJson.error) errorDetail = errJson.error;
+        } catch {
+          // ignore
+        }
+        throw new Error(errorDetail);
+      }
+
+      const json = await res.json();
+      if (json.data?.lead_id) {
+        setLeadId(json.data.lead_id);
+      }
+      setSubmitted(true);
     } catch (err) {
-      console.error(err);
+      console.error("Error al enviar formulario de calificación:", err);
+      setErrorMessage(
+        err instanceof Error && err.message !== "Failed to fetch"
+          ? err.message
+          : "Hubo un problema de conexión al registrar tus datos. Por favor intenta nuevamente o contáctanos directamente."
+      );
     } finally {
       setLoading(false);
-      setSubmitted(true);
     }
   };
 
@@ -188,6 +210,13 @@ export function QualificationForm() {
                   <option value="Solo estoy evaluando opciones">Solo estoy evaluando opciones</option>
                 </select>
               </div>
+
+              {errorMessage && (
+                <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-destructive" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
 
               <HoverBorderGradient
                 as="button"
