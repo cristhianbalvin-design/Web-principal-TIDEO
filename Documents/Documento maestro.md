@@ -3,7 +3,7 @@
 > **Repositorio:** `cristhianbalvin-design/Web-principal-TIDEO`
 > **Dominio de producción:** `www.tideo.tech`
 > **Tipo de documento:** Documentación técnica, funcional y de negocio integral
-> **Última actualización de este documento:** Generado a partir de análisis directo del código fuente
+> **Última actualización de este documento:** Actualizado con la integración completa del widget Calendly inline, resolución de bugs de CORS y deduplicación de leads, y lecciones operativas de infraestructura y control de versiones.
 
 ---
 
@@ -103,6 +103,7 @@ Empresas medianas (perfiles de 1 a 200+ colaboradores, segmentados explícitamen
 | Componentes base | Radix UI (vía shadcn/ui, estilo "new-york") | múltiples paquetes `@radix-ui/*` | Ver `components.json` |
 | Iconos | lucide-react | ^0.575.0 | |
 | Formularios | react-hook-form + @hookform/resolvers + zod | ^7.71 / ^5.2 / ^3.24 | Infraestructura disponible; el formulario de contacto actual usa estado nativo de React, no RHF |
+| Integraciones de agenda | react-calendly | ^4.4.0 | Widget `InlineWidget` embebido en la landing de OPERA (`QualificationForm`) |
 | Gráficos | recharts | ^2.15.4 | Disponible vía `components/ui/chart.tsx`, no usado activamente en el diagnóstico (el radar es SVG manual) |
 | Animaciones auxiliares | tw-animate-css, embla-carousel-react, vaul | — | |
 | Lenguaje | TypeScript | ^5.8.3 | `strict` vía `tsconfig.json` |
@@ -255,8 +256,14 @@ Página dedicada exclusivamente a vender el ERP "OPERA". Sirve a los dominios `o
 - **Estructura de contenido:** Hero con parallax (capas de imágenes, en placeholder pendiente de maquinaria), problema del sector, qué es OPERA, tipos de operación objetivo, arquitectura ERP+MOM, diferenciador de integración nativa, comparativa vs alternativas, beneficios, pasos de implementación y un formulario final de calificación.
 - **Formulario de calificación y lógica de descarte:**
   - **Campos:** Datos de contacto + tipo de operación + herramienta actual + presupuesto (>$7,000 USD: sí/no/aún no definido) + plazo de implementación.
-  - **Descarte automático:** Si el presupuesto es insuficiente, el botón de Calendly se oculta y el visitante ve el mensaje "te contactaremos". El lead se envía a la API con estado `"descartado"` y un `motivo_descarte`.
-  - **Prevención de duplicados:** La API devuelve el `lead_id` recién creado. El formulario lo captura y lo añade a la URL de Calendly como `salesforce_uuid`. Si el visitante agenda la cita, la integración de reservas (`api-reservas`) asocia el evento a este lead existente en vez de crear uno nuevo.
+  - **Descarte automático:** Si el presupuesto es insuficiente, el widget de Calendly se oculta y el visitante ve el mensaje de agradecimiento. El lead se envía a la API con estado `"descartado"` y un `motivo_descarte`.
+  - **Manejo robusto de errores del formulario:** Se corrigió un bug donde el bloque `finally` forzaba `submitted = true` incondicionalmente, fingiendo éxito incluso si la petición fallaba en la red o por CORS. Ahora solo avanza ante respuestas HTTP exitosas (`json.success === true`), mostrando una alerta visual (`errorMessage`) con icono `AlertCircle` si ocurre cualquier fallo.
+  - **Widget embebido de Calendly (`InlineWidget` de `react-calendly`):** Se sustituyó el botón que abría una pestaña externa por un calendario incrustado directamente en la página con `InlineWidget`.
+  - **Transición y auto-confirmación:** Al calificar favorablemente (`isQualified === true`), la interfaz presenta durante 2.4 segundos una pantalla de confirmación ("¡Perfecto! Calificas para nuestra solución") con animación de pulso mediante `CheckCircle2` (`lucide-react`). Tras el temporizador, transiciona de forma 100% automática al calendario embebido sin requerir clic del usuario, expandiendo fluidamente el contenedor a `max-w-4xl`.
+  - **Paleta visual integrada:** Parámetros `pageSettings` de Calendly alineados a la marca: fondo `060B14` (`--background`), texto `f7f8fa` (`--foreground`) y acento cian `3aced6` (`--labs`).
+  - **Prellenado automático (Prefill):** Nombre y correo (`formData.nombre` y `formData.correo`) se transfieren directamente a Calendly vía prop `prefill`, eliminando la necesidad de reescribirlos.
+  - **Trazabilidad única de `salesforce_uuid`:** Para la vinculación con el CRM, el `lead_id` se pasa como query parameter en la URL del widget (`?salesforce_uuid=${leadId}`). Aunque `react-calendly` admite `salesforce_uuid` dentro de su objeto `utm`, usar ambas simultáneamente provocaba duplicidad en la query string final generada por `formatCalendlyUrl`; se determinó conservar únicamente el query param en la URL base como vía canónica.
+  - **Resolución de URL de Calendly:** La URL `https://calendly.com/tideo/30min` arrojaba error 404 inicialmente por un desajuste en el slug del evento configurado dentro de la cuenta de Calendly (no por fallo de código). Se corrigió en la plataforma de Calendly y el código conservó la URL estándar.
   - Todo lead entrante desde aquí tiene `fuente: "opera_landing"`.
 
 ---
@@ -479,10 +486,26 @@ Las 3 funciones viven en `supabase/functions/`, corren en **Deno** (runtime de S
 
 Archivo de mapeo de imports de Deno compartido por las funciones (estándar de Supabase Edge Functions, define de dónde se resuelven los módulos remotos como `https://deno.land/std@0.177.0/http/server.ts`).
 
-### 9.5 Integración con ERP (`api-prospectos` y leads)
+### 9.5 Integración con ERP (`api-prospectos`, `api-reservas` y pipeline anti-duplicados)
 
-- El formulario de la landing de OPERA se conecta con el backend principal de prospectos del ERP.
+- El formulario de la landing de OPERA se conecta con el backend principal de prospectos del ERP (`api-prospectos` para registro inicial y `api-reservas` para reservas agendadas vía Calendly).
 - Se ajustó la API (`api-prospectos`) para respetar los campos `estado` y `motivo_descarte` en el payload entrante. Esto permite que la lógica de "descarte por presupuesto insuficiente" del frontend impacte correctamente en la base de datos de leads, manteniendo el fallback a estado "nuevo". (Catálogo validado: `nuevo`, `en_contacto`, `calificado`, `convertido`, `descartado`).
+- **Resolución de bugs de deduplicación de leads (formulario ↔ Calendly):**
+  Al registrar un lead desde OPERA (`fuente: "opera_landing"`) y posteriormente agendar en Calendly con `?salesforce_uuid=${leadId}`, el sistema creaba un segundo lead duplicado (`fuente: "calendly_directo"`) en vez de asociar la cita al lead existente. Se descubrieron y corrigieron dos causas encadenadas:
+  1. **Discrepancia en la estructura del webhook de Calendly (`invitee.created`):** El endpoint `api-reservas` (repo ERP) intentaba leer el identificador en `payload.scheduled_event.tracking.salesforce_uuid`. Sin embargo, en el payload real del webhook v2 de Calendly, `tracking` vive en la raíz del payload (`payload.tracking.salesforce_uuid`). Se corrigió para leer directamente `payload.tracking`.
+  2. **Columna inexistente en la sentencia UPDATE (`modificado_en` vs `updated_at`):** Tras corregir el path del payload, el duplicado persistía. El diagnóstico reveló que la sentencia `.update({ modificado_en: new Date().toISOString() })` en la tabla `leads` fallaba con error HTTP 400 (`PGRST204: Could not find the 'modificado_en' column of 'leads' in the schema cache`), dado que la columna real en la base de datos es `updated_at`. La función silenciaba el error en un `console.warn` genérico y asumía que el lead no existía, saltando a crear un lead duplicado. Se corrigió a `updated_at` y se reestructuró el logging para diferenciar un error de base de datos de un lead genuinamente inexistente.
+  - Ambas correcciones fueron validadas de punta a punta con reservas reales antes del pase definitivo.
+
+### 9.6 `submit-lead` — Función de captura de prospectos y CORS multi-dominio
+
+- **Propósito:** Endpoint serverless en Supabase Edge Functions que recibe los datos de `QualificationForm.tsx` y los canaliza hacia el backend del ERP.
+- **Bug crítico de CORS con subdominios:** Originalmente, `submit-lead/index.ts` mantenía un encabezado estático `Access-Control-Allow-Origin: "https://www.tideo.tech"`. Al incorporar el subdominio `opera.tideo.tech`, los navegadores bloqueaban silenciosamente todas las solicitudes del formulario (fallo de preflight OPTIONS / CORS), impidiendo la entrada de prospectos al CRM mientras la interfaz aparentaba éxito.
+- **Solución implementada:** Se reemplazó el origen fijo por una función de resolución dinámica por request basada en una lista blanca autorizada:
+  - `https://www.tideo.tech`
+  - `https://tideo.tech`
+  - `https://opera.tideo.tech`
+  - `https://www.opera.tideo.tech`
+  - Orígenes locales de desarrollo (`http://localhost:5173`, `http://localhost:4173`, `http://localhost:3000`).
 
 ---
 
@@ -597,6 +620,15 @@ npm run dev
 
 > **Nota sobre gestor de paquetes:** el repo incluye tanto `package-lock.json` (npm) como `bun.lock` (Bun). Se recomienda que el equipo defina **un solo gestor oficial** y elimine el lockfile del otro, para evitar resoluciones de dependencias distintas entre entornos de desarrollo y CI/CD (ver sección 17).
 
+### 13.2 Control de ramas y prevención de colisiones (`git branch -a`)
+
+- **Lección operativa en sesiones asistidas por IA:** Durante sesiones iterativas de desarrollo con agentes, se detectó el riesgo recurrente de nombrar ramas con identificadores previamente utilizados o genéricos. Esto causó escenarios donde commits quedaban mezclados en ramas antiguas no relacionadas o donde comandos como `git checkout -b <rama>` fallaban silenciosamente, derivando en commits accidentales directamente sobre `main` local.
+- **Regla obligatoria de flujo:** Antes de crear cualquier rama nueva en cualquiera de los repositorios del ecosistema (`Web-principal-TIDEO` o `ERP - TIDEO`), se debe ejecutar:
+  ```bash
+  git branch -a
+  ```
+  para confirmar que el nombre propuesto no exista en local ni en remoto (`origin/`), evitando colisiones de historial.
+
 ---
 
 ## 14. Despliegue e infraestructura
@@ -634,6 +666,15 @@ El punto de entrada (`src/server.ts`) es el wrapper de errores descrito en la se
 ### 14.4 Decisión pendiente
 
 El proyecto tiene **dos rutas de despliegue configuradas en paralelo** (Vercel y Cloudflare). Se recomienda que el equipo defina explícitamente cuál es la plataforma de producción activa y documente esa decisión aquí, retirando o marcando claramente como "en desuso" la configuración que no corresponda, para evitar despliegues duplicados o confusión sobre dónde vive la fuente de verdad de producción.
+
+### 14.5 Despliegue desacoplado de Supabase Edge Functions (proceso manual obligatorio)
+
+- **Lección crítica de arquitectura CI/CD:** Las Supabase Edge Functions (`supabase/functions/*`) que coexisten dentro de este repositorio **no están conectadas al pipeline automático de GitHub / Vercel**. Al fusionar un Pull Request a la rama `main`, Vercel únicamente compila y despliega el frontend y el servidor TanStack Start.
+- **Procedimiento manual requerido:** Todo cambio en el código o configuración de una Edge Function exige ejecutar manualmente desde terminal el comando de despliegue mediante Supabase CLI inmediatamente después del merge:
+  ```bash
+  supabase functions deploy <nombre-funcion> --project-ref <id-proyecto>
+  ```
+- **Caso real experimentado:** Durante la corrección del bloqueo de CORS en `submit-lead`, el código ya estaba en `main`, pero la función en producción siguió respondiendo con el código antiguo por varias horas, simulando que la corrección no funcionaba hasta que se ejecutó el despliegue explícito en Supabase.
 
 ---
 
@@ -706,6 +747,7 @@ Listado consolidado de observaciones encontradas durante el análisis del códig
 - [ ] En el **Footer**, los íconos de **LinkedIn y WhatsApp** son `<span>` (no funcionales); solo Facebook e Instagram son enlaces reales.
 - [ ] El formulario de `/contacto` muestra "Recibido. Gracias." **incluso si `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` no están configuradas** (el `fetch` simplemente no se dispara) — riesgo de perder leads silenciosamente sin que nadie lo note.
 - [ ] `send-contact-email` siempre responde `{ success: true }` al frontend aunque Resend falle internamente — un fallo de envío solo queda en logs de Supabase, no genera alerta visible.
+- [x] ~~**Falso éxito en formulario de OPERA ante caídas de red o CORS:**~~ Resuelto en `QualificationForm.tsx`. Se removió la bandera incondicional del `finally` y ahora se maneja estado de error visual explícito (`errorMessage` con `AlertCircle`).
 
 ### 17.3 Código / arquitectura
 - [ ] **Doble lockfile** (`package-lock.json` + `bun.lock`): definir un gestor de paquetes oficial único.
