@@ -1,5 +1,6 @@
-import { useState, FormEvent } from "react";
-import { AlertCircle } from "lucide-react";
+import { useState, useEffect, FormEvent } from "react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { InlineWidget } from "react-calendly";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
@@ -24,8 +25,18 @@ export function QualificationForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isQualified, setIsQualified] = useState(true);
+  const [showCalendar, setShowCalendar] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (submitted && isQualified) {
+      const timer = setTimeout(() => {
+        setShowCalendar(true);
+      }, 2400);
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, isQualified]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -106,7 +117,7 @@ export function QualificationForm() {
 
   return (
     <section id="calificacion" className="py-24 md:py-32 border-t border-hairline">
-      <div className="mx-auto max-w-3xl px-6 lg:px-10">
+      <div className={`mx-auto px-6 lg:px-10 transition-all duration-500 ${showCalendar ? "max-w-4xl" : "max-w-3xl"}`}>
         <SectionHeader
           align="center"
           eyebrow="Agendar Demo"
@@ -118,33 +129,65 @@ export function QualificationForm() {
           description="Completa estos datos para agendar una sesión estratégica donde evaluaremos si OPERA es el fit correcto para tu empresa."
         />
 
-        <div className="mt-12 bg-surface/30 p-8 rounded-2xl border border-hairline shadow-lg">
+        <div className={`mt-12 bg-surface/30 rounded-2xl border border-hairline shadow-lg transition-all duration-500 ${showCalendar ? "p-4 md:p-8" : "p-8"}`}>
           {submitted ? (
-            <div className="text-center py-10">
-              <h3 className="text-2xl font-bold mb-4">
-                {isQualified ? "¡Todo listo!" : "Gracias por tu interés"}
-              </h3>
-              <p className="text-muted-foreground mb-8">
-                {isQualified 
-                  ? "A continuación puedes agendar la fecha y hora de nuestra sesión en el calendario." 
-                  : "Nuestro equipo revisará tu información y te contactaremos pronto."}
-              </p>
-              {isQualified && (
-                <HoverBorderGradient
-                  as="button"
-                  onClick={() => {
-                    const calendlyUrl = leadId 
-                      ? `https://calendly.com/tideo/30min?salesforce_uuid=${leadId}` 
-                      : "https://calendly.com/tideo/30min";
-                    window.open(calendlyUrl, "_blank");
-                  }}
-                  containerClassName="final-cta-gradient rounded-full"
-                  className="final-cta-button inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base md:text-lg font-semibold transition"
-                >
-                  Agendar en Calendly
-                </HoverBorderGradient>
-              )}
-            </div>
+            !isQualified ? (
+              <div className="text-center py-10">
+                <h3 className="text-2xl font-bold mb-4">Gracias por tu interés</h3>
+                <p className="text-muted-foreground mb-8">
+                  Nuestro equipo revisará tu información y te contactaremos pronto.
+                </p>
+              </div>
+            ) : !showCalendar ? (
+              <div className="text-center py-12 px-4 transition-all duration-500 animate-in fade-in zoom-in-95">
+                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-primary shadow-[0_0_35px_-5px_rgba(58,206,214,0.35)]">
+                  <CheckCircle2 className="h-10 w-10 text-primary animate-pulse" />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold mb-3 text-foreground tracking-tight">
+                  ¡Perfecto! Calificas para nuestra solución
+                </h3>
+                <p className="text-muted-foreground text-base max-w-md mx-auto mb-5">
+                  Estamos preparando tu calendario personalizado para agendar la sesión estratégica...
+                </p>
+                <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs text-primary font-medium">
+                  <span className="inline-block h-2 w-2 rounded-full bg-primary animate-ping" />
+                  Abriendo agenda en tiempo real...
+                </div>
+              </div>
+            ) : (
+              <div className="py-2 transition-all duration-700 animate-in fade-in slide-in-from-bottom-4">
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-3">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> Sesión Calificada
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+                    Elige la fecha y hora de tu sesión
+                  </h3>
+                  <p className="text-muted-foreground text-sm max-w-lg mx-auto mt-2">
+                    Evaluaremos cómo OPERA se adapta a la flota y procesos de tu empresa. Tus datos ya vienen prellenados.
+                  </p>
+                </div>
+                <div className="w-full overflow-hidden rounded-2xl border border-hairline bg-[#060B14]/80 shadow-2xl">
+                  <InlineWidget
+                    url={leadId ? `https://calendly.com/tideo/30min?salesforce_uuid=${leadId}` : "https://calendly.com/tideo/30min"}
+                    styles={{ height: "700px", width: "100%" }}
+                    pageSettings={{
+                      backgroundColor: "060B14",
+                      textColor: "f7f8fa",
+                      primaryColor: "3aced6",
+                      hideGdprBanner: true,
+                    }}
+                    prefill={{
+                      name: formData.nombre,
+                      email: formData.correo,
+                    }}
+                    utm={{
+                      utmSource: "opera_landing",
+                    }}
+                  />
+                </div>
+              </div>
+            )
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
