@@ -63,7 +63,7 @@ const problems = [
 
 export function SectorProblem() {
   return (
-    <section className="py-24 md:py-32 bg-surface/30 border-t border-hairline">
+    <section id="problema" className="py-24 md:py-32 bg-surface/30 border-t border-hairline scroll-mt-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <SectionHeader
           eyebrow="El problema del sector"

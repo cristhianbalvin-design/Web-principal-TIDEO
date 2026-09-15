@@ -14,7 +14,7 @@ export function ParallaxHero() {
   });
 
   return (
-    <section ref={containerRef} className="relative h-[250vh] bg-hero">
+    <section ref={containerRef} id="hero" className="relative h-[250vh] bg-hero">
       {/* Sticky Viewport Container */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center pt-20">
         {/* Background Canvas for Scroll-Scrubbing Video */}

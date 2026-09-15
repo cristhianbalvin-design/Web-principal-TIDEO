@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export function NativeIntegration() {
   return (
-    <section className="py-24 md:py-32 border-t border-hairline bg-surface/30">
+    <section id="integracion" className="py-24 md:py-32 border-t border-hairline bg-surface/30 scroll-mt-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <SectionHeader
           eyebrow="El diferenciador"

@@ -3,6 +3,7 @@ import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { InlineWidget } from "react-calendly";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { submitLead } from "@/lib/leads";
 
 interface FormData {
   nombre: string;
@@ -16,8 +17,14 @@ interface FormData {
 }
 
 const initialForm: FormData = {
-  nombre: "", empresa: "", correo: "", telefono: "", 
-  tipo_operacion: "", herramienta_actual: "", presupuesto: "", plazo: ""
+  nombre: "",
+  empresa: "",
+  correo: "",
+  telefono: "",
+  tipo_operacion: "",
+  herramienta_actual: "",
+  presupuesto: "",
+  plazo: "",
 };
 
 export function QualificationForm() {
@@ -51,7 +58,7 @@ export function QualificationForm() {
       "Inmediato, este mes": "alta",
       "En 1-3 meses": "media",
       "En más de 3 meses": "baja",
-      "Solo estoy evaluando opciones": "solo_evaluando"
+      "Solo estoy evaluando opciones": "solo_evaluando",
     };
 
     const payload = {
@@ -63,40 +70,17 @@ export function QualificationForm() {
       industria: formData.tipo_operacion,
       urgencia: urgencyMap[formData.plazo] || "media",
       presupuesto_mayor_7000: formData.presupuesto,
-      notas: `Herramienta actual: ${formData.herramienta_actual}`
+      notas: `Herramienta actual: ${formData.herramienta_actual}`,
     };
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      
-      if (!supabaseUrl || !anonKey) {
-        throw new Error("Configuración del servidor no disponible.");
-      }
-
-      const res = await fetch(`${supabaseUrl}/functions/v1/submit-lead`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${anonKey}`
-        },
-        body: JSON.stringify(payload)
+      const result = await submitLead({
+        ...payload,
+        fuente: "opera_landing",
       });
 
-      if (!res.ok) {
-        let errorDetail = "No se pudo registrar la información.";
-        try {
-          const errJson = await res.json();
-          if (errJson.error) errorDetail = errJson.error;
-        } catch {
-          // ignore
-        }
-        throw new Error(errorDetail);
-      }
-
-      const json = await res.json();
-      if (json.data?.lead_id) {
-        setLeadId(json.data.lead_id);
+      if (result.leadId) {
+        setLeadId(result.leadId);
       }
       setSubmitted(true);
     } catch (err) {
@@ -104,7 +88,7 @@ export function QualificationForm() {
       setErrorMessage(
         err instanceof Error && err.message !== "Failed to fetch"
           ? err.message
-          : "Hubo un problema de conexión al registrar tus datos. Por favor intenta nuevamente o contáctanos directamente."
+          : "Hubo un problema de conexión al registrar tus datos. Por favor intenta nuevamente o contáctanos directamente.",
       );
     } finally {
       setLoading(false);
@@ -112,12 +96,14 @@ export function QualificationForm() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
-    <section id="calificacion" className="py-24 md:py-32 border-t border-hairline">
-      <div className={`mx-auto px-6 lg:px-10 transition-all duration-500 ${showCalendar ? "max-w-4xl" : "max-w-3xl"}`}>
+    <section id="calificacion" className="py-24 md:py-32 border-t border-hairline scroll-mt-20">
+      <div
+        className={`mx-auto px-6 lg:px-10 transition-all duration-500 ${showCalendar ? "max-w-4xl" : "max-w-3xl"}`}
+      >
         <SectionHeader
           align="center"
           eyebrow="Agendar Demo"
@@ -129,7 +115,9 @@ export function QualificationForm() {
           description="Completa estos datos para agendar una sesión estratégica donde evaluaremos si OPERA es el fit correcto para tu empresa."
         />
 
-        <div className={`mt-12 bg-surface/30 rounded-2xl border border-hairline shadow-lg transition-all duration-500 ${showCalendar ? "p-4 md:p-8" : "p-8"}`}>
+        <div
+          className={`mt-12 bg-surface/30 rounded-2xl border border-hairline shadow-lg transition-all duration-500 ${showCalendar ? "p-4 md:p-8" : "p-8"}`}
+        >
           {submitted ? (
             !isQualified ? (
               <div className="text-center py-10">
@@ -147,7 +135,8 @@ export function QualificationForm() {
                   ¡Perfecto! Calificas para nuestra solución
                 </h3>
                 <p className="text-muted-foreground text-base max-w-md mx-auto mb-5">
-                  Estamos preparando tu calendario personalizado para agendar la sesión estratégica...
+                  Estamos preparando tu calendario personalizado para agendar la sesión
+                  estratégica...
                 </p>
                 <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs text-primary font-medium">
                   <span className="inline-block h-2 w-2 rounded-full bg-primary animate-ping" />
@@ -164,12 +153,17 @@ export function QualificationForm() {
                     Elige la fecha y hora de tu sesión
                   </h3>
                   <p className="text-muted-foreground text-sm max-w-lg mx-auto mt-2">
-                    Evaluaremos cómo OPERA se adapta a la flota y procesos de tu empresa. Tus datos ya vienen prellenados.
+                    Evaluaremos cómo OPERA se adapta a la flota y procesos de tu empresa. Tus datos
+                    ya vienen prellenados.
                   </p>
                 </div>
                 <div className="w-full overflow-hidden rounded-2xl border border-hairline bg-[#060B14]/80 shadow-2xl">
                   <InlineWidget
-                    url={leadId ? `https://calendly.com/tideo/30min?salesforce_uuid=${leadId}` : "https://calendly.com/tideo/30min"}
+                    url={
+                      leadId
+                        ? `https://calendly.com/tideo/30min?salesforce_uuid=${leadId}`
+                        : "https://calendly.com/tideo/30min"
+                    }
                     styles={{ height: "700px", width: "100%" }}
                     pageSettings={{
                       backgroundColor: "060B14",
@@ -193,26 +187,63 @@ export function QualificationForm() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Nombre completo</label>
-                  <input required name="nombre" value={formData.nombre} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground" placeholder="Juan Pérez" />
+                  <input
+                    required
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                    placeholder="Juan Pérez"
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Empresa</label>
-                  <input required name="empresa" value={formData.empresa} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground" placeholder="Minería XYZ" />
+                  <input
+                    required
+                    name="empresa"
+                    value={formData.empresa}
+                    onChange={handleChange}
+                    className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                    placeholder="Minería XYZ"
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Correo de trabajo</label>
-                  <input required type="email" name="correo" value={formData.correo} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground" placeholder="juan@empresa.com" />
+                  <input
+                    required
+                    type="email"
+                    name="correo"
+                    value={formData.correo}
+                    onChange={handleChange}
+                    className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                    placeholder="juan@empresa.com"
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Teléfono / WhatsApp</label>
-                  <input required name="telefono" value={formData.telefono} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground" placeholder="+51 ..." />
+                  <input
+                    required
+                    name="telefono"
+                    value={formData.telefono}
+                    onChange={handleChange}
+                    className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                    placeholder="+51 ..."
+                  />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Tipo de operación</label>
-                <select required name="tipo_operacion" value={formData.tipo_operacion} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground">
-                  <option value="" disabled>Selecciona una opción</option>
+                <select
+                  required
+                  name="tipo_operacion"
+                  value={formData.tipo_operacion}
+                  onChange={handleChange}
+                  className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                >
+                  <option value="" disabled>
+                    Selecciona una opción
+                  </option>
                   <option value="Alquiler de maquinaria">Alquiler de maquinaria</option>
                   <option value="Taller de mantenimiento">Taller de mantenimiento</option>
                   <option value="Metalmecánica-producción">Metalmecánica-producción</option>
@@ -224,9 +255,19 @@ export function QualificationForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">¿Qué usas hoy para gestionar tu operación?</label>
-                <select required name="herramienta_actual" value={formData.herramienta_actual} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground">
-                  <option value="" disabled>Selecciona una opción</option>
+                <label className="text-sm font-medium text-foreground">
+                  ¿Qué usas hoy para gestionar tu operación?
+                </label>
+                <select
+                  required
+                  name="herramienta_actual"
+                  value={formData.herramienta_actual}
+                  onChange={handleChange}
+                  className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                >
+                  <option value="" disabled>
+                    Selecciona una opción
+                  </option>
                   <option value="Excel/WhatsApp">Excel/WhatsApp</option>
                   <option value="Sistemas separados por área">Sistemas separados por área</option>
                   <option value="Ningún sistema">Ningún sistema</option>
@@ -234,9 +275,19 @@ export function QualificationForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">¿Cuentas con un presupuesto disponible mayor a $7,000 USD para este proyecto?</label>
-                <select required name="presupuesto" value={formData.presupuesto} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground">
-                  <option value="" disabled>Selecciona una opción</option>
+                <label className="text-sm font-medium text-foreground">
+                  ¿Cuentas con un presupuesto disponible mayor a $7,000 USD para este proyecto?
+                </label>
+                <select
+                  required
+                  name="presupuesto"
+                  value={formData.presupuesto}
+                  onChange={handleChange}
+                  className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                >
+                  <option value="" disabled>
+                    Selecciona una opción
+                  </option>
                   <option value="Sí">Sí</option>
                   <option value="No">No</option>
                   <option value="Aún no lo he definido">Aún no lo he definido</option>
@@ -244,13 +295,25 @@ export function QualificationForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">¿En qué plazo piensas implementar una solución?</label>
-                <select required name="plazo" value={formData.plazo} onChange={handleChange} className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground">
-                  <option value="" disabled>Selecciona una opción</option>
+                <label className="text-sm font-medium text-foreground">
+                  ¿En qué plazo piensas implementar una solución?
+                </label>
+                <select
+                  required
+                  name="plazo"
+                  value={formData.plazo}
+                  onChange={handleChange}
+                  className="w-full bg-background border border-hairline rounded-md px-4 py-3 focus:outline-none focus:border-primary/50 text-foreground"
+                >
+                  <option value="" disabled>
+                    Selecciona una opción
+                  </option>
                   <option value="Inmediato, este mes">Inmediato, este mes</option>
                   <option value="En 1-3 meses">En 1-3 meses</option>
                   <option value="En más de 3 meses">En más de 3 meses</option>
-                  <option value="Solo estoy evaluando opciones">Solo estoy evaluando opciones</option>
+                  <option value="Solo estoy evaluando opciones">
+                    Solo estoy evaluando opciones
+                  </option>
                 </select>
               </div>
 

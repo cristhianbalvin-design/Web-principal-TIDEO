@@ -39,7 +39,7 @@ function AnimatedListItem({ children, delay }: { children: React.ReactNode; dela
 
 export function WhatIsOpera() {
   return (
-    <section className="py-24 md:py-32 border-t border-hairline">
+    <section id="que-es-opera" className="py-24 md:py-32 border-t border-hairline scroll-mt-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <SectionHeader
           eyebrow="Qué es OPERA"
