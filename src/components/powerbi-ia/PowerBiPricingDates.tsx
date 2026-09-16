@@ -159,7 +159,10 @@ export function PowerBiPricingDates() {
 
               {/* Countdown regresivo (activo solo mientras diff > 0) */}
               {!timeLeft.isExpired && (
-                <div className="mb-8 p-5 rounded-2xl bg-background/60 border border-academy/20 shadow-inner">
+                <div
+                  suppressHydrationWarning
+                  className="mb-8 p-5 rounded-2xl bg-background/60 border border-academy/20 shadow-inner"
+                >
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <div className="flex items-center gap-2 text-xs font-mono text-academy">
                       <Clock className="w-3.5 h-3.5" />
@@ -170,9 +173,15 @@ export function PowerBiPricingDates() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-4 gap-2.5 sm:gap-3 text-center">
+                  <div
+                    suppressHydrationWarning
+                    className="grid grid-cols-4 gap-2.5 sm:gap-3 text-center"
+                  >
                     <div className="p-2.5 sm:p-3 rounded-xl bg-surface/80 border border-hairline">
-                      <div className="text-xl sm:text-2xl font-bold text-foreground font-mono">
+                      <div
+                        suppressHydrationWarning
+                        className="text-xl sm:text-2xl font-bold text-foreground font-mono"
+                      >
                         {String(timeLeft.days).padStart(2, "0")}
                       </div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider mt-0.5">
@@ -180,7 +189,10 @@ export function PowerBiPricingDates() {
                       </div>
                     </div>
                     <div className="p-2.5 sm:p-3 rounded-xl bg-surface/80 border border-hairline">
-                      <div className="text-xl sm:text-2xl font-bold text-foreground font-mono">
+                      <div
+                        suppressHydrationWarning
+                        className="text-xl sm:text-2xl font-bold text-foreground font-mono"
+                      >
                         {String(timeLeft.hours).padStart(2, "0")}
                       </div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider mt-0.5">
@@ -188,7 +200,10 @@ export function PowerBiPricingDates() {
                       </div>
                     </div>
                     <div className="p-2.5 sm:p-3 rounded-xl bg-surface/80 border border-hairline">
-                      <div className="text-xl sm:text-2xl font-bold text-foreground font-mono">
+                      <div
+                        suppressHydrationWarning
+                        className="text-xl sm:text-2xl font-bold text-foreground font-mono"
+                      >
                         {String(timeLeft.minutes).padStart(2, "0")}
                       </div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider mt-0.5">
@@ -196,7 +211,10 @@ export function PowerBiPricingDates() {
                       </div>
                     </div>
                     <div className="p-2.5 sm:p-3 rounded-xl bg-surface/80 border border-hairline">
-                      <div className="text-xl sm:text-2xl font-bold text-academy font-mono">
+                      <div
+                        suppressHydrationWarning
+                        className="text-xl sm:text-2xl font-bold text-academy font-mono"
+                      >
                         {String(timeLeft.seconds).padStart(2, "0")}
                       </div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider mt-0.5">

@@ -7,6 +7,7 @@ const ALLOWED_ORIGINS = [
   "https://www.opera.tideo.tech",
   "https://powerbi-ia.tideo.tech",
   "https://www.powerbi-ia.tideo.tech",
+  "https://web-principal-tideo.vercel.app",
   "http://localhost:5173",
   "http://localhost:4173",
   "http://localhost:8080",
@@ -21,6 +22,8 @@ function getCorsHeaders(req: Request) {
   const isAllowed =
     ALLOWED_ORIGINS.includes(origin) ||
     origin.endsWith(".tideo.tech") ||
+    origin.endsWith(".vercel.app") ||
+    /^https?:\/\/.*\.vercel\.app$/.test(origin) ||
     /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
     /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin);
 
