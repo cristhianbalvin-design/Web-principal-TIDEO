@@ -16,6 +16,6 @@ export default defineConfig({
       enabled: true,
       crawlLinks: true,
     },
-    pages: [{ path: "/" }, { path: "/contacto" }, { path: "/opera" }],
+    pages: [{ path: "/" }, { path: "/contacto" }, { path: "/opera" }, { path: "/powerbi-ia" }],
   },
 });

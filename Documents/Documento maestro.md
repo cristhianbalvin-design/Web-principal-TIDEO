@@ -549,18 +549,23 @@ Esta capa es poco visible funcionalmente pero es importante para la estabilidad 
 
 Este diseño es una solución de ingeniería a un problema conocido de TanStack Start sobre Cloudflare Workers (h3 "traga" errores de servidor y los convierte en JSON genérico); vale la pena que cualquier persona que dé mantenimiento entienda que **no es código redundante**, sino un workaround intencional documentado con comentarios en el propio código fuente.
 
-### 11.1 Lección operativa: Desafío técnico con subdominios isomórficos (`opera.tideo.tech`)
+### 11.1 Lección operativa: Desafío técnico con subdominios isomórficos (`opera.tideo.tech` y `powerbi-ia.tideo.tech`)
 
-**El problema:** Se requería que la aplicación (TanStack Start) mostrara la landing de OPERA en el subdominio `opera.tideo.tech`, haciendo que servidor y cliente coincidan en la ruta a procesar para evitar desajustes, a diferencia del ERP que vive en un proyecto separado de Vercel.
+**El problema:** Se requiere que la aplicación (TanStack Start) muestre landings dedicadas según el subdominio (`opera.tideo.tech` -> `/opera`, `powerbi-ia.tideo.tech` -> `/powerbi-ia`), haciendo que servidor y cliente coincidan en la ruta a procesar para evitar que la hidratación de React devuelva al usuario a la página principal (`/`).
 
 - **Intento 1 (Descartado):** Usar `rewrites` con `has: [{ type: "host", ... }]` en `vercel.json`. Descartado por ser poco confiable (documentado por Vercel).
 - **Intento 2 (Causó incidente):** Mover la decisión a `beforeLoad` isomórfico con `getRequest()` del lado del servidor, excluyendo la ruta `/` del prerender estático para forzar SSR por solicitud. Esto rompió producción (~15 min caído) porque el proyecto no tiene el plugin `Nitro` activado, requisito de Vercel para SSR dinámico.
-- **Solución final (Exitosa):** Una combinación de dos piezas que evitan tocar el prerenderizado:
-  1. **Middleware de Edge de Vercel (`middleware.ts`)**: Reescribe la ruta a `/opera` en el borde (Edge) cuando el host es de OPERA, ignorando explícitamente recursos estáticos (JS, CSS) para no romperlos.
-  2. **Opción `rewrite` de TanStack Router**: En `src/router.tsx` se agregó una regla de `rewrite` (input/output) que replica la transformación de host a ruta durante la hidratación del cliente. Esto soluciona el `hydration mismatch` (React error #418). Requirió subir a `@tanstack/react-router ^1.170.33`.
+- **Solución final (Exitosa):** Una combinación de piezas que evitan tocar el prerenderizado:
+  1. **Middleware de Edge de Vercel (`middleware.ts`)**: Reescribe la ruta a la landing correspondiente en el borde (Edge) cuando el host coincide, ignorando explícitamente recursos estáticos (JS, CSS) para no romperlos.
+  2. **Opción `rewrite` de TanStack Router**: En `src/router.tsx` se define la regla de `rewrite` (`input` y `output`) para cada subdominio. Esto replica la transformación de host a ruta durante la hidratación del cliente y soluciona el `hydration mismatch` (React error #418) y el redireccionamiento indeseado a la raíz.
+  3. **Prerender en `vite.config.ts`**: Asegurar que la ruta esté en `tanstackStart.pages` (`[{ path: "/" }, { path: "/contacto" }, { path: "/opera" }, { path: "/powerbi-ia" }]`).
+  4. **CORS en Edge Functions**: En caso de procesar formularios/leads desde el subdominio, agregar el subdominio a `ALLOWED_ORIGINS` en `supabase/functions/submit-lead/index.ts`.
 
-> **Patrón a replicar:** Para futuros subdominios dentro de este mismo proyecto, se debe agregar el hostname a `middleware.ts` y a las reglas en `src/router.tsx`, sin necesidad de reconstruir la solución.
-> **Pruebas locales:** Para probar localmente, usar `npm run preview`, editar `C:\Windows\System32\drivers\etc\hosts` (dominio apuntando a `127.0.0.1`), y habilitar `preview.allowedHosts` en Vite. Probar en Preview deployments de Vercel vía IP no funciona si el dominio ya está registrado para producción.
+> **Patrón a replicar para futuros subdominios:**
+> 1. Agregar el hostname y el rewrite en `middleware.ts`.
+> 2. Agregar la función de host (`isXHost`) y las reglas en `rewrite.input` y `rewrite.output` de `src/router.tsx`.
+> 3. Agregar la ruta al array `pages` en `vite.config.ts`.
+> 4. Asegurar que los orígenes estén autorizados en CORS de las Supabase Functions correspondientes.
 
 ---
 

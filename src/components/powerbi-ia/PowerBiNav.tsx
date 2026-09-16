@@ -30,7 +30,7 @@ export function PowerBiNav() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-3 group">
+        <a href="#" className="flex items-center gap-3 group">
           <img
             src={isotipo}
             alt="TIDEO"
