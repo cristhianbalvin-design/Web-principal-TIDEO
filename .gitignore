@@ -14,7 +14,16 @@ dist-ssr
 .vinxi
 .tanstack/**
 .nitro
+
+# Environment variables
+.env
+.env.*
+!.env.example
 *.local
+
+# Temp and caches
+.temp/
+supabase/.temp/
 
 # Wrangler / Cloudflare
 .wrangler/

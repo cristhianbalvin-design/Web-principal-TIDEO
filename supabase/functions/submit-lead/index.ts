@@ -5,11 +5,15 @@ const ALLOWED_ORIGINS = [
   "https://tideo.tech",
   "https://opera.tideo.tech",
   "https://www.opera.tideo.tech",
+  "https://powerbi-ia.tideo.tech",
+  "https://www.powerbi-ia.tideo.tech",
   "http://localhost:5173",
   "http://localhost:4173",
+  "http://localhost:8080",
   "http://localhost:3000",
   "http://127.0.0.1:5173",
   "http://127.0.0.1:4173",
+  "http://127.0.0.1:8080",
 ];
 
 function getCorsHeaders(req: Request) {
@@ -20,7 +24,9 @@ function getCorsHeaders(req: Request) {
     /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
     /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin);
 
-  const allowedOrigin = isAllowed ? origin : (Deno.env.get("ALLOWED_ORIGIN") || "https://www.tideo.tech");
+  const allowedOrigin = isAllowed
+    ? origin
+    : Deno.env.get("ALLOWED_ORIGIN") || "https://www.tideo.tech";
 
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
@@ -30,18 +36,27 @@ function getCorsHeaders(req: Request) {
 }
 
 interface LeadPayload {
+  id_lead?: string;
   nombre?: string;
+  nombre_contacto?: string;
   empresa?: string;
+  nombre_empresa?: string;
   correo?: string;
+  email?: string;
   telefono?: string;
   cargo?: string;
   canal?: string;
+  fuente?: string;
   campaña?: string;
+  campana?: string;
+  campana_id?: string;
   notas?: string;
   lead_ref?: string;
   industria?: string;
   urgencia?: string;
   presupuesto_mayor_7000?: string;
+  tipo_documento?: string;
+  registrado_desde?: string;
 }
 
 serve(async (req) => {
@@ -81,23 +96,40 @@ serve(async (req) => {
       motivo_descarte = "presupuesto_insuficiente";
     }
 
-    // Mapeo hacia el formato que espera api-prospectos
-    const erpPayload = {
-      nombre_contacto: body.nombre,
-      nombre_empresa: body.empresa,
-      email: body.correo,
+    // Generar id_lead con el formato lead_<timestamp>_<random> si no viene en el body
+    const id_lead =
+      body.id_lead || `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+
+    const fuente = body.fuente || body.canal || "powerbi_ia_landing";
+    const campana = body.campana || body.campana_id || body.campaña || "Pendiente";
+    const tipo_documento =
+      body.tipo_documento || (body.empresa || body.nombre_empresa ? "RUC" : "DNI");
+
+    // Mapeo hacia el formato que espera api-prospectos (tenant emp_20609996464)
+    const erpPayload: Record<string, unknown> = {
+      id_lead,
+      nombre_contacto: body.nombre_contacto || body.nombre,
+      email: body.email || body.correo,
       telefono: body.telefono,
       cargo: body.cargo,
-      fuente: body.canal,
+      fuente: fuente,
+      registrado_desde: body.registrado_desde || "api",
+      tipo_documento: tipo_documento,
       notas: body.notas,
-      campana_id: body.campaña,
+      campana_id: campana,
+      campana: campana,
       industria: body.industria,
-      urgencia: body.urgencia,
+      urgencia: body.urgencia || "media",
       estado: estado,
       motivo_descarte: motivo_descarte,
     };
 
-    // Llamada al ERP
+    // Solo incluir nombre_empresa si existe (persona jurídica)
+    if (body.nombre_empresa || body.empresa) {
+      erpPayload.nombre_empresa = body.nombre_empresa || body.empresa;
+    }
+
+    // Llamada al ERP: endpoint api-prospectos
     const response = await fetch(`${ERP_SUPABASE_URL}/functions/v1/api-prospectos`, {
       method: "POST",
       headers: {

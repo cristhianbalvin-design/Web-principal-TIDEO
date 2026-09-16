@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as OperaIndexRouteImport } from './routes/opera/index'
+import { Route as PowerbiIaIndexRouteImport } from './routes/powerbi-ia/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const OperaIndexRoute = OperaIndexRouteImport.update({
   path: '/opera/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PowerbiIaIndexRoute = PowerbiIaIndexRouteImport.update({
+  id: '/powerbi-ia/',
+  path: '/powerbi-ia/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
   '/opera/': typeof OperaIndexRoute
+  '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
   '/opera': typeof OperaIndexRoute
+  '/powerbi-ia': typeof PowerbiIaIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
   '/opera/': typeof OperaIndexRoute
+  '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contacto' | '/opera/'
+  fullPaths: '/' | '/contacto' | '/opera/' | '/powerbi-ia/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contacto' | '/opera'
-  id: '__root__' | '/' | '/contacto' | '/opera/'
+  to: '/' | '/contacto' | '/opera' | '/powerbi-ia'
+  id: '__root__' | '/' | '/contacto' | '/opera/' | '/powerbi-ia/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ContactoRoute: typeof ContactoRoute
   OperaIndexRoute: typeof OperaIndexRoute
+  PowerbiIaIndexRoute: typeof PowerbiIaIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OperaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/powerbi-ia/': {
+      id: '/powerbi-ia/'
+      path: '/powerbi-ia'
+      fullPath: '/powerbi-ia/'
+      preLoaderRoute: typeof PowerbiIaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ContactoRoute: ContactoRoute,
   OperaIndexRoute: OperaIndexRoute,
+  PowerbiIaIndexRoute: PowerbiIaIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
