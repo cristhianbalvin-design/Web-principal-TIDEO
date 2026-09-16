@@ -25,24 +25,32 @@ export const Route = createFileRoute("/powerbi-ia/")({
   component: PowerBiIaLanding,
   head: () => ({
     meta: [
-      { title: "Power BI con Inteligencia Artificial | TIDEO Academy" },
+      { title: "Power BI + IA Agéntica — Del Asistente al Operador | TIDEO Academy" },
       {
         name: "description",
         content:
-          "12 horas para transformar tu forma de trabajar con Power BI utilizando ChatGPT, Claude, Gemini y Google Antigravity como asistentes, coworkers y operadores.",
+          "12 horas para dominar Power BI + IA Agéntica (Del Asistente al Operador). Aprende a construir dashboards utilizando ChatGPT, Claude, Gemini y Google Antigravity.",
       },
-      { property: "og:title", content: "Power BI con Inteligencia Artificial | TIDEO Academy" },
+      {
+        property: "og:title",
+        content: "Power BI + IA Agéntica — Del Asistente al Operador | TIDEO Academy",
+      },
       {
         property: "og:description",
-        content: "Ya sabes Power BI. Ahora aprende a construir dashboards con IA.",
+        content:
+          "Ya sabes Power BI. Ahora aprende a construir dashboards con IA Agéntica: del asistente al operador.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Power BI con Inteligencia Artificial | TIDEO Academy" },
+      {
+        name: "twitter:title",
+        content: "Power BI + IA Agéntica — Del Asistente al Operador | TIDEO Academy",
+      },
       {
         name: "twitter:description",
-        content: "Ya sabes Power BI. Ahora aprende a construir dashboards con IA.",
+        content:
+          "Ya sabes Power BI. Ahora aprende a construir dashboards con IA Agéntica: del asistente al operador.",
       },
       { name: "theme-color", content: "#060B14" },
     ],

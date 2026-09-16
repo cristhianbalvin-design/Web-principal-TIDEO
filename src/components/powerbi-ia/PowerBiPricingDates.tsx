@@ -102,7 +102,7 @@ export function PowerBiPricingDates() {
               <span className="font-serif-italic text-academy">tu primer dashboard</span>.
             </>
           }
-          description="Edición intensiva en vivo diseñada para profesionales que ya usan Power BI y necesitan multiplicar su velocidad de entrega con inteligencia artificial."
+          description="Edición intensiva en vivo de Power BI + IA Agéntica diseñada para profesionales que ya usan Power BI y buscan pasar de tareas manuales a operar con agentes inteligentes."
         />
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">

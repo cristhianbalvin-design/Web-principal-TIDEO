@@ -26,7 +26,7 @@ export function PowerBiDifferentialTable() {
           title={
             <>
               Power BI tradicional vs.{" "}
-              <span className="font-serif-italic text-academy">Power BI + IA</span>.
+              <span className="font-serif-italic text-academy">Power BI + IA Agéntica</span>.
             </>
           }
           description="La diferencia no es saber más fórmulas de memoria, sino saber dirigir a la Inteligencia Artificial con criterio analítico para multiplicar tu productividad."
@@ -41,7 +41,7 @@ export function PowerBiDifferentialTable() {
             </div>
             <div className="p-5 pl-8 bg-academy/[0.08] text-academy font-semibold flex items-center gap-2 border-l border-hairline">
               <span className="w-2 h-2 rounded-full bg-academy animate-pulse" />
-              Power BI + Inteligencia Artificial
+              Power BI + IA Agéntica
             </div>
           </div>
 

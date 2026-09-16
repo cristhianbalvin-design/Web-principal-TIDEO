@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const WA_URL =
-  "https://wa.me/51919102556?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20del%20curso%20Power%20BI%20con%20Inteligencia%20Artificial%20%F0%9F%9A%80";
+  "https://wa.me/51919102556?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20del%20curso%20Power%20BI%20%2B%20IA%20Ag%C3%A9ntica%20%F0%9F%9A%80";
 
 export function PowerBiFloatingWhatsApp() {
   const [isHovered, setIsHovered] = useState(false);
@@ -31,7 +31,7 @@ export function PowerBiFloatingWhatsApp() {
         rel="noopener noreferrer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        aria-label="Abrir chat de WhatsApp para consultar sobre el curso Power BI con IA"
+        aria-label="Abrir chat de WhatsApp para consultar sobre el curso Power BI + IA Agéntica"
         className="relative group flex items-center justify-center h-14 w-14 rounded-full bg-[#25D366] text-white shadow-[0_4px_25px_rgba(37,211,102,0.45)] hover:shadow-[0_6px_35px_rgba(37,211,102,0.65)] hover:scale-110 active:scale-95 transition-all duration-300"
       >
         {/* Glow pulse ring */}

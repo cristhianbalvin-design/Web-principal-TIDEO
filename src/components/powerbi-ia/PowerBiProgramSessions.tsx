@@ -15,7 +15,7 @@ const sessions: SessionItem[] = [
   {
     number: "01",
     duration: "Sesión 1 · 3 horas",
-    title: "Del Power BI tradicional al Power BI con IA",
+    title: "Del Power BI tradicional a Power BI + IA Agéntica",
     summary: "Cambio de rol: de operador mecánico a director de inteligencia analítica.",
     bullets: [
       "Configuración y ecosistema del stack: ChatGPT, Claude, Gemini y Google Antigravity.",

@@ -106,8 +106,8 @@ export function PowerBiTargetAudience() {
               </h3>
 
               <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                Este es un curso de actualización y aceleración con Inteligencia Artificial. No
-                invertiremos tiempo explicando qué es una tabla o cómo instalar el software.
+                Este es un curso de especialización y aceleración con IA Agéntica. No invertiremos
+                tiempo explicando qué es una tabla o cómo instalar el software.
               </p>
 
               <ul className="mt-6 space-y-3.5 text-sm text-muted-foreground/90">

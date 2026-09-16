@@ -27,11 +27,13 @@ export function PowerBiHero() {
 
           {/* Main Title */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight leading-[1.08] text-gradient">
-            Ya sabes Power BI. Ahora aprende a construir{" "}
+            Power BI + IA{" "}
             <span className="font-serif-italic text-academy underline decoration-academy/40 underline-offset-8">
-              dashboards con IA
+              Agéntica
             </span>
-            .
+            <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl font-medium text-foreground/90 tracking-tight">
+              Del Asistente al Operador
+            </span>
           </h1>
 
           {/* Subheadline */}
@@ -66,7 +68,7 @@ export function PowerBiHero() {
               href="#inscripcion"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-academy px-8 py-4 text-base font-semibold text-background hover:bg-academy/90 transition-all duration-200 shadow-[0_0_30px_-6px_rgba(249,115,22,0.6)] hover:shadow-[0_0_40px_-4px_rgba(249,115,22,0.8)]"
             >
-              Quiero actualizarme en Power BI + IA
+              Quiero dominar Power BI + IA Agéntica
               <ArrowRight className="w-4 h-4" />
             </a>
             <a

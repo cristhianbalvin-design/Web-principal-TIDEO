@@ -31,7 +31,7 @@ export function PowerBiInstructor() {
               <div className="relative w-full max-w-[260px] sm:max-w-[280px] aspect-[3/4] rounded-2xl overflow-hidden border border-academy/40 bg-[#060B14] shadow-[0_0_40px_-10px_rgba(249,115,22,0.3)] group">
                 <img
                   src={instructorPhoto}
-                  alt="Cristhian Balvin - Instructor de Power BI con Inteligencia Artificial"
+                  alt="Cristhian Balvin - Instructor de Power BI + IA Agéntica"
                   className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
                 />

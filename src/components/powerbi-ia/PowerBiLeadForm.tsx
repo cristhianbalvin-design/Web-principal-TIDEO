@@ -4,7 +4,7 @@ import { SectionHeader } from "@/components/site/SectionHeader";
 import { submitLead } from "@/lib/leads";
 
 const WA_URL =
-  "https://wa.me/51919102556?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20del%20curso%20Power%20BI%20con%20Inteligencia%20Artificial%20%F0%9F%9A%80";
+  "https://wa.me/51919102556?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20del%20curso%20Power%20BI%20%2B%20IA%20Ag%C3%A9ntica%20%F0%9F%9A%80";
 
 interface LeadData {
   nombre: string;
@@ -67,7 +67,7 @@ export function PowerBiLeadForm() {
     const expText = hasBase ? "Sí, tiene base en Power BI" : "No, parto de cero";
 
     const notas = [
-      `Curso: Power BI con Inteligencia Artificial (12h)`,
+      `Curso: Power BI + IA Agéntica (12h)`,
       expText,
       `Origen: powerbi-ia.tideo.tech`,
     ].join(" | ");
@@ -137,10 +137,8 @@ export function PowerBiLeadForm() {
 
                   <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-md mx-auto mb-6">
                     Hemos recibido tu solicitud para el curso{" "}
-                    <strong className="text-foreground">
-                      Power BI con Inteligencia Artificial
-                    </strong>
-                    . Se ha abierto WhatsApp en una pestaña paralela para coordinar tu acceso.
+                    <strong className="text-foreground">Power BI + IA Agéntica</strong>. Se ha
+                    abierto WhatsApp en una pestaña paralela para coordinar tu acceso.
                   </p>
 
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-hairline text-xs font-mono text-muted-foreground">
@@ -166,11 +164,8 @@ export function PowerBiLeadForm() {
 
                   <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-md mx-auto mb-6">
                     Hemos guardado tus datos para el curso{" "}
-                    <strong className="text-foreground">
-                      Power BI con Inteligencia Artificial
-                    </strong>
-                    . Abrimos una ventana de WhatsApp para entregarte el temario detallado y
-                    coordinar tu cupo.
+                    <strong className="text-foreground">Power BI + IA Agéntica</strong>. Abrimos una
+                    ventana de WhatsApp para entregarte el temario detallado y coordinar tu cupo.
                   </p>
 
                   {/* Botón grande de WhatsApp como fallback garantizado */}
@@ -350,7 +345,7 @@ export function PowerBiLeadForm() {
                   <>
                     <span>
                       {formData.experiencia_previa === "si"
-                        ? "Quiero actualizarme en Power BI + IA"
+                        ? "Quiero dominar Power BI + IA Agéntica"
                         : "Notificarme cuando haya curso básico"}
                     </span>
                     <ArrowRight className="w-4 h-4" />

@@ -41,6 +41,9 @@ export function PowerBiNav() {
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium tracking-wide uppercase bg-academy/15 text-academy border border-academy/30">
               Academy
             </span>
+            <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono text-muted-foreground border border-hairline/80 bg-surface/40">
+              Power BI + IA Agéntica
+            </span>
           </span>
         </a>
 
