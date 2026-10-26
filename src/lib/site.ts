@@ -17,6 +17,11 @@ export const ORG = {
   sameAs: ["https://www.facebook.com/tideomarketing", "https://www.instagram.com/tideo.marketing/"],
 } as const;
 
+/** Chat de WhatsApp con mensaje inicial (botón flotante de la home). */
+export const WHATSAPP_URL = `https://wa.me/${ORG.telephone.replace(/\D/g, "")}?text=${encodeURIComponent(
+  "Hola TIDEO, quiero contarles un proceso de mi empresa que me gustaría mejorar.",
+)}`;
+
 /** URL absoluta para una ruta del sitio principal (www). */
 export function canonicalUrl(path: string): string {
   if (path === "/" || path === "") return `${SITE_URL}/`;

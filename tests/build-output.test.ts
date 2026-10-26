@@ -42,6 +42,14 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(html).toContain('property="og:title" content="TIDEO Tech &amp; Strategy | ERP a medida');
   });
 
+  it("el botón flotante de WhatsApp de la home abre el chat con el número de TIDEO", () => {
+    const html = page("index.html");
+    const link = html.match(/<a[^>]*aria-label="Escríbenos por WhatsApp"[^>]*>/)?.[0] ?? "";
+    expect(link).toContain('href="https://wa.me/51919102556?text=');
+    expect(link).toContain('target="_blank"');
+    expect(link).toContain('rel="noopener noreferrer"');
+  });
+
   it("la home tiene JSON-LD Organization con contactPoint y address", () => {
     const org = jsonLd(page("index.html")).find((d) => d["@type"] === "Organization");
     expect(org).toBeDefined();
