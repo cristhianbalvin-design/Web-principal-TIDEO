@@ -57,6 +57,8 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(link).toContain('rel="noopener noreferrer"');
     const org = jsonLd(html).find((d) => d["@type"] === "Organization");
     expect(org.sameAs).toContain("https://www.linkedin.com/company/tideo-tech-strategy/");
+    expect(org.sameAs).toContain("https://maps.google.com/?cid=11732253999648614933");
+    expect(org.hasMap).toBe("https://maps.google.com/?cid=11732253999648614933");
   });
 
   it("la home tiene JSON-LD Organization con contactPoint y address", () => {

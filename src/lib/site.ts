@@ -15,8 +15,11 @@ export const ORG = {
   description:
     "TIDEO diseña, automatiza y construye soluciones digitales para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología, IA y desarrollo ágil.",
   linkedin: "https://www.linkedin.com/company/tideo-tech-strategy/",
+  /** Perfil de Empresa en Google (Maps), por su identificador permanente (CID). */
+  googleBusiness: "https://maps.google.com/?cid=11732253999648614933",
   sameAs: [
     "https://www.linkedin.com/company/tideo-tech-strategy/",
+    "https://maps.google.com/?cid=11732253999648614933",
     "https://www.facebook.com/tideomarketing",
     "https://www.instagram.com/tideo.marketing/",
   ],
@@ -67,6 +70,7 @@ export const organizationJsonLd = {
     },
   ],
   areaServed: { "@type": "Place", name: "Latinoamérica" },
+  hasMap: ORG.googleBusiness,
   sameAs: [...ORG.sameAs],
 } as const;
 
