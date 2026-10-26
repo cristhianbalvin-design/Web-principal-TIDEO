@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import tideoLogoVertical from "@/assets/tideo-logo-vertical.png";
+import { ORG } from "@/lib/site";
 
 export function Footer() {
   return (
@@ -93,8 +94,11 @@ export function Footer() {
                 <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
               </svg>
             </a>
-            <span
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background cursor-default"
+            <a
+              href={ORG.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"
               aria-label="LinkedIn"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -102,7 +106,7 @@ export function Footer() {
                 <rect width="4" height="12" x="2" y="9" />
                 <circle cx="4" cy="4" r="2" />
               </svg>
-            </span>
+            </a>
             <span
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background cursor-default"
               aria-label="WhatsApp"

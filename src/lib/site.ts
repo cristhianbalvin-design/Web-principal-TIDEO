@@ -14,7 +14,12 @@ export const ORG = {
   country: "PE",
   description:
     "TIDEO diseña, automatiza y construye soluciones digitales para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología, IA y desarrollo ágil.",
-  sameAs: ["https://www.facebook.com/tideomarketing", "https://www.instagram.com/tideo.marketing/"],
+  linkedin: "https://www.linkedin.com/company/tideo-tech-strategy/",
+  sameAs: [
+    "https://www.linkedin.com/company/tideo-tech-strategy/",
+    "https://www.facebook.com/tideomarketing",
+    "https://www.instagram.com/tideo.marketing/",
+  ],
 } as const;
 
 /** Chat de WhatsApp con mensaje inicial (botón flotante de la home). */

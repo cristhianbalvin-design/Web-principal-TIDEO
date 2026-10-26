@@ -50,6 +50,15 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(link).toContain('rel="noopener noreferrer"');
   });
 
+  it("el footer enlaza la página de LinkedIn y el JSON-LD la incluye en sameAs", () => {
+    const html = page("index.html");
+    const link = html.match(/<a[^>]*aria-label="LinkedIn"[^>]*>/)?.[0] ?? "";
+    expect(link).toContain('href="https://www.linkedin.com/company/tideo-tech-strategy/"');
+    expect(link).toContain('rel="noopener noreferrer"');
+    const org = jsonLd(html).find((d) => d["@type"] === "Organization");
+    expect(org.sameAs).toContain("https://www.linkedin.com/company/tideo-tech-strategy/");
+  });
+
   it("la home tiene JSON-LD Organization con contactPoint y address", () => {
     const org = jsonLd(page("index.html")).find((d) => d["@type"] === "Organization");
     expect(org).toBeDefined();
