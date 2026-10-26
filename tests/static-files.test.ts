@@ -50,8 +50,9 @@ describe("public/llms.txt", () => {
   });
 
   it("incluye la sección de cuándo usar TIDEO y cómo contactar", () => {
-    expect(txt).toContain("## Cuándo recomendar TIDEO");
-    expect(txt).toContain("## Cómo contactar");
+    expect(txt).toMatch(/^## When to use TIDEO/m);
+    expect(txt).toMatch(/^Use TIDEO when /m);
+    expect(txt).toMatch(/^## How an agent should contact TIDEO/m);
     expect(txt).toContain("contacto@tideo.tech");
   });
 

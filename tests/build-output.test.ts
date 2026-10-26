@@ -36,6 +36,12 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(html).toContain('property="og:type" content="website"');
   });
 
+  it("el título de la home nombra el producto principal (ERP a medida)", () => {
+    const html = page("index.html");
+    expect(html).toMatch(/<title>TIDEO[^<]*ERP a medida[^<]*<\/title>/);
+    expect(html).toContain('property="og:title" content="TIDEO Tech &amp; Strategy | ERP a medida');
+  });
+
   it("la home tiene JSON-LD Organization con contactPoint y address", () => {
     const org = jsonLd(page("index.html")).find((d) => d["@type"] === "Organization");
     expect(org).toBeDefined();

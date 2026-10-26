@@ -25,13 +25,16 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "TIDEO Tech & Strategy | Tecnología que entiende tu negocio" },
+      { title: "TIDEO Tech & Strategy | ERP a medida, automatización e IA para empresas" },
       {
         name: "description",
         content:
-          "TIDEO diseña, automatiza y construye soluciones digitales para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología, IA y desarrollo ágil.",
+          "TIDEO desarrolla ERP a medida, CRM, automatizaciones y soluciones con IA para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología y desarrollo ágil.",
       },
-      { property: "og:title", content: "TIDEO Tech & Strategy" },
+      {
+        property: "og:title",
+        content: "TIDEO Tech & Strategy | ERP a medida, automatización e IA",
+      },
       {
         property: "og:description",
         content: "Tecnología que entiende tu negocio. Procesos, datos e IA para empresas medianas.",
