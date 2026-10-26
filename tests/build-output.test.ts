@@ -70,10 +70,23 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     },
   );
 
+  it("ninguna página normal lleva la marca de 404", () => {
+    for (const f of [
+      "index.html",
+      "contacto/index.html",
+      "nosotros/index.html",
+      "privacidad/index.html",
+    ]) {
+      expect(page(f)).not.toContain('name="tideo:page"');
+    }
+  });
+
   it("existe 404.html en la raíz, en español y con noindex", () => {
     const html = page("404.html");
     expect(html).toContain("Página no encontrada");
     expect(html).toContain('name="robots" content="noindex"');
+    // Marca que el router usa para hidratar 404.html en cualquier URL sin error #418.
+    expect(html).toContain('<meta name="tideo:page" content="not-found"');
     expect(existsSync(new URL("404/index.html", dist))).toBe(false);
   });
 

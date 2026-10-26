@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
+import { createNotFoundRewrite, detectServedNotFoundPath } from "./lib/not-found-rewrite";
 
 const isOperaHost = (hostname: string) =>
   hostname === 'opera.tideo.tech' || hostname === 'www.opera.tideo.tech';
@@ -10,6 +11,10 @@ const isPowerBiHost = (hostname: string) =>
 
 export const getRouter = () => {
   const queryClient = new QueryClient();
+  // Solo en el navegador: si esta carga es 404.html, hidratar como la ruta /404.
+  const notFound = createNotFoundRewrite(
+    detectServedNotFoundPath(typeof document !== "undefined" ? document : undefined),
+  );
 
   const router = createRouter({
     routeTree,
@@ -18,6 +23,7 @@ export const getRouter = () => {
     defaultPreloadStaleTime: 0,
     rewrite: {
       input: ({ url }) => {
+        if (notFound.input(url)) return url;
         if (isOperaHost(url.hostname) && !url.pathname.startsWith('/opera')) {
           url.pathname = url.pathname === '/' ? '/opera' : `/opera${url.pathname}`;
         }
@@ -27,6 +33,7 @@ export const getRouter = () => {
         return url;
       },
       output: ({ url }) => {
+        if (notFound.output(url)) return url;
         if (isOperaHost(url.hostname) && url.pathname.startsWith('/opera')) {
           url.pathname = url.pathname.replace(/^\/opera/, '') || '/';
         }
