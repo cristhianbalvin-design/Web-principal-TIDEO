@@ -42,6 +42,11 @@ export function Footer() {
               </a>
             </li>
             <li>
+              <Link to="/nosotros" className="hover:text-primary transition-colors">
+                Nosotros
+              </Link>
+            </li>
+            <li>
               <Link to="/contacto" className="hover:text-primary transition-colors">
                 Contacto
               </Link>
@@ -53,11 +58,8 @@ export function Footer() {
           <h4 className="text-xs uppercase tracking-widest text-muted-foreground">Contacto</h4>
           <ul className="mt-4 space-y-2 text-sm">
             <li>
-              <a
-                href="mailto:cristhian@cristhianbalvin.com"
-                className="hover:text-primary transition-colors"
-              >
-                cristhian@cristhianbalvin.com
+              <a href="mailto:contacto@tideo.tech" className="hover:text-primary transition-colors">
+                contacto@tideo.tech
               </a>
             </li>
             <li>
@@ -115,7 +117,12 @@ export function Footer() {
       <div className="border-t border-hairline">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-6 flex flex-col sm:flex-row gap-3 items-center justify-between text-xs text-muted-foreground">
           <span>© 2026 TIDEO Tech & Strategy. Todos los derechos reservados.</span>
-          <span>Lima · Perú</span>
+          <span className="flex items-center gap-4">
+            <Link to="/privacidad" className="hover:text-primary transition-colors">
+              Política de privacidad
+            </Link>
+            <span>Lima · Perú</span>
+          </span>
         </div>
       </div>
     </footer>

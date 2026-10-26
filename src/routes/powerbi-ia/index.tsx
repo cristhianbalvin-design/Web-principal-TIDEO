@@ -41,7 +41,7 @@ export const Route = createFileRoute("/powerbi-ia/")({
           "Ya sabes Power BI. Ahora aprende a construir dashboards con IA Agéntica: del asistente al operador.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/og-image.png" },
+      { property: "og:image", content: "https://www.tideo.tech/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
@@ -54,6 +54,8 @@ export const Route = createFileRoute("/powerbi-ia/")({
       },
       { name: "theme-color", content: "#060B14" },
     ],
+    // La landing vive en su subdominio; /powerbi-ia en www es la misma página.
+    links: [{ rel: "canonical", href: "https://powerbi-ia.tideo.tech/" }],
   }),
 });
 

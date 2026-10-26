@@ -23,6 +23,8 @@ export const Route = createFileRoute("/opera/")({
         content: "OPERA es la plataforma que une el ERP y la operación de activos intensivos. Diseñada para alquiler de maquinaria, talleres y servicios en campo.",
       },
     ],
+    // La landing vive en su subdominio; /opera en www es la misma página.
+    links: [{ rel: "canonical", href: "https://opera.tideo.tech/" }],
   }),
 });
 

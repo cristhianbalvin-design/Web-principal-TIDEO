@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { canonicalLink, canonicalUrl } from "@/lib/site";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/contacto")({
           "Cuéntanos qué proceso quieres transformar. Auditoría gratuita y conversación estratégica con TIDEO.",
       },
     ],
+    links: [canonicalLink(canonicalUrl("/contacto"))],
   }),
 });
 

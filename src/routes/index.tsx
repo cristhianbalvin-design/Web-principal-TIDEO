@@ -13,6 +13,13 @@ import { Differential } from "@/components/site/Differential";
 import { Insights } from "@/components/site/Insights";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { DiagnosticModal } from "@/components/diagnostic/DiagnosticModal";
+import {
+  canonicalLink,
+  canonicalUrl,
+  jsonLdScript,
+  organizationJsonLd,
+  websiteJsonLd,
+} from "@/lib/site";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -29,7 +36,10 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Tecnología que entiende tu negocio. Procesos, datos e IA para empresas medianas.",
       },
+      { property: "og:url", content: canonicalUrl("/") },
     ],
+    links: [canonicalLink(canonicalUrl("/"))],
+    scripts: [jsonLdScript(organizationJsonLd), jsonLdScript(websiteJsonLd)],
   }),
 });
 

@@ -16,6 +16,16 @@ export default defineConfig({
       enabled: true,
       crawlLinks: true,
     },
-    pages: [{ path: "/" }, { path: "/contacto" }, { path: "/opera" }, { path: "/powerbi-ia" }],
+    pages: [
+      { path: "/" },
+      { path: "/contacto" },
+      { path: "/nosotros" },
+      { path: "/privacidad" },
+      { path: "/opera" },
+      { path: "/powerbi-ia" },
+      // Se escribe como dist/client/404.html: Vercel lo sirve con estado 404
+      // para cualquier ruta que no exista.
+      { path: "/404", prerender: { outputPath: "/404", autoSubfolderIndex: false } },
+    ],
   },
 });

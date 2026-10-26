@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as R404RouteImport } from './routes/404'
 import { Route as ContactoRouteImport } from './routes/contacto'
+import { Route as NosotrosRouteImport } from './routes/nosotros'
+import { Route as PrivacidadRouteImport } from './routes/privacidad'
 import { Route as OperaIndexRouteImport } from './routes/opera/index'
 import { Route as PowerbiIaIndexRouteImport } from './routes/powerbi-ia/index'
 
@@ -19,9 +22,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const R404Route = R404RouteImport.update({
+  id: '/404',
+  path: '/404',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactoRoute = ContactoRouteImport.update({
   id: '/contacto',
   path: '/contacto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NosotrosRoute = NosotrosRouteImport.update({
+  id: '/nosotros',
+  path: '/nosotros',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadRoute = PrivacidadRouteImport.update({
+  id: '/privacidad',
+  path: '/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OperaIndexRoute = OperaIndexRouteImport.update({
@@ -37,34 +55,68 @@ const PowerbiIaIndexRoute = PowerbiIaIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/contacto': typeof ContactoRoute
+  '/nosotros': typeof NosotrosRoute
+  '/privacidad': typeof PrivacidadRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/contacto': typeof ContactoRoute
+  '/nosotros': typeof NosotrosRoute
+  '/privacidad': typeof PrivacidadRoute
   '/opera': typeof OperaIndexRoute
   '/powerbi-ia': typeof PowerbiIaIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/contacto': typeof ContactoRoute
+  '/nosotros': typeof NosotrosRoute
+  '/privacidad': typeof PrivacidadRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contacto' | '/opera/' | '/powerbi-ia/'
+  fullPaths:
+    | '/'
+    | '/404'
+    | '/contacto'
+    | '/nosotros'
+    | '/privacidad'
+    | '/opera/'
+    | '/powerbi-ia/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contacto' | '/opera' | '/powerbi-ia'
-  id: '__root__' | '/' | '/contacto' | '/opera/' | '/powerbi-ia/'
+  to:
+    | '/'
+    | '/404'
+    | '/contacto'
+    | '/nosotros'
+    | '/privacidad'
+    | '/opera'
+    | '/powerbi-ia'
+  id:
+    | '__root__'
+    | '/'
+    | '/404'
+    | '/contacto'
+    | '/nosotros'
+    | '/privacidad'
+    | '/opera/'
+    | '/powerbi-ia/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  R404Route: typeof R404Route
   ContactoRoute: typeof ContactoRoute
+  NosotrosRoute: typeof NosotrosRoute
+  PrivacidadRoute: typeof PrivacidadRoute
   OperaIndexRoute: typeof OperaIndexRoute
   PowerbiIaIndexRoute: typeof PowerbiIaIndexRoute
 }
@@ -78,11 +130,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contacto': {
       id: '/contacto'
       path: '/contacto'
       fullPath: '/contacto'
       preLoaderRoute: typeof ContactoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nosotros': {
+      id: '/nosotros'
+      path: '/nosotros'
+      fullPath: '/nosotros'
+      preLoaderRoute: typeof NosotrosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidad': {
+      id: '/privacidad'
+      path: '/privacidad'
+      fullPath: '/privacidad'
+      preLoaderRoute: typeof PrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/opera/': {
@@ -104,7 +177,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  R404Route: R404Route,
   ContactoRoute: ContactoRoute,
+  NosotrosRoute: NosotrosRoute,
+  PrivacidadRoute: PrivacidadRoute,
   OperaIndexRoute: OperaIndexRoute,
   PowerbiIaIndexRoute: PowerbiIaIndexRoute,
 }

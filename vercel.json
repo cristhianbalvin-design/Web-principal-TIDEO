@@ -1,10 +1,14 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/client",
-  "rewrites": [
+  "redirects": [
+    { "source": "/about", "destination": "/nosotros", "permanent": true },
+    { "source": "/privacy", "destination": "/privacidad", "permanent": true }
+  ],
+  "headers": [
     {
-      "source": "/:path*",
-      "destination": "/index.html"
+      "source": "/llms.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
     }
   ]
 }
