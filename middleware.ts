@@ -51,13 +51,20 @@ export default function middleware(request: Request) {
   }
 
   if (!isStaticAsset(url.pathname)) {
+    // En el subdominio, /opera/… (o /powerbi-ia/…) es la misma página que su URL limpia:
+    // redirigir evita URLs duplicadas (p. ej. opera.tideo.tech/opera/metalmecanica).
+    if (landing && (url.pathname === landing || url.pathname.startsWith(`${landing}/`))) {
+      const clean = url.pathname.slice(landing.length) || "/";
+      return Response.redirect(new URL(clean + url.search, request.url), 308);
+    }
+
     // Ruta efectiva tras el mapeo de subdominio (mismo criterio que el rewrite de abajo).
-    const effectivePath =
-      landing && !url.pathname.startsWith(landing)
-        ? url.pathname === "/"
-          ? landing
-          : `${landing}${url.pathname}`
-        : url.pathname;
+    // (Las rutas bajo el prefijo ya se redirigieron arriba.)
+    const effectivePath = landing
+      ? url.pathname === "/"
+        ? landing
+        : `${landing}${url.pathname}`
+      : url.pathname;
 
     if (prefersMarkdown(request.headers.get("accept"))) {
       if (normalizePath(effectivePath) === "/") return markdown(HOME_MARKDOWN, 200);

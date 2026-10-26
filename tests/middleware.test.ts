@@ -115,11 +115,42 @@ describe("subdominios (comportamiento existente)", () => {
     expect(rewriteTarget(res)).toBe("https://opera.tideo.tech/opera?utm_source=x");
   });
 
-  it("no reescribe rutas que ya empiezan con la landing ni assets", () => {
-    expect(isPassThrough(middleware(req("/opera", BROWSER_ACCEPT, "opera.tideo.tech")))).toBe(true);
-    expect(isPassThrough(middleware(req("/assets/a.js", BROWSER_ACCEPT, "opera.tideo.tech")))).toBe(
-      true,
+  it("en el subdominio, /opera/… redirige con 308 a la URL limpia", () => {
+    for (const [host, path, target] of [
+      ["opera.tideo.tech", "/opera", "https://opera.tideo.tech/"],
+      ["opera.tideo.tech", "/opera/", "https://opera.tideo.tech/"],
+      [
+        "opera.tideo.tech",
+        "/opera/metalmecanica?utm_source=x",
+        "https://opera.tideo.tech/metalmecanica?utm_source=x",
+      ],
+      ["powerbi-ia.tideo.tech", "/powerbi-ia", "https://powerbi-ia.tideo.tech/"],
+    ]) {
+      for (const accept of [BROWSER_ACCEPT, "text/markdown"]) {
+        const res = middleware(req(path, accept, host));
+        expect(res.status).toBe(308);
+        expect(res.headers.get("location")).toBe(target);
+      }
+    }
+  });
+
+  it("no toca assets ni rutas que solo se parecen al prefijo", () => {
+    for (const path of [
+      "/assets/a.js",
+      "/opera-frames/frame_001.webp",
+      "/1971c59e957ba112b91b726a8a2c7d28.txt",
+    ]) {
+      expect(isPassThrough(middleware(req(path, BROWSER_ACCEPT, "opera.tideo.tech")))).toBe(true);
+    }
+    // /operaciones no es /opera/…: se reescribe como cualquier otra ruta del subdominio.
+    expect(rewriteTarget(middleware(req("/operaciones", BROWSER_ACCEPT, "opera.tideo.tech")))).toBe(
+      "https://opera.tideo.tech/opera/operaciones",
     );
+  });
+
+  it("en www, /opera sigue sirviéndose sin redirección", () => {
+    expect(isPassThrough(middleware(req("/opera", BROWSER_ACCEPT)))).toBe(true);
+    expect(isPassThrough(middleware(req("/opera/metalmecanica", BROWSER_ACCEPT)))).toBe(true);
   });
 
   it("OPERA responde en Markdown en su subdominio y en /opera", async () => {

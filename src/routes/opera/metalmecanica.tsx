@@ -17,7 +17,8 @@ import { QualificationForm } from "@/components/opera/QualificationForm";
 import { Footer } from "@/components/site/Footer";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { METALMECANICA_URL, metalmecanica, metalmecanicaJsonLd } from "@/lib/metalmecanica-content";
-import { jsonLdScript } from "@/lib/site";
+import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
+import { jsonLdScript, whatsappUrl } from "@/lib/site";
 
 const navLinks = [
   { href: "#para-quien", label: "Para quién" },
@@ -79,6 +80,11 @@ function OperaMetalmecanica() {
         </TracingBeam>
       </main>
       <Footer />
+      <WhatsAppFloat
+        href={whatsappUrl(
+          "Hola TIDEO, tengo un taller metalmecánico y quiero información sobre OPERA.",
+        )}
+      />
     </div>
   );
 }

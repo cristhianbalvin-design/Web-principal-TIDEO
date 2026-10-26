@@ -12,7 +12,8 @@ import { QualificationForm } from "@/components/opera/QualificationForm";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { OperaNav } from "@/components/opera/OperaNav";
 import { Footer } from "@/components/site/Footer";
-import { OPERA_URL, jsonLdScript, operaJsonLd } from "@/lib/site";
+import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
+import { OPERA_URL, jsonLdScript, operaJsonLd, whatsappUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/opera/")({
   component: OperaLanding,
@@ -55,6 +56,9 @@ function OperaLanding() {
         </TracingBeam>
       </main>
       <Footer />
+      <WhatsAppFloat
+        href={whatsappUrl("Hola TIDEO, quiero información sobre OPERA, el ERP para mi operación.")}
+      />
     </div>
   );
 }

@@ -139,6 +139,17 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(html).not.toMatch(/factura electrónica/i);
   });
 
+  it.each([
+    ["opera/index.html", "OPERA"],
+    ["opera/metalmecanica/index.html", "taller metalmec"],
+    ["index.html", "proceso de mi empresa"],
+  ])("%s tiene el botón flotante de WhatsApp con su mensaje", (file, text) => {
+    const link = page(file).match(/<a[^>]*aria-label="Escríbenos por WhatsApp"[^>]*>/)?.[0] ?? "";
+    expect(link).toContain('href="https://wa.me/51919102556?text=');
+    const msg = decodeURIComponent(link.match(/text=([^"&]+)/)?.[1] ?? "");
+    expect(msg).toContain(text);
+  });
+
   it("la landing de OPERA enlaza a la página de metalmecánica", () => {
     expect(page("opera/index.html")).toMatch(/<a[^>]*href="\/opera\/metalmecanica"/);
   });

@@ -25,10 +25,15 @@ export const ORG = {
   ],
 } as const;
 
-/** Chat de WhatsApp con mensaje inicial (botón flotante de la home). */
-export const WHATSAPP_URL = `https://wa.me/${ORG.telephone.replace(/\D/g, "")}?text=${encodeURIComponent(
+/** Enlace de chat de WhatsApp con un mensaje inicial. */
+export function whatsappUrl(message: string): string {
+  return `https://wa.me/${ORG.telephone.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;
+}
+
+/** Chat de WhatsApp del botón flotante de la home. */
+export const WHATSAPP_URL = whatsappUrl(
   "Hola TIDEO, quiero contarles un proceso de mi empresa que me gustaría mejorar.",
-)}`;
+);
 
 /** URL absoluta para una ruta del sitio principal (www). */
 export function canonicalUrl(path: string): string {
