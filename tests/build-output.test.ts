@@ -95,6 +95,17 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     }
   });
 
+  it("OPERA se presenta como ERP para talleres con JSON-LD SoftwareApplication", () => {
+    const html = page("opera/index.html");
+    expect(html).toMatch(/<title>OPERA \| ERP para talleres[^<]*<\/title>/);
+    const app = jsonLd(html).find((d) => d["@type"] === "SoftwareApplication");
+    expect(app).toBeDefined();
+    expect(app.name).toBe("OPERA");
+    expect(app.url).toBe("https://opera.tideo.tech/");
+    expect(app.applicationCategory).toBe("BusinessApplication");
+    expect(app.provider.name).toBe("TIDEO Tech & Strategy");
+  });
+
   it("existe 404.html en la raíz, en español y con noindex", () => {
     const html = page("404.html");
     expect(html).toContain("Página no encontrada");

@@ -7,7 +7,7 @@
  * Si cambias el copy de la home (src/components/site/*), actualiza HOME_MARKDOWN.
  * Si agregas una ruta, agrégala a KNOWN_PATHS, a public/sitemap.xml y a vite.config.ts.
  */
-import { ORG, SITE_URL } from "./site";
+import { OPERA_URL, ORG, SITE_URL } from "./site";
 
 export const KNOWN_PATHS = [
   "/",
@@ -116,4 +116,48 @@ Para encontrar lo que buscas:
 - Mapa del sitio: ${SITE_URL}/sitemap.xml
 - Inicio (también disponible en Markdown con \`Accept: text/markdown\`): ${SITE_URL}/
 - Contacto: ${SITE_URL}/contacto · ${ORG.email}
+`;
+
+export const OPERA_MARKDOWN = `# OPERA — ERP para talleres, alquiler de maquinaria y servicios en campo
+
+> OPERA es un ERP + MOM desarrollado por ${ORG.name} para empresas que dependen de activos físicos: une la operación (mantenimiento, almacén, campo, producción, seguridad) y la gestión (comercial, finanzas, compras, RRHH, BI) en una sola base de datos, sin doble digitación.
+
+- Sitio: ${OPERA_URL}
+- Demo y evaluación: formulario en ${OPERA_URL} · ${ORG.email} · WhatsApp ${ORG.telephone}
+- Proveedor: ${ORG.name}, Lima, Perú — ${SITE_URL}/
+
+## Para quién es
+
+1. **Talleres de mantenimiento** (servicio técnico y overhaul): órdenes de trabajo, asignación de mecánicos, repuestos y control de tiempos.
+2. **Alquiler de maquinaria** (flota pesada y contratos): contratos, tarifas dinámicas, disponibilidad de flota y mantenimientos preventivos.
+3. **Metalmecánica** (manufactura y mecanizado): control de producción, ruta de fabricación, costos de materiales y horas hombre.
+4. **Servicios con flota** (despacho y logística operativa): despacho, rastreo, consumo de combustible y gestión de choferes u operarios.
+5. **Minería y construcción** (operaciones en faena): control de activos pesados, HSE integrado, campamentos y valorizaciones.
+6. **Contratistas de mantenimiento** (field service y SLAs): técnicos en campo, SLAs, liquidación y facturación al cliente final.
+
+## Problemas que resuelve
+
+- Información dispersa: operación en Excel, mantenimiento en papel y finanzas en un ERP que no conversa con nadie.
+- Costos que se descubren tarde: la rentabilidad real de un proyecto o equipo se conoce semanas después.
+- Disponibilidad de equipos gestionada a ojo, sin visibilidad en tiempo real.
+- HSE como trámite: incidentes que se pierden y poca trazabilidad.
+- Doble digitación: el operario anota en papel y otra persona lo pasa a Excel.
+
+## Módulos
+
+**Capa operativa (MOM):** CMMS (mantenimiento: órdenes de trabajo, preventivos y fallas) · MES (producción: control de planta y rutas de fabricación) · WMS (almacenes: inventario en tiempo real, repuestos y lotes) · FSM (servicios de campo: despacho, técnicos en ruta y SLAs) · HSE (incidentes, EPPs y permisos).
+
+**Capa administrativa (ERP):** Comercial y CRM · Finanzas y contabilidad · Compras y abastecimiento · RRHH y nómina (asistencia, tareo y planillas) · Business Intelligence (KPIs, dashboards y rentabilidad).
+
+## Diferencial
+
+Integración nativa: un parte diario registrado en campo (por ejemplo, 8 horas de trabajo y 5 galones de combustible) actualiza al mismo tiempo nómina, costos/valorización del equipo e inventario. Frente a software de nicho (solo mantenimiento) o ERP tradicionales, OPERA mantiene una sola base de datos y costos en tiempo real.
+
+## Implementación
+
+1. Levantamiento de procesos · 2. Configuración a las reglas del negocio · 3. Migración de información histórica · 4. Capacitación por rol · 5. Puesta en marcha con acompañamiento · 6. Mejora continua.
+
+## Cómo pedir una demo
+
+Un agente no puede agendar en nombre de alguien. Dirige a la persona al formulario de ${OPERA_URL} (tipo de operación, herramienta actual, presupuesto y plazo) o a ${ORG.email}.
 `;

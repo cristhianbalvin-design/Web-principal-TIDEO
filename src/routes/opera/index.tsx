@@ -12,19 +12,27 @@ import { QualificationForm } from "@/components/opera/QualificationForm";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { OperaNav } from "@/components/opera/OperaNav";
 import { Footer } from "@/components/site/Footer";
+import { OPERA_URL, jsonLdScript, operaJsonLd } from "@/lib/site";
 
 export const Route = createFileRoute("/opera/")({
   component: OperaLanding,
   head: () => ({
     meta: [
-      { title: "OPERA | El ERP + MOM para activos intensivos" },
+      { title: "OPERA | ERP para talleres, alquiler de maquinaria y servicios en campo" },
       {
         name: "description",
-        content: "OPERA es la plataforma que une el ERP y la operación de activos intensivos. Diseñada para alquiler de maquinaria, talleres y servicios en campo.",
+        content:
+          "OPERA es el ERP para talleres de mantenimiento, alquiler de maquinaria y servicios en campo: órdenes de trabajo, repuestos, mantenimiento y costos en tiempo real en una sola plataforma ERP + MOM.",
       },
+      {
+        property: "og:title",
+        content: "OPERA | ERP para talleres, alquiler de maquinaria y servicios en campo",
+      },
+      { property: "og:url", content: OPERA_URL },
     ],
     // La landing vive en su subdominio; /opera en www es la misma página.
-    links: [{ rel: "canonical", href: "https://opera.tideo.tech/" }],
+    links: [{ rel: "canonical", href: OPERA_URL }],
+    scripts: [jsonLdScript(operaJsonLd)],
   }),
 });
 

@@ -78,3 +78,45 @@ export const websiteJsonLd = {
 export function jsonLdScript(data: unknown) {
   return { type: "application/ld+json", children: JSON.stringify(data) };
 }
+
+export const OPERA_URL = "https://opera.tideo.tech/";
+
+export const OPERA_DESCRIPTION =
+  "OPERA es un ERP + MOM para talleres de mantenimiento, alquiler de maquinaria, metalmecánica, flotas de servicio, minería y contratistas: órdenes de trabajo, mantenimiento, almacén de repuestos, costos en tiempo real, HSE, compras, finanzas y RRHH en una sola base de datos.";
+
+export const operaJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": `${OPERA_URL}#software`,
+  name: "OPERA",
+  alternateName: "OPERA ERP + MOM",
+  url: OPERA_URL,
+  description: OPERA_DESCRIPTION,
+  applicationCategory: "BusinessApplication",
+  applicationSubCategory: "ERP para talleres y gestión de activos",
+  operatingSystem: "Web",
+  inLanguage: "es",
+  audience: {
+    "@type": "BusinessAudience",
+    audienceType:
+      "Talleres de mantenimiento, alquiler de maquinaria, metalmecánica, flotas de servicio, minería y construcción, contratistas de mantenimiento",
+  },
+  featureList: [
+    "Órdenes de trabajo y mantenimiento preventivo (CMMS)",
+    "Asignación de mecánicos, repuestos y control de tiempos",
+    "Almacén e inventario de repuestos en tiempo real (WMS)",
+    "Control de producción y rutas de fabricación (MES)",
+    "Servicios de campo, despacho y SLAs (FSM)",
+    "Seguridad y salud en el trabajo (HSE)",
+    "Comercial, finanzas, compras, RRHH y BI integrados",
+    "Costos de operación y mantenimiento en tiempo real",
+  ],
+  areaServed: { "@type": "Place", name: "Latinoamérica" },
+  provider: {
+    "@id": `${SITE_URL}/#organization`,
+    "@type": "Organization",
+    name: ORG.name,
+    url: `${SITE_URL}/`,
+  },
+  publisher: { "@id": `${SITE_URL}/#organization` },
+} as const;

@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import middleware from "../middleware";
-import { HOME_MARKDOWN, NOT_FOUND_MARKDOWN, prefersMarkdown } from "../src/lib/agent-content";
+import {
+  HOME_MARKDOWN,
+  NOT_FOUND_MARKDOWN,
+  OPERA_MARKDOWN,
+  prefersMarkdown,
+} from "../src/lib/agent-content";
 
 const BROWSER_ACCEPT =
   "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8";
@@ -73,7 +78,7 @@ describe("404 para agentes", () => {
       "/contacto/",
       "/nosotros",
       "/privacidad",
-      "/opera",
+      "/powerbi-ia",
       "/about",
     ]) {
       expect(isPassThrough(middleware(req(path, "text/markdown")))).toBe(true);
@@ -116,8 +121,30 @@ describe("subdominios (comportamiento existente)", () => {
     );
   });
 
-  it("la raíz de un subdominio no devuelve el Markdown de la home principal", () => {
-    const res = middleware(req("/", "text/markdown", "opera.tideo.tech"));
+  it("OPERA responde en Markdown en su subdominio y en /opera", async () => {
+    for (const [host, path] of [
+      ["opera.tideo.tech", "/"],
+      ["www.opera.tideo.tech", "/"],
+      ["www.tideo.tech", "/opera"],
+      ["www.tideo.tech", "/opera/"],
+    ]) {
+      const res = middleware(req(path, "text/markdown", host));
+      expect(res.status).toBe(200);
+      expect(res.headers.get("content-type")).toBe("text/markdown; charset=utf-8");
+      expect(res.headers.get("vary")).toBe("Accept");
+      const body = await res.text();
+      expect(body).toBe(OPERA_MARKDOWN);
+      expect(body).toContain("ERP para talleres");
+    }
+  });
+
+  it("los navegadores siguen viendo el HTML de OPERA", () => {
+    const res = middleware(req("/", BROWSER_ACCEPT, "opera.tideo.tech"));
     expect(rewriteTarget(res)).toBe("https://opera.tideo.tech/opera");
+  });
+
+  it("la raíz de Power BI no devuelve el Markdown de la home principal", () => {
+    const res = middleware(req("/", "text/markdown", "powerbi-ia.tideo.tech"));
+    expect(rewriteTarget(res)).toBe("https://powerbi-ia.tideo.tech/powerbi-ia");
   });
 });

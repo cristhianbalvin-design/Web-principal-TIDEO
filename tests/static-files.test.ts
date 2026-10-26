@@ -17,17 +17,18 @@ describe("public/sitemap.xml", () => {
     expect([...xml.matchAll(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)].length).toBe(locs.length);
   });
 
-  it("solo lista URLs canónicas de www que existen", () => {
-    for (const loc of locs) {
-      expect(loc.startsWith(`${SITE_URL}/`)).toBe(true);
+  it("lista las URLs canónicas de www y de las landings en subdominio", () => {
+    for (const loc of locs.filter((l) => l.startsWith(`${SITE_URL}/`))) {
       const path = loc.slice(SITE_URL.length) || "/";
       expect(KNOWN_PATHS).toContain(path);
     }
-    expect(locs).toEqual(
-      ["/", "/contacto", "/nosotros", "/privacidad"].map((p) =>
+    expect(locs).toEqual([
+      ...["/", "/contacto", "/nosotros", "/privacidad"].map((p) =>
         p === "/" ? `${SITE_URL}/` : SITE_URL + p,
       ),
-    );
+      "https://opera.tideo.tech/",
+      "https://powerbi-ia.tideo.tech/",
+    ]);
   });
 });
 
