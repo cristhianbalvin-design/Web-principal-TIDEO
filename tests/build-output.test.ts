@@ -117,6 +117,32 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(app.provider.name).toBe("TIDEO Tech & Strategy");
   });
 
+  it("la página de metalmecánica tiene título, canonical y JSON-LD de FAQ y breadcrumb", () => {
+    const html = page("opera/metalmecanica/index.html");
+    expect(html).toMatch(/<title>ERP para metalmecánica en Perú[^<]*<\/title>/);
+    expect(html).toContain('<link rel="canonical" href="https://opera.tideo.tech/metalmecanica"');
+    expect(html).toMatch(/<h1[^>]*>[\s\S]*metalmecánica[\s\S]*<\/h1>/);
+    const ld = jsonLd(html);
+    const faq = ld.find((d) => d["@type"] === "FAQPage");
+    expect(faq.mainEntity.length).toBe(6);
+    const crumbs = ld.find((d) => d["@type"] === "BreadcrumbList");
+    expect(crumbs.itemListElement.map((i: { item: string }) => i.item)).toEqual([
+      "https://opera.tideo.tech/",
+      "https://opera.tideo.tech/metalmecanica",
+    ]);
+  });
+
+  it("las respuestas del FAQ están en el HTML y no se publica nada PENDIENTE", () => {
+    const html = page("opera/metalmecanica/index.html");
+    expect(html).toContain("La Hoja de Costeo toma la tarifa por cargo desde planilla");
+    expect(html).not.toContain("PENDIENTE");
+    expect(html).not.toMatch(/factura electrónica/i);
+  });
+
+  it("la landing de OPERA enlaza a la página de metalmecánica", () => {
+    expect(page("opera/index.html")).toMatch(/<a[^>]*href="\/opera\/metalmecanica"/);
+  });
+
   it("existe 404.html en la raíz, en español y con noindex", () => {
     const html = page("404.html");
     expect(html).toContain("Página no encontrada");

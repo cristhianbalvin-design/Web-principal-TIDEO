@@ -27,8 +27,13 @@ const initialForm: FormData = {
   plazo: "",
 };
 
-export function QualificationForm() {
-  const [formData, setFormData] = useState<FormData>(initialForm);
+export function QualificationForm({
+  defaultTipoOperacion = "",
+}: { defaultTipoOperacion?: string } = {}) {
+  const [formData, setFormData] = useState<FormData>({
+    ...initialForm,
+    tipo_operacion: defaultTipoOperacion,
+  });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isQualified, setIsQualified] = useState(true);

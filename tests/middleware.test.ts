@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import middleware from "../middleware";
 import {
   HOME_MARKDOWN,
+  METALMECANICA_MARKDOWN,
   NOT_FOUND_MARKDOWN,
   OPERA_MARKDOWN,
   prefersMarkdown,
@@ -136,6 +137,26 @@ describe("subdominios (comportamiento existente)", () => {
       expect(body).toBe(OPERA_MARKDOWN);
       expect(body).toContain("ERP para talleres");
     }
+  });
+
+  it("la página de metalmecánica responde en Markdown en opera.tideo.tech y en www", async () => {
+    for (const [host, path] of [
+      ["opera.tideo.tech", "/metalmecanica"],
+      ["www.tideo.tech", "/opera/metalmecanica"],
+    ]) {
+      const res = middleware(req(path, "text/markdown", host));
+      expect(res.status).toBe(200);
+      expect(res.headers.get("content-type")).toBe("text/markdown; charset=utf-8");
+      const body = await res.text();
+      expect(body).toBe(METALMECANICA_MARKDOWN);
+      expect(body.startsWith("# ERP para metalmecánica en Perú")).toBe(true);
+      expect(body).not.toContain("PENDIENTE");
+    }
+  });
+
+  it("los navegadores ven el HTML de metalmecánica en el subdominio", () => {
+    const res = middleware(req("/metalmecanica", BROWSER_ACCEPT, "opera.tideo.tech"));
+    expect(rewriteTarget(res)).toBe("https://opera.tideo.tech/opera/metalmecanica");
   });
 
   it("los navegadores siguen viendo el HTML de OPERA", () => {

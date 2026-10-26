@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { CheckCircle2 } from "lucide-react";
 
-function AnimatedListItem({ children, delay }: { children: React.ReactNode; delay: number }) {
+export function AnimatedListItem({ children, delay }: { children: React.ReactNode; delay: number }) {
   const ref = useRef<HTMLLIElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 

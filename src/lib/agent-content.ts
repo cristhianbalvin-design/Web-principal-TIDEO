@@ -7,6 +7,7 @@
  * Si cambias el copy de la home (src/components/site/*), actualiza HOME_MARKDOWN.
  * Si agregas una ruta, agrégala a KNOWN_PATHS, a public/sitemap.xml y a vite.config.ts.
  */
+import { METALMECANICA_URL, metalmecanica as mm } from "./metalmecanica-content";
 import { OPERA_URL, ORG, SITE_URL } from "./site";
 
 export const KNOWN_PATHS = [
@@ -15,6 +16,7 @@ export const KNOWN_PATHS = [
   "/nosotros",
   "/privacidad",
   "/opera",
+  "/opera/metalmecanica",
   "/powerbi-ia",
   // Redirecciones definidas en vercel.json:
   "/about",
@@ -160,4 +162,53 @@ Integración nativa: un parte diario registrado en campo (por ejemplo, 8 horas d
 ## Cómo pedir una demo
 
 Un agente no puede agendar en nombre de alguien. Dirige a la persona al formulario de ${OPERA_URL} (tipo de operación, herramienta actual, presupuesto y plazo) o a ${ORG.email}.
+`;
+
+export const METALMECANICA_MARKDOWN = `# ${mm.title}
+
+> ${mm.subtitle}
+
+- Página: ${METALMECANICA_URL}
+- Producto: OPERA (${OPERA_URL}), desarrollado por ${ORG.name}, Lima, Perú
+- Demo: formulario en ${METALMECANICA_URL} · ${ORG.email} · WhatsApp ${ORG.telephone}
+
+## Para quién es
+
+${mm.companyTypes.map((t) => `- **${t.title}** (${t.subtitle.toLowerCase()}): ${t.desc}`).join("\n")}
+
+Roles que usan el sistema:
+
+${mm.roles.map((r) => `- **${r.role}:** ${r.uses}`).join("\n")}
+
+## Problemas del rubro y cómo los resuelve OPERA
+
+${mm.problems.map((p, i) => `### ${i + 1}. ${p.title}\n\n"${p.quote}"\n\n**${p.solutionTitle}.** ${p.solution}`).join("\n\n")}
+
+## Flujo de trabajo típico
+
+${mm.workflow.map((s, i) => `${i + 1}. **${s.t}.** ${s.d}`).join("\n")}
+
+## Módulos incluidos
+
+${mm.modules.map((m) => `- **${m.name}:** ${m.desc}`).join("\n")}
+
+## Diferencial
+
+${mm.differentials.map((d) => `- **${d.title}.** ${d.desc}`).join("\n")}
+
+## Implementación
+
+${mm.implementation.map((s, i) => `${i + 1}. **${s.t}:** ${s.d}`).join("\n")}
+
+Qué conviene tener listo:
+
+${mm.clientChecklist.map((x) => `- ${x}`).join("\n")}
+
+## Preguntas frecuentes
+
+${mm.faqs.map((f) => `### ${f.q}\n\n${f.a}`).join("\n\n")}
+
+## Términos del rubro
+
+${mm.terms.join(" · ")}
 `;

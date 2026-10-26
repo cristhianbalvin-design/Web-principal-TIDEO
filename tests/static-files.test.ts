@@ -27,6 +27,7 @@ describe("public/sitemap.xml", () => {
         p === "/" ? `${SITE_URL}/` : SITE_URL + p,
       ),
       "https://opera.tideo.tech/",
+      "https://opera.tideo.tech/metalmecanica",
       "https://powerbi-ia.tideo.tech/",
     ]);
   });

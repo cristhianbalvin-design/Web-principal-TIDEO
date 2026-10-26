@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import { Link } from "@tanstack/react-router";
 import isotipo from "@/assets/tideo-isotipo.png";
 
-const navLinks = [
+const defaultNavLinks = [
   { href: "#que-es-opera", label: "Qué es OPERA" },
   { href: "#sectores", label: "Sectores" },
   { href: "#arquitectura", label: "Arquitectura" },
@@ -10,7 +11,32 @@ const navLinks = [
   { href: "#proceso", label: "Proceso" },
 ];
 
-export function OperaNav() {
+type NavLink = { href: string; label: string };
+
+/**
+ * links: anclas de la página actual (por defecto, las de la landing).
+ * homeLink: si es true, el logo vuelve a la landing de OPERA (para subpáginas).
+ */
+export function OperaNav({
+  links = defaultNavLinks,
+  homeLink = false,
+}: { links?: NavLink[]; homeLink?: boolean } = {}) {
+  const navLinks = links;
+  const brand = (
+    <>
+      <img
+        src={isotipo}
+        alt="TIDEO"
+        className="h-6 w-6 object-contain drop-shadow-[0_0_12px_rgba(58,206,214,0.3)]"
+      />
+      <span className="font-semibold tracking-tight text-foreground flex items-center gap-2">
+        TIDEO
+        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium tracking-wide uppercase bg-labs/15 text-labs border border-labs/30">
+          Labs
+        </span>
+      </span>
+    </>
+  );
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -30,19 +56,15 @@ export function OperaNav() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-3 group">
-          <img
-            src={isotipo}
-            alt="TIDEO"
-            className="h-6 w-6 object-contain drop-shadow-[0_0_12px_rgba(58,206,214,0.3)]"
-          />
-          <span className="font-semibold tracking-tight text-foreground flex items-center gap-2">
-            TIDEO
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium tracking-wide uppercase bg-labs/15 text-labs border border-labs/30">
-              Labs
-            </span>
-          </span>
-        </a>
+        {homeLink ? (
+          <Link to="/opera" className="flex items-center gap-3 group">
+            {brand}
+          </Link>
+        ) : (
+          <a href="#" className="flex items-center gap-3 group">
+            {brand}
+          </a>
+        )}
 
         <nav className="hidden lg:flex items-center gap-7 text-sm">
           {navLinks.map((link) => (

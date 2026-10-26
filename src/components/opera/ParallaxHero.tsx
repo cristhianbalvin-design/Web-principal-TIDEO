@@ -1,8 +1,21 @@
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { useScrollScrubbing } from "@/hooks/useScrollScrubbing";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
-export function ParallaxHero() {
+type ParallaxHeroProps = {
+  /** Contenido del H1. Por defecto, el de la landing de OPERA. */
+  title?: ReactNode;
+  description?: ReactNode;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+};
+
+export function ParallaxHero({
+  title,
+  description,
+  secondaryHref = "#arquitectura",
+  secondaryLabel = "Ver cómo funciona",
+}: ParallaxHeroProps = {}) {
   const containerRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -35,16 +48,20 @@ export function ParallaxHero() {
         {/* Content remains static & visible during sticky scroll */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 text-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.95] text-gradient">
+            {title ?? (
+              <>
             La plataforma que une el ERP y la <br className="hidden md:block"/>
             <span className="hero-highlight-word font-serif-italic text-primary">operación</span> de activos intensivos
+          </>
+            )}
           </h1>
           <p className="mt-8 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Primero el proceso, luego la tecnología. Un ERP + MOM construido sobre una sola base de datos, sin duplicación de información.
+            {description ?? <>Primero el proceso, luego la tecnología. Un ERP + MOM construido sobre una sola base de datos, sin duplicación de información.</>}
           </p>
           
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#arquitectura" className="px-8 py-3 rounded-full text-sm md:text-base font-medium border border-hairline hover:bg-surface transition-all text-foreground">
-              Ver cómo funciona
+            <a href={secondaryHref} className="px-8 py-3 rounded-full text-sm md:text-base font-medium border border-hairline hover:bg-surface transition-all text-foreground">
+              {secondaryLabel}
             </a>
             <HoverBorderGradient as="a" href="#calificacion" containerClassName="rounded-full" className="px-8 py-3 text-sm md:text-base font-semibold bg-primary text-primary-foreground shadow-glow">
               Agendar una conversación

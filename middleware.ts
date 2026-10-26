@@ -2,6 +2,7 @@ import { rewrite, next } from "@vercel/functions";
 
 import {
   HOME_MARKDOWN,
+  METALMECANICA_MARKDOWN,
   NOT_FOUND_MARKDOWN,
   OPERA_MARKDOWN,
   isKnownPath,
@@ -61,6 +62,9 @@ export default function middleware(request: Request) {
     if (prefersMarkdown(request.headers.get("accept"))) {
       if (normalizePath(effectivePath) === "/") return markdown(HOME_MARKDOWN, 200);
       if (normalizePath(effectivePath) === "/opera") return markdown(OPERA_MARKDOWN, 200);
+      if (normalizePath(effectivePath) === "/opera/metalmecanica") {
+        return markdown(METALMECANICA_MARKDOWN, 200);
+      }
       if (!isKnownPath(effectivePath)) return markdown(NOT_FOUND_MARKDOWN, 404);
       // Rutas existentes sin versión Markdown: siguen al HTML.
     }

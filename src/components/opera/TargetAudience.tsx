@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 
@@ -22,6 +23,8 @@ const models = [
     subtitle: "Manufactura y mecanizado",
     desc: "Control de producción, ruta de fabricación, costos de materiales y horas hombre.",
     color: "var(--color-academy)",
+    href: "/opera/metalmecanica",
+    linkLabel: "Ver ERP para metalmecánica",
   },
   {
     n: "04",
@@ -101,6 +104,17 @@ export function TargetAudience() {
                 >
                   {model.desc}
                 </CardItem>
+                {"href" in model && model.href && (
+                  <CardItem translateZ={30} className="relative mt-6">
+                    <Link
+                      to={model.href}
+                      className="inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-80"
+                      style={{ color: model.color }}
+                    >
+                      {model.linkLabel} →
+                    </Link>
+                  </CardItem>
+                )}
               </CardBody>
             </CardContainer>
           ))}

@@ -15,6 +15,7 @@ import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as NosotrosRouteImport } from './routes/nosotros'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
 import { Route as OperaIndexRouteImport } from './routes/opera/index'
+import { Route as OperaMetalmecanicaRouteImport } from './routes/opera/metalmecanica'
 import { Route as PowerbiIaIndexRouteImport } from './routes/powerbi-ia/index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -47,6 +48,11 @@ const OperaIndexRoute = OperaIndexRouteImport.update({
   path: '/opera/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OperaMetalmecanicaRoute = OperaMetalmecanicaRouteImport.update({
+  id: '/opera/metalmecanica',
+  path: '/opera/metalmecanica',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PowerbiIaIndexRoute = PowerbiIaIndexRouteImport.update({
   id: '/powerbi-ia/',
   path: '/powerbi-ia/',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
+  '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
+  '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
   '/opera': typeof OperaIndexRoute
   '/powerbi-ia': typeof PowerbiIaIndexRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
+  '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/privacidad'
+    | '/opera/metalmecanica'
     | '/opera/'
     | '/powerbi-ia/'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/privacidad'
+    | '/opera/metalmecanica'
     | '/opera'
     | '/powerbi-ia'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/privacidad'
+    | '/opera/metalmecanica'
     | '/opera/'
     | '/powerbi-ia/'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   ContactoRoute: typeof ContactoRoute
   NosotrosRoute: typeof NosotrosRoute
   PrivacidadRoute: typeof PrivacidadRoute
+  OperaMetalmecanicaRoute: typeof OperaMetalmecanicaRoute
   OperaIndexRoute: typeof OperaIndexRoute
   PowerbiIaIndexRoute: typeof PowerbiIaIndexRoute
 }
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OperaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/opera/metalmecanica': {
+      id: '/opera/metalmecanica'
+      path: '/opera/metalmecanica'
+      fullPath: '/opera/metalmecanica'
+      preLoaderRoute: typeof OperaMetalmecanicaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/powerbi-ia/': {
       id: '/powerbi-ia/'
       path: '/powerbi-ia'
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactoRoute: ContactoRoute,
   NosotrosRoute: NosotrosRoute,
   PrivacidadRoute: PrivacidadRoute,
+  OperaMetalmecanicaRoute: OperaMetalmecanicaRoute,
   OperaIndexRoute: OperaIndexRoute,
   PowerbiIaIndexRoute: PowerbiIaIndexRoute,
 }
