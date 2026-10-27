@@ -1,42 +1,14 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-
-const ALLOWED_ORIGINS = [
-  "https://www.tideo.tech",
-  "https://tideo.tech",
-  "https://opera.tideo.tech",
-  "https://www.opera.tideo.tech",
-  "https://powerbi-ia.tideo.tech",
-  "https://www.powerbi-ia.tideo.tech",
-  "https://web-principal-tideo.vercel.app",
-  "http://localhost:5173",
-  "http://localhost:4173",
-  "http://localhost:8080",
-  "http://localhost:3000",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:4173",
-  "http://127.0.0.1:8080",
-];
-
-function getCorsHeaders(req: Request) {
-  const origin = req.headers.get("origin") || "";
-  const isAllowed =
-    ALLOWED_ORIGINS.includes(origin) ||
-    origin.endsWith(".tideo.tech") ||
-    origin.endsWith(".vercel.app") ||
-    /^https?:\/\/.*\.vercel\.app$/.test(origin) ||
-    /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
-    /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin);
-
-  const allowedOrigin = isAllowed
-    ? origin
-    : Deno.env.get("ALLOWED_ORIGIN") || "https://www.tideo.tech";
-
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  };
-}
+import {
+  clientIp,
+  clip,
+  corsFor,
+  EMAIL_RE,
+  json,
+  originRejected,
+  rateLimited,
+  readJson,
+} from "../_shared/guard.ts";
 
 interface LeadPayload {
   id_lead?: string;
@@ -60,35 +32,69 @@ interface LeadPayload {
   presupuesto_mayor_7000?: string;
   tipo_documento?: string;
   registrado_desde?: string;
+  /** Honeypot: los humanos lo dejan vacío. */
+  website?: string;
 }
 
 serve(async (req) => {
-  const corsHeaders = getCorsHeaders(req);
+  const corsHeaders = corsFor(req);
 
-  // Manejo de preflight (OPTIONS)
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    if (req.method !== "POST") {
-      return new Response(JSON.stringify({ error: "Method Not Allowed" }), {
-        status: 405,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (req.method !== "POST") return json({ error: "Method Not Allowed" }, 405, corsHeaders);
+    if (originRejected(req)) return json({ error: "Forbidden" }, 403, corsHeaders);
+
+    const ip = clientIp(req);
+    if (rateLimited(`lead:${ip}`, 5, 10 * 60_000)) {
+      return json({ error: "Too Many Requests" }, 429, corsHeaders);
     }
 
-    const body: LeadPayload = await req.json();
+    let raw: LeadPayload;
+    try {
+      raw = await readJson<LeadPayload>(req);
+    } catch (e) {
+      const tooLarge = e instanceof Error && e.message === "too_large";
+      return json({ error: tooLarge ? "Payload Too Large" : "Bad Request" }, tooLarge ? 413 : 400, corsHeaders);
+    }
+
+    // Honeypot: responde como si hubiera funcionado, sin enviar nada al ERP.
+    if (raw.website) return json({ success: true, data: {} }, 200, corsHeaders);
+
+    const email = clip(raw.email || raw.correo, 200);
+    const nombreContacto = clip(raw.nombre_contacto || raw.nombre, 200);
+    if (!nombreContacto || !EMAIL_RE.test(email)) {
+      return json({ error: "Datos inválidos" }, 400, corsHeaders);
+    }
+    if (rateLimited(`lead-email:${email.toLowerCase()}`, 3, 10 * 60_000)) {
+      return json({ error: "Too Many Requests" }, 429, corsHeaders);
+    }
+
+    const body: LeadPayload = {
+      ...raw,
+      email,
+      correo: undefined,
+      nombre_contacto: nombreContacto,
+      nombre: undefined,
+      empresa: clip(raw.empresa, 200),
+      nombre_empresa: clip(raw.nombre_empresa, 200),
+      telefono: clip(raw.telefono, 50),
+      cargo: clip(raw.cargo, 120),
+      industria: clip(raw.industria, 120),
+      notas: clip(raw.notas, 4000),
+      campana: clip(raw.campana || raw.campana_id || raw.campaña, 120),
+      campana_id: undefined,
+      campaña: undefined,
+    };
 
     const ERP_SUPABASE_URL = Deno.env.get("ERP_SUPABASE_URL");
     const ERP_API_KEY = Deno.env.get("ERP_API_KEY");
 
     if (!ERP_SUPABASE_URL || !ERP_API_KEY) {
       console.error("Faltan variables de entorno para integración con ERP");
-      return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return json({ error: "Internal Server Error" }, 500, corsHeaders);
     }
 
     let estado = "nuevo";
@@ -146,10 +152,7 @@ serve(async (req) => {
       const errorText = await response.text();
       console.error("Error al enviar lead al ERP:", response.status, errorText);
       // No exponer el detalle interno del ERP al cliente
-      return new Response(JSON.stringify({ error: "Error al procesar el prospecto" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return json({ error: "Error al procesar el prospecto" }, 500, corsHeaders);
     }
 
     // Intentar extraer JSON de la respuesta del ERP
@@ -160,15 +163,9 @@ serve(async (req) => {
       console.error("No se pudo parsear el JSON del ERP:", e);
     }
 
-    return new Response(JSON.stringify({ success: true, data: responseData }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return json({ success: true, data: responseData }, 200, corsHeaders);
   } catch (error) {
     console.error("Error no controlado:", error);
-    return new Response(JSON.stringify({ error: "Bad Request" }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return json({ error: "Bad Request" }, 400, corsHeaders);
   }
 });

@@ -24,7 +24,7 @@ function getMaturityLevel(pct: number): string {
 
 function extractRecommendedService(text: string): string {
   const match = text.match(/\*\*Primer paso recomendado:\*\*\s*\n?([^\n*]+)/);
-  return match ? match[1].trim() : "TIDEO Labs — ERP personalizado";
+  return match ? match[1].trim() : "TIDEO Labs — Sistemas a medida sobre OPERA";
 }
 
 type View = "welcome" | "map" | "questions" | "final" | "radar-preview" | "final-done" | "capture" | "result";
