@@ -4,6 +4,7 @@ import {
   clip,
   corsFor,
   EMAIL_RE,
+  escapeHtml,
   json,
   originRejected,
   rateLimited,
@@ -34,6 +35,99 @@ interface LeadPayload {
   registrado_desde?: string;
   /** Honeypot: los humanos lo dejan vacío. */
   website?: string;
+}
+
+const BRAND_ROW = (label: string, value: string) => `
+  <tr>
+    <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;width:40%;font-size:13px;font-weight:600;color:#607D8B;">${escapeHtml(label)}</td>
+    <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${escapeHtml(value) || "—"}</td>
+  </tr>`;
+
+function internalLeadEmail(d: Record<string, string>): string {
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:24px;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;padding:28px 32px;">
+    <tr><td>
+      <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:2px;color:#607D8B;text-transform:uppercase;">TIDEO — OPERA</p>
+      <h1 style="margin:0 0 16px;font-size:20px;color:#060B14;">Nuevo lead desde la landing de OPERA</h1>
+      <table width="100%" style="border-collapse:collapse;">
+        ${BRAND_ROW("Estado", d.estado)}
+        ${BRAND_ROW("Nombre", d.nombre)}
+        ${BRAND_ROW("Empresa", d.empresa)}
+        ${BRAND_ROW("Correo", d.email)}
+        ${BRAND_ROW("Teléfono", d.telefono)}
+        ${BRAND_ROW("Tipo de operación", d.industria)}
+        ${BRAND_ROW("Presupuesto > US$7,000", d.presupuesto)}
+        ${BRAND_ROW("Plazo (urgencia)", d.urgencia)}
+        ${BRAND_ROW("Campaña", d.campana)}
+        ${BRAND_ROW("Notas", d.notas)}
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+}
+
+function confirmationLeadEmail(nombre: string): string {
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#060B14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" style="padding:40px 20px;background:#060B14;"><tr><td align="center">
+    <table width="100%" style="max-width:560px;">
+      <tr><td style="padding-bottom:24px;text-align:center;">
+        <p style="margin:0;font-size:22px;font-weight:800;color:#00BCD4;letter-spacing:2px;">OPERA</p>
+        <p style="margin:4px 0 0;font-size:12px;color:#607D8B;letter-spacing:1px;">BY TIDEO TECH &amp; STRATEGY</p>
+      </td></tr>
+      <tr><td style="background:#1A2B4A;border-radius:8px;padding:28px 32px;">
+        <h1 style="margin:0 0 12px;font-size:20px;color:#F7F8FA;">${escapeHtml(nombre)}, recibimos tus datos</h1>
+        <p style="margin:0 0 12px;font-size:15px;color:#C8D6E5;line-height:1.7;">
+          Gracias por tu interés en OPERA. Evaluaremos junto contigo si es el fit correcto para tu operación.
+          Si ya reservaste tu sesión estratégica, recibirás la confirmación del calendario en este mismo correo.
+        </p>
+        <p style="margin:0;font-size:13px;color:#607D8B;line-height:1.6;">
+          ¿Prefieres hablar ahora? Escríbenos a contacto@tideo.tech o por WhatsApp al +51 919 102 556.
+        </p>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+}
+
+/** Avisos por correo de los leads de OPERA. Es secundario: nunca debe hacer fallar el registro. */
+async function notifyOperaLead(d: Record<string, string>, qualified: boolean): Promise<void> {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey) {
+    console.error("submit-lead: falta RESEND_API_KEY, no se enviaron avisos");
+    return;
+  }
+  const send = (to: string, subject: string, html: string, replyTo?: string) =>
+    fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        from: "TIDEO <hola@tideo.tech>",
+        to,
+        subject: subject.replace(/[\r\n]+/g, " "),
+        html,
+        ...(replyTo ? { reply_to: replyTo } : {}),
+      }),
+    }).then(async (res) => {
+      if (!res.ok) console.error(`Resend error (${to}):`, res.status, await res.text());
+    });
+
+  const jobs = [
+    send(
+      "cristhian@tideo.tech",
+      `Nuevo lead OPERA${qualified ? "" : " (descartado)"} — ${d.nombre} | ${d.empresa}`,
+      internalLeadEmail(d),
+      d.email,
+    ),
+  ];
+  // La confirmación solo va a quienes califican; a los descartados ya se les muestra un mensaje en la web.
+  if (qualified) {
+    jobs.push(
+      send(d.email, "Recibimos tus datos — OPERA by TIDEO", confirmationLeadEmail(d.nombre), "contacto@tideo.tech"),
+    );
+  }
+  await Promise.allSettled(jobs);
 }
 
 serve(async (req) => {
@@ -161,6 +255,28 @@ serve(async (req) => {
       responseData = await response.json();
     } catch (e) {
       console.error("No se pudo parsear el JSON del ERP:", e);
+    }
+
+    if (fuente === "opera_landing") {
+      try {
+        await notifyOperaLead(
+          {
+            estado,
+            nombre: body.nombre_contacto ?? "",
+            empresa: body.nombre_empresa || body.empresa || "",
+            email: body.email ?? "",
+            telefono: body.telefono ?? "",
+            industria: body.industria ?? "",
+            presupuesto: clip(body.presupuesto_mayor_7000, 40),
+            urgencia: clip(body.urgencia, 40),
+            campana,
+            notas: body.notas ?? "",
+          },
+          estado !== "descartado",
+        );
+      } catch (err) {
+        console.error("submit-lead: error enviando avisos:", err);
+      }
     }
 
     return json({ success: true, data: responseData }, 200, corsHeaders);
