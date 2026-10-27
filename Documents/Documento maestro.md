@@ -3,7 +3,24 @@
 > **Repositorio:** `cristhianbalvin-design/Web-principal-TIDEO`
 > **Dominio de producción:** `www.tideo.tech`
 > **Tipo de documento:** Documentación técnica, funcional y de negocio integral
-> **Última actualización de este documento:** Actualizado con la integración completa del widget Calendly inline, resolución de bugs de CORS y deduplicación de leads, y lecciones operativas de infraestructura y control de versiones.
+> **Última actualización de este documento:** 27-oct-2026 — reposicionamiento "1 producto (OPERA) + 6 servicios", enlaces con UTM entre dominios, leads de `/contacto` y diagnóstico hacia el ERP, endurecimiento de Edge Functions y limpieza del repositorio (rama `feat/opera-producto-servicios`, PR #11).
+
+
+## Cambios recientes (oct-2026) — leer primero
+
+| Tema | Estado actual |
+|---|---|
+| **Oferta de la home** | `SelectedWork` = **1 producto (OPERA)** + **6 servicios**: sistemas a medida *sobre OPERA*, gestión comercial y clientes, automatización e integraciones, datos y BI, IA aplicada, **MVP en semanas** (para emprendedores/startups/áreas que validan). Todos los servicios se **cotizan caso por caso**; no hay paquetes ni precios publicados. Cierra con una franja a todo el ancho que abre el diagnóstico. |
+| **Mensaje ancla** | Sustituye a "se construye desde cero": *"Partimos de OPERA, un ERP que ya funciona, y lo adaptamos para que opere exactamente como tu negocio genera valor."* Vive en el prompt de `get-diagnostic`, `HOME_MARKDOWN` (`src/lib/agent-content.ts`) y `public/llms.txt`. |
+| **Enlaces a OPERA** | Hero (pastilla "Nuevo"), menú, `LabsFeature`, footer y tarjeta de OPERA. Se generan con `operaUrl(campaña, ruta)` / `powerbiUrl` / `trackedUrl` (`src/lib/site.ts`) y llevan `utm_source=tideo.tech`, `utm_medium=web` y un `utm_campaign` por ubicación (`home_hero`, `home_nav`, `home_card_opera`, `home_card_opera_metalmecanica`, `home_labs`, `home_footer`, `home_card_powerbi`). |
+| **Atribución** | `captureAttribution()` (en `__root.tsx`) guarda en `sessionStorage` (`tideo:attribution`) los UTM de la primera página con parámetros; `submitLead` los usa. Solo `utm_campaign` llega como campo propio al ERP (`campana`); source/medium/content van en `notas`. |
+| **Footer en subdominios** | `Footer` tiene `variant="main" \| "subdomain"`. En `opera.` y `powerbi-ia.` todos los enlaces son absolutos hacia `www.tideo.tech` (antes eran relativos y daban 404). |
+| **Metadatos de OPERA** | `operaSocialMeta()` + `public/og-opera.png` (1200×630); `application-name` = OPERA. |
+| **Leads** | `/contacto` y el diagnóstico envían **correo + lead al ERP** (`submit-lead`, `fuente` = `web_contacto` / `web_diagnostico`). Los formularios llevan *honeypot* (`website`). |
+| **Edge Functions** | Guard compartido `supabase/functions/_shared/guard.ts`: CORS por allowlist estricta (`*.tideo.tech`, previews `web-principal-tideo*.vercel.app`, localhost), límite de intentos por IP (en memoria, mejor esfuerzo), tope de tamaño, validación y escape de HTML en correos. `send-contact-email` ya devuelve 502 si Resend falla. |
+| **Diagnóstico** | 5.ª pregunta de bloque final (categórica): *tipo de operación*. El prompt recomienda OPERA primero para taller/alquiler de maquinaria o flota/metalmecánica/minería-construcción-contratista, sin precios. |
+| **Limpieza** | Eliminados `wrangler.jsonc`, `@cloudflare/vite-plugin`, `bun.lock` (el gestor oficial es **npm**) y `src/server-fns/diagnostic.ts` (sin uso). Menú móvil en `Nav`. |
+| **Despliegue** | Producción en **Vercel**. Las Edge Functions **no** se despliegan con el merge: hay que ejecutar `supabase functions deploy` (ver 14.5). |
 
 ---
 
@@ -39,7 +56,7 @@
 - Un **formulario de contacto** (`/contacto`) conectado a un backend serverless.
 - Un **módulo de diagnóstico digital interactivo** (el activo más sofisticado del proyecto): un cuestionario tipo "radar de madurez digital" que evalúa 10 áreas del negocio del visitante, calcula un puntaje de madurez y genera —vía la API de Anthropic (Claude)— un diagnóstico personalizado en lenguaje natural, con recomendación de servicios TIDEO. El resultado se envía por correo (Resend) y opcionalmente se reenvía a un CRM/automatización externa vía webhook de Make.
 
-El proyecto está construido con **React 19 + TanStack Start (SSR) + Vite 7 + Tailwind CSS v4**, fue **generado y es mantenido con Lovable.dev** (`@lovable.dev/vite-tanstack-config`), y tiene configuración de despliegue dual: **Cloudflare Workers** (`wrangler.jsonc`) y **Vercel** (`vercel.json`). El backend de lógica de negocio (envío de correos y llamado a IA) vive en **Supabase Edge Functions** (Deno), no en el propio servidor de la app.
+El proyecto está construido con **React 19 + TanStack Start (SSR) + Vite 7 + Tailwind CSS v4**, fue **generado y es mantenido con Lovable.dev** (`@lovable.dev/vite-tanstack-config`), y se despliega en **Vercel** (`vercel.json`; Cloudflare fue retirado). El backend de lógica de negocio (envío de correos y llamado a IA) vive en **Supabase Edge Functions** (Deno), no en el propio servidor de la app.
 
 No es (todavía, según el propio documento de dirección del proyecto): portal de alumnos, ERP SaaS, intranet ni dashboard administrativo. Es la puerta de entrada comercial y el generador de leads B2B de TIDEO.
 
@@ -68,9 +85,9 @@ El código (`Ecosystem.tsx`, `get-diagnostic` Edge Function) modela **cuatro uni
 
 ### 2.3 Mensaje central del ERP (frase ancla usada literalmente en el prompt de IA)
 
-> "Un ERP donde el núcleo de tu operación no se adapta a un software estándar: se construye desde cero para funcionar exactamente como tu negocio genera valor."
+> "Partimos de OPERA, un ERP que ya funciona, y lo adaptamos para que opere exactamente como tu negocio genera valor."
 
-Esta frase es tratada como **concepto de venta central** y aparece codificada de forma literal en el *system prompt* de la función `get-diagnostic` (ver sección 9.1) como regla obligatoria de redacción del diagnóstico automatizado.
+*(Reemplaza a la frase anterior "…se construye desde cero…": OPERA es un producto terminado y los sistemas a medida se construyen sobre él.)* Esta frase es tratada como **concepto de venta central** y aparece codificada de forma literal en el *system prompt* de la función `get-diagnostic` (ver sección 9.1) como regla obligatoria de redacción del diagnóstico automatizado.
 
 ### 2.4 Tono de voz
 
@@ -139,7 +156,7 @@ El frontend **no tiene backend propio con lógica de negocio persistente** (no h
 
 Existen **dos configuraciones de despliegue simultáneas** en el repo, lo cual debe resolverse/documentarse como decisión de infraestructura (ver sección 14 y sección 17):
 
-- **Cloudflare Workers** vía `wrangler.jsonc` (`main: src/server.ts`, `nodejs_compat`).
+- ~~Cloudflare Workers~~ (retirado; ver 14.2).
 - **Vercel** vía `vercel.json` (`buildCommand: npm run build`, `outputDirectory: dist/client`).
 
 El propio `vite.config.ts` tiene `cloudflare: false` en la configuración de Lovable, sugiriendo que el flujo activo actual prioriza Vercel, y que Cloudflare quedó configurado pero no necesariamente en uso productivo.
@@ -159,7 +176,6 @@ Web-principal-TIDEO/
 ├── tsconfig.json                          # TypeScript config
 ├── vite.config.ts                         # Config de build (envuelto por Lovable)
 ├── vercel.json                            # Config de despliegue en Vercel
-├── wrangler.jsonc                         # Config de despliegue en Cloudflare Workers
 ├── public/
 │   ├── demo-tideo.mp4                     # Video demo mostrado en modal de "Selected Work"
 │   ├── favicon*, apple-touch-icon.png, icon-192/512.png, og-image.png
@@ -232,7 +248,7 @@ Nav
     └── TracingBeam (envoltorio visual con línea de scroll animada)
         ├── Hero
         ├── TrustBar
-        ├── SelectedWork      (id="trabajo")
+        ├── SelectedWork      (id="trabajo") — OPERA + 6 servicios + franja de diagnóstico
         ├── Ecosystem         (id="ecosistema")
         ├── LabsFeature
         ├── Methodology
@@ -241,13 +257,14 @@ Nav
         └── FinalCTA
 Footer
 DiagnosticModal (modal, se abre desde SelectedWork)
-Botón flotante de WhatsApp (decorativo, sin `href` funcional — ver sección 17)
+Botón flotante de WhatsApp (enlace funcional a `wa.me`, ver `WHATSAPP_URL` en `site.ts`)
 ```
 
 ### 5.3 `src/routes/contacto.tsx` — Contacto (`/contacto`)
 
 Formulario de contacto de una sola página. Ver detalle completo en sección 10.
 
+- Lee `?servicio=<slug>` (`sistemas-a-medida`, `comercial`, `automatizacion`, `datos-bi`, `ia`, `mvp`) desde las tarjetas de la home y lo muestra como chip.
 - Soporta **prefill automático** vía `sessionStorage` (`tideo:diagnostic-contact-prefill`) cuando el usuario llega desde el diagnóstico con `?origen=diagnostico` en la URL — es el puente entre el módulo de diagnóstico y el formulario de contacto tradicional.
 
 ### 5.4 `src/routes/opera/index.tsx` — Landing de OPERA (`/opera`)
@@ -331,17 +348,17 @@ Cada componente es una sección de la home, autocontenida, sin props obligatoria
 
 | Componente | Contenido / responsabilidad | Notas técnicas |
 |---|---|---|
-| **`Nav.tsx`** | Barra de navegación fija. Cambia de transparente a `backdrop-blur` al hacer scroll (>8px). Links a anclas (`#trabajo`, `#ecosistema`, `#insights`) y a `/contacto`. | Estado `scrolled` con listener de `scroll` pasivo |
+| **`Nav.tsx`** | Barra fija con `backdrop-blur` al hacer scroll. Links: Inicio, Trabajo, **OPERA** (externo con UTM), Ecosistema, Insights, Contacto. Menú desplegable en móvil. | Anclas absolutas (`/#trabajo`) para funcionar desde `/contacto` |
 | **`Hero.tsx`** | Sección de apertura: video de fondo en loop (`hero-tideo-animated.webm`), headline "*Tecnología que entiende tu negocio*", subheadline, doble CTA ("Ver soluciones" → ancla `#trabajo`, "Cuéntanos tu proceso" → `/contacto`) | Composición de imagen + video + gradientes de máscara para el efecto "editorial dark" |
 | **`TrustBar.tsx`** | Franja de 4 métricas de confianza (10+ años, 3×, 24h, "Semanas" para MVPs) con animación de conteo al entrar en viewport | Usa `IntersectionObserver`, respeta `prefers-reduced-motion` |
-| **`SelectedWork.tsx`** | Grilla de 6 "soluciones tipo" (ERP, CRM, Automatización, BI, Apps internas, IA aplicada), con efecto focus/blur y modal de video demo | Contiene el botón "Realizar diagnóstico de la empresa" que abre `DiagnosticModal` (solo en la card `01`) y el botón "Ver video" que abre un `Dialog` con `demo-tideo.mp4` |
+| **`SelectedWork.tsx`** | Tarjeta destacada de **OPERA** (producto, id `opera`) + 6 servicios (`FocusCards`) cuyo CTA lleva a `/contacto?servicio=<slug>`; el de Datos y BI añade enlace a Power BI + IA. Cierra con la franja "¿No sabes si te conviene OPERA, algo a medida o un MVP?" | La franja abre `DiagnosticModal` (`onDiagnostic`); "Ver video" abre un `Dialog` con `demo-tideo.mp4` |
 | **`Ecosystem.tsx`** | Presenta las 4 unidades de negocio (Consulting, Labs, Academy, Studio) en cards 3D con color propio | Usa `CardContainer/CardBody/CardItem` |
 | **`LabsFeature.tsx`** | Sección dedicada a TIDEO Labs como "servicio estrella", con 4 pilares (proceso antes que software, MVP en semanas, tecnología adaptable, acompañamiento real) | CTA directo a `/contacto` |
 | **`Methodology.tsx`** | Metodología en 5 pasos (Entendemos → Ordenamos → Diseñamos → Construimos → Escalamos), mostrada como cards y como flujo de píldoras con flechas | Efecto de highlight que sigue el mouse vía CSS custom properties (`--hover-x/y`) |
 | **`Differential.tsx`** | Tabla comparativa: ERP estándar / ERP corporativo / software legacy / agencia de desarrollo vs. TIDEO | Tabla responsive (columnas en desktop, stack en mobile) |
-| **`Insights.tsx`** | Grilla de 4 artículos "editoriales" (contenido de marcador de posición, sin backend de blog real) | `href="#"` — pendiente de contenido real (ver sección 17) |
+| **`Insights.tsx`** | Grilla de 4 artículos "editoriales" (marcador de posición) | Tarjetas `<article>` con etiqueta "Próximamente" (sin enlaces muertos) |
 | **`FinalCTA.tsx`** | CTA de cierre de página, con botón a `/contacto` | |
-| **`Footer.tsx`** | Logo, navegación secundaria, correo de contacto, redes sociales | Los íconos de LinkedIn y WhatsApp son `<span>` decorativos sin link real (Facebook e Instagram sí son `<a>` funcionales) — ver sección 17 |
+| **`Footer.tsx`** | Logo, navegación, contacto y redes (LinkedIn, WhatsApp, Facebook, Instagram, todos enlaces) | Prop `variant`: `main` (relativos) o `subdomain` (absolutos a `www.tideo.tech`) |
 | **`Preloader.tsx`** | Video de marca a pantalla completa al cargar la app, con salida automática (por fin de video, timeout de 9s, o inmediata si `prefers-reduced-motion`) | Vive en `__root.tsx`, se muestra en cada carga de la SPA/SSR |
 | **`SectionHeader.tsx`** | Componente de utilidad: eyebrow + título + descripción, reutilizado por casi todas las secciones | Prop `align` (`left` \| `center`) |
 
@@ -395,12 +412,13 @@ El radar que ve el usuario **no muestra los 10 módulos como ejes**, sino que lo
 
 ### 8.4 Bloque final de impacto (`FINAL_QUESTIONS`)
 
-4 preguntas transversales, independientes de los módulos, que alimentan directamente la lógica de urgencia y tono del diagnóstico generado por IA:
+5 preguntas transversales, independientes de los módulos, que alimentan directamente la lógica de urgencia y tono del diagnóstico generado por IA:
 
 1. Horas semanales perdidas en tareas manuales/reprocesos.
 2. Si ha perdido clientes/contratos por falta de información o lentitud operativa.
 3. Urgencia percibida de resolver el problema.
 4. Cómo resuelve hoy la comunicación de marca/marketing (esta pregunta alimenta la recomendación de **TIDEO Studio**).
+5. **Tipo de operación** (categórica, `categorical: true`; no puntúa como nivel 1–4): taller de mantenimiento/reparación, alquiler de maquinaria o flota, metalmecánica, minería/construcción/contratista, otro. Decide si el diagnóstico recomienda **OPERA** primero.
 
 ### 8.5 Cálculo de puntajes (funciones puras en `data.ts`)
 
@@ -450,7 +468,7 @@ Existe también un camino corto: desde el mapa (`map`) o desde el bloque final (
 
 ## 9. Backend e integraciones (Supabase Edge Functions)
 
-Las 3 funciones viven en `supabase/functions/`, corren en **Deno** (runtime de Supabase Edge Functions) y comparten el mismo patrón: CORS abierto (`Access-Control-Allow-Origin: *`), manejo de `OPTIONS`, y lectura de secretos vía `Deno.env.get(...)`.
+Las 3 funciones viven en `supabase/functions/`, corren en **Deno** (runtime de Supabase Edge Functions) y comparten el módulo `_shared/guard.ts`: CORS por allowlist (se refleja solo el origen permitido; `Vary: Origin`), rechazo 403 de orígenes no permitidos, límite de intentos por IP (en memoria: mejor esfuerzo; uno estricto requiere Turnstile o una tabla), tope de tamaño del cuerpo (413), `escapeHtml` para correos y lectura de secretos vía `Deno.env.get(...)`.
 
 ### 9.1 `get-diagnostic` — Generación de diagnóstico con IA
 
@@ -472,7 +490,7 @@ Las 3 funciones viven en `supabase/functions/`, corren en **Deno** (runtime de S
 
 - **Secreto requerido:** `RESEND_API_KEY`.
 - Envía **un solo correo interno** (a `cristhian@tideo.tech`, con `reply_to` = correo del remitente) usando una plantilla HTML propia con tabla de datos del formulario (nombre, empresa, cargo, correo, WhatsApp, rubro, urgencia) y bloques destacados para "proceso a mejorar" y "herramientas actuales".
-- **No responde con error real al frontend**: siempre retorna `{ success: true }`, incluso si el envío a Resend falla (el error solo se loguea en consola del servidor). Esto es una decisión de UX (no bloquear al usuario) pero significa que **un fallo de envío es invisible para el equipo de TIDEO** salvo que revisen logs de Supabase (ver sección 17).
+- Valida los datos, descarta el *honeypot* y escapa todo el HTML. Si falta `RESEND_API_KEY` o Resend falla, responde **502** (antes devolvía siempre éxito). Incluye el campo `servicio` (servicio de interés + campaña de origen).
 
 ### 9.3 `send-diagnostic-email` — Notificación de diagnóstico completado
 
@@ -506,6 +524,8 @@ Archivo de mapeo de imports de Deno compartido por las funciones (estándar de S
   - `https://opera.tideo.tech`
   - `https://www.opera.tideo.tech`
   - Orígenes locales de desarrollo (`http://localhost:5173`, `http://localhost:4173`, `http://localhost:3000`).
+- **Actualización (oct-2026):** la lista manual fue reemplazada por regex estrictas en `_shared/guard.ts` (ya no se acepta cualquier `*.vercel.app`). Además valida nombre y correo, aplica tope de longitud, descarta el honeypot `website` (responde éxito sin enviar al ERP) y limita 5 envíos/10 min por IP y 3/10 min por correo.
+- **Fuentes de lead:** `opera_landing`, `powerbi_ia_landing`, `web_contacto`, `web_diagnostico`.
 
 ---
 
@@ -529,8 +549,9 @@ Archivo de mapeo de imports de Deno compartido por las funciones (estándar de S
 
 ### 10.2 Envío
 
-- `POST` directo desde el navegador a `${SUPABASE_URL}/functions/v1/send-contact-email`, autenticado con el header `Authorization: Bearer ${SUPABASE_ANON_KEY}` (clave anónima pública de Supabase, no un secreto — es seguro exponerla en el cliente).
-- Si `SUPABASE_URL`/`SUPABASE_ANON_KEY` no están configuradas, el `fetch` simplemente no se ejecuta (el `if` lo evita), pero **la UI igual muestra "Recibido. Gracias."** — es decir, el usuario puede pensar que su mensaje se envió aunque no haya backend configurado. Ver sección 17.
+- Al enviar se ejecutan **en paralelo**: (1) `POST` a `send-contact-email` (correo interno) y (2) `submitLead` → `submit-lead` (lead en el ERP, `fuente: web_contacto`, con servicio, proceso, herramientas y urgencia en `notas`). Ambos con `Authorization: Bearer ${SUPABASE_ANON_KEY}` (clave pública).
+- Se muestra "Recibido. Gracias." si **al menos uno** funciona. Si fallan los dos (o faltan las variables `VITE_*`), aparece un error con alternativa: `contacto@tideo.tech` y el WhatsApp de TIDEO.
+- El honeypot (`website`) viaja en ambas llamadas.
 
 ### 10.3 Prefill desde el diagnóstico
 
@@ -544,7 +565,7 @@ Esta capa es poco visible funcionalmente pero es importante para la estabilidad 
 
 - **`src/start.ts`**: define un middleware de TanStack Start que envuelve cada request; si ocurre un error sin `statusCode` (es decir, no es un error HTTP esperado), lo loguea y devuelve una página de error HTML de fallback (`renderErrorPage()`) en vez de dejar pasar un 500 genérico sin estilo.
 - **`src/lib/error-capture.ts`**: escucha eventos globales `error` y `unhandledrejection` para "capturar" el error original antes de que el framework (h3) lo convierta en una respuesta 500 genérica sin stack trace útil. Guarda el último error por 5 segundos (TTL) para que `server.ts` pueda recuperarlo.
-- **`src/server.ts`**: entry point real del servidor (usado por el build de Cloudflare/`wrangler`). Detecta específicamente el patrón de error "catastrófico" de h3 (`{"unhandled":true,"message":"HTTPError"}`) inspeccionando el body de la respuesta, y si lo encuentra, sustituye la respuesta por la página de error de marca, recuperando el error real capturado por `error-capture.ts` para el log del servidor.
+- **`src/server.ts`**: entry point real del servidor (entry de servidor configurado en `vite.config.ts`). Detecta específicamente el patrón de error "catastrófico" de h3 (`{"unhandled":true,"message":"HTTPError"}`) inspeccionando el body de la respuesta, y si lo encuentra, sustituye la respuesta por la página de error de marca, recuperando el error real capturado por `error-capture.ts` para el log del servidor.
 - **`src/lib/error-page.ts`**: HTML plano (sin dependencias de framework) para la página de error, con botones "Try again" (recarga) y "Go home".
 
 Este diseño es una solución de ingeniería a un problema conocido de TanStack Start sobre Cloudflare Workers (h3 "traga" errores de servidor y los convierte en JSON genérico); vale la pena que cualquier persona que dé mantenimiento entienda que **no es código redundante**, sino un workaround intencional documentado con comentarios en el propio código fuente.
@@ -578,12 +599,9 @@ Este diseño es una solución de ingeniería a un problema conocido de TanStack 
 | `VITE_SUPABASE_URL` | `contacto.tsx`, `DiagnosticModal.tsx` | URL base del proyecto Supabase, para invocar las Edge Functions |
 | `VITE_SUPABASE_ANON_KEY` | `contacto.tsx`, `DiagnosticModal.tsx` | Clave anónima pública de Supabase (segura de exponer en cliente) |
 
-### 12.2 Backend (server-side, `server-fns/diagnostic.ts`)
+### 12.2 Backend (server-side)
 
-| Variable | Propósito |
-|---|---|
-| `SUPABASE_URL` | Igual que arriba, pero leída server-side (sin prefijo `VITE_`) en la Server Function de TanStack Start — nota: esta Server Function (`getDiagnosis`) existe en el código pero **no se ve invocada actualmente desde `DiagnosticModal.tsx`**, que llama directo a Supabase desde el cliente. Ver sección 17. |
-| `SUPABASE_ANON_KEY` | Idem |
+La app ya no usa variables server-side propias (se eliminó `src/server-fns/diagnostic.ts`, que no se invocaba). Todo el backend vive en las Edge Functions (12.3). Para `submit-lead` se requieren además `ERP_SUPABASE_URL` y `ERP_API_KEY`, y opcionalmente `ALLOWED_ORIGIN` (origen por defecto para CORS).
 
 ### 12.3 Supabase Edge Functions (secretos configurados en el proyecto de Supabase, no en el frontend)
 
@@ -640,37 +658,20 @@ npm run dev
 
 ### 14.1 Vercel (`vercel.json`)
 
-```json
-{
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/client",
-  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }]
-}
-```
+Vercel es la **plataforma de producción**. `vercel.json` define `buildCommand: npm run build`, `outputDirectory: dist/client`, dos redirecciones permanentes (`/about → /nosotros`, `/privacy → /privacidad`) y el `Content-Type` de `llms.txt`. No hay rewrite SPA: las páginas se **prerenderizan** (`/`, `/contacto`, `/nosotros`, `/privacidad`, `/opera`, `/powerbi-ia`, `/opera/metalmecanica`, `/404`). Los subdominios `opera.` y `powerbi-ia.` se sirven desde este mismo proyecto con `middleware.ts` (rewrite, redirección 308 a URL limpia y negociación Markdown para agentes) más la reescritura en `src/router.tsx`.
 
-Esta configuración de `rewrites` es típica de una SPA pura; sin embargo, el proyecto usa **SSR con prerender** (`tanstackStart.prerender.enabled: true` en `vite.config.ts`, con `pages: [{ path: "/" }, { path: "/contacto" }]`). Vale la pena que el equipo de infraestructura confirme si el `rewrite` a `index.html` es compatible con el modo de salida real de TanStack Start en Vercel, o si debería usarse la integración nativa de Vercel para este framework en vez de un rewrite manual de SPA (ver sección 17).
+### 14.2 Cloudflare (retirado)
 
-### 14.2 Cloudflare Workers (`wrangler.jsonc`)
-
-```jsonc
-{
-  "name": "tanstack-start-app",
-  "compatibility_date": "2025-09-24",
-  "compatibility_flags": ["nodejs_compat"],
-  "main": "src/server.ts"
-}
-```
-
-El punto de entrada (`src/server.ts`) es el wrapper de errores descrito en la sección 11, que a su vez importa dinámicamente el entry-point real generado por `@tanstack/react-start/server-entry`.
+Se eliminaron `wrangler.jsonc` y la dependencia `@cloudflare/vite-plugin`. `vite.config.ts` mantiene `cloudflare: false`. `src/server.ts` sigue siendo el entry del servidor (envoltorio de errores, sección 11).
 
 ### 14.3 Dominio
 
 - Dominio de producción objetivo: **`www.tideo.tech`**.
 - El brief de marca especifica una redirección `tideo.tech → www.tideo.tech`, que debe configurarse a nivel de DNS/proveedor de hosting (no está en el código de la app).
 
-### 14.4 Decisión pendiente
+### 14.4 Plataforma activa
 
-El proyecto tiene **dos rutas de despliegue configuradas en paralelo** (Vercel y Cloudflare). Se recomienda que el equipo defina explícitamente cuál es la plataforma de producción activa y documente esa decisión aquí, retirando o marcando claramente como "en desuso" la configuración que no corresponda, para evitar despliegues duplicados o confusión sobre dónde vive la fuente de verdad de producción.
+Resuelto: **Vercel**. El gestor de paquetes oficial es **npm** (`package-lock.json`).
 
 ### 14.5 Despliegue desacoplado de Supabase Edge Functions (proceso manual obligatorio)
 
@@ -742,30 +743,30 @@ Menús enormes, explicar todo el stack técnico en el hero, hablar del portal/su
 Listado consolidado de observaciones encontradas durante el análisis del código, útil como backlog inicial de mejora:
 
 ### 17.1 Contenido / negocio
-- [ ] La sección **Insights** usa artículos de marcador de posición con `href="#"` — no hay backend de blog ni contenido real conectado.
-- [ ] No hay sección de **prueba social real** (testimonios, logos de clientes) pese a estar recomendada explícitamente en el brief de marca.
-- [ ] Los 6 "casos" de `SelectedWork` son **tipos de solución genéricos**, no proyectos reales con nombre de cliente — coherente con la etapa actual del negocio, pero a evolucionar cuando existan casos reales.
-- [ ] Faltan datos legales/de empresa y foto del fundador para la sección "Sobre TIDEO" (aún no implementada como página separada).
+- [ ] **Insights** muestra tarjetas "Próximamente": falta contenido real y un blog.
+- [ ] Sin **prueba social real** (testimonios, logos de clientes).
+- [ ] Los servicios de `SelectedWork` son tipos de solución, no casos con nombre de cliente.
+- [ ] Faltan datos legales/de empresa y foto del fundador en "Nosotros".
 
 ### 17.2 Funcionalidad / UX
-- [ ] El **botón flotante de WhatsApp** en la home (`index.tsx`) es un `<span>` decorativo sin `href`/`onClick` — no es funcional actualmente.
-- [ ] En el **Footer**, los íconos de **LinkedIn y WhatsApp** son `<span>` (no funcionales); solo Facebook e Instagram son enlaces reales.
-- [ ] El formulario de `/contacto` muestra "Recibido. Gracias." **incluso si `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` no están configuradas** (el `fetch` simplemente no se dispara) — riesgo de perder leads silenciosamente sin que nadie lo note.
-- [ ] `send-contact-email` siempre responde `{ success: true }` al frontend aunque Resend falle internamente — un fallo de envío solo queda en logs de Supabase, no genera alerta visible.
-- [x] ~~**Falso éxito en formulario de OPERA ante caídas de red o CORS:**~~ Resuelto en `QualificationForm.tsx`. Se removió la bandera incondicional del `finally` y ahora se maneja estado de error visual explícito (`errorMessage` con `AlertCircle`).
+- [x] ~~WhatsApp flotante y del footer sin enlace~~ — ya son enlaces funcionales.
+- [x] ~~`/contacto` mostraba éxito aunque fallara el envío~~ — ahora muestra error real.
+- [x] ~~`send-contact-email` siempre respondía éxito~~ — responde 502 si falla.
+- [x] ~~Footer roto en subdominios; sin menú móvil~~ — resueltos.
+- [ ] Decidir si `/contacto` y el diagnóstico deben **también** fijar `urgencia` estructurada en el ERP (hoy va en `notas`; el valor por defecto es `media`).
+- [ ] Confirmar con el ERP (`api-prospectos`) que acepta las fuentes `web_contacto` y `web_diagnostico`.
 
 ### 17.3 Código / arquitectura
-- [ ] **Doble lockfile** (`package-lock.json` + `bun.lock`): definir un gestor de paquetes oficial único.
-- [ ] **Doble configuración de despliegue** (Vercel + Cloudflare Workers) sin que quede explícito en el repo cuál es la plataforma activa de producción.
-- [ ] `src/server-fns/diagnostic.ts` (Server Function de TanStack Start, con su propia lectura de `SUPABASE_URL`/`SUPABASE_ANON_KEY` server-side) **existe pero no parece estar siendo invocada** desde `DiagnosticModal.tsx`, que llama directamente a Supabase desde el cliente con las variables `VITE_*`. Aclarar si es código muerto/en transición o si se planea migrar la llamada al servidor (lo cual sería más seguro, al no requerir exponer el flujo completo desde el cliente).
-- [ ] El formulario de contacto usa `useState` nativo pese a que `react-hook-form` + `zod` están instalados como dependencias — inconsistencia de patrón; se podría migrar para validación más robusta y consistente con el resto del ecosistema de shadcn/ui.
-- [ ] No hay **rate limiting** visible en `get-diagnostic` (llamada paga a Anthropic) ni en `send-contact-email`/`send-diagnostic-email` — expuesto a abuso/spam si el sitio recibe tráfico malicioso.
-- [ ] La lógica de umbrales de "nivel de madurez" (`Inicial/En desarrollo/Avanzado/Líder digital`) está **duplicada** entre `DiagnosticModal.tsx` (`getMaturityLevel`) y el system prompt de `get-diagnostic` — cualquier cambio de criterio debe replicarse manualmente en ambos lugares.
-- [ ] No hay `sitemap.xml` ni `robots.txt` en `public/`.
-- [ ] No se detectaron tests automatizados (unitarios, de integración o e2e) en el repositorio.
+- [x] ~~Doble lockfile, restos de Cloudflare, `server-fns` sin uso~~ — eliminados.
+- [x] ~~Sin tests / sin `sitemap.xml` ni `robots.txt`~~ — existen (`tests/`, `public/`).
+- [ ] Límite de intentos **en memoria** (mejor esfuerzo): para un límite estricto, añadir Turnstile o una tabla de conteo.
+- [ ] El `manifest` web sigue siendo el de TIDEO en todos los hosts.
+- [ ] El formulario de contacto usa `useState` aunque `react-hook-form` + `zod` están instalados.
+- [ ] Los umbrales de "nivel de madurez" siguen **duplicados** entre `DiagnosticModal.tsx` y el prompt de `get-diagnostic`.
+- [ ] `eslint` reporta formato (prettier) en archivos antiguos; ejecutar `npm run format` en un PR aparte.
 
 ### 17.4 Performance
-- [ ] Los assets de video (`hero-tideo-animated.webm` ~5.8 MB, `tideo-logo-preloader.webm` ~4.1 MB, `demo-tideo.mp4` ~16 MB) son el mayor peso de carga del sitio; evaluar compresión adicional o CDN de streaming si el Lighthouse/Core Web Vitals lo justifica.
+- [ ] Videos pesados (`hero-tideo-animated.webm` ~5.8 MB, `tideo-logo-preloader.webm` ~4.1 MB, `demo-tideo.mp4` ~16 MB): comprimir o servir por streaming si Lighthouse/Core Web Vitals lo justifican.
 
 ---
 
@@ -778,7 +779,7 @@ Listado consolidado de observaciones encontradas durante el análisis del códig
 | **Lovable** | Plataforma de generación de aplicaciones asistida por IA usada como origen/mantenimiento de este proyecto (`@lovable.dev/vite-tanstack-config`) |
 | **Madurez digital** | Métrica propia de TIDEO (0–100%) calculada a partir de las respuestas del módulo de diagnóstico, con 4 niveles: Inicial, En desarrollo, Avanzado, Líder digital |
 | **Radar de módulos** | Visualización SVG tipo "radar chart" que resume visualmente el avance/puntaje del usuario en el diagnóstico |
-| **Frase ancla del ERP** | Frase de venta obligatoria codificada en el system prompt de IA: *"Un ERP donde el núcleo de tu operación no se adapta a un software estándar: se construye desde cero para funcionar exactamente como tu negocio genera valor."* |
+| **Frase ancla del ERP** | Frase de venta codificada en el prompt de IA: *"Partimos de OPERA, un ERP que ya funciona, y lo adaptamos para que opere exactamente como tu negocio genera valor."* |
 | **shadcn/ui** | Colección de componentes de UI basados en Radix UI + Tailwind, copiados directamente al repo (no instalados como paquete de terceros), configurados vía `components.json` |
 | **OKLCH** | Espacio de color perceptualmente uniforme usado en `styles.css` para definir toda la paleta del sitio |
 
