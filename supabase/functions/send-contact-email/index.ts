@@ -89,6 +89,38 @@ function buildInternalEmail(p: ContactPayload): string {
 </html>`;
 }
 
+function buildConfirmationEmail(p: ContactPayload): string {
+  return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background-color:#060B14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#060B14;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+        <tr><td style="padding-bottom:24px;text-align:center;">
+          <p style="margin:0;font-size:22px;font-weight:800;color:#00BCD4;letter-spacing:2px;">TIDEO</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#607D8B;letter-spacing:1px;">TECH &amp; STRATEGY</p>
+        </td></tr>
+        <tr><td style="background:#1A2B4A;border-radius:8px;padding:28px 32px;">
+          <h1 style="margin:0 0 12px;font-size:20px;color:#F7F8FA;">${escapeHtml(p.nombre)}, recibimos tu mensaje</h1>
+          <p style="margin:0 0 12px;font-size:15px;color:#C8D6E5;line-height:1.7;">
+            Gracias por contarnos qué proceso quieres mejorar${p.empresa ? ` en ${escapeHtml(p.empresa)}` : ""}.
+            Lo revisaremos y te escribiremos a la brevedad para coordinar la conversación inicial.
+          </p>
+          <p style="margin:0;font-size:13px;color:#607D8B;line-height:1.6;">
+            Si prefieres hablar ahora, escríbenos a contacto@tideo.tech o por WhatsApp al +51 919 102 556.
+          </p>
+        </td></tr>
+        <tr><td style="padding:20px 0;text-align:center;">
+          <p style="margin:0;font-size:12px;color:#607D8B;">TIDEO Tech &amp; Strategy — www.tideo.tech</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
 serve(async (req) => {
   const cors = corsFor(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
@@ -150,6 +182,24 @@ serve(async (req) => {
   } catch (err) {
     console.error("send-contact-email error:", err);
     return json({ error: "No se pudo enviar el mensaje" }, 502, cors);
+  }
+
+  // Confirmación a quien escribió. Es secundaria: si falla, el aviso interno ya salió.
+  try {
+    const conf = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        from: "TIDEO <hola@tideo.tech>",
+        to: p.correo,
+        reply_to: "contacto@tideo.tech",
+        subject: "Recibimos tu mensaje — TIDEO Tech & Strategy",
+        html: buildConfirmationEmail(p),
+      }),
+    });
+    if (!conf.ok) console.error("Resend (confirmación) error:", conf.status, await conf.text());
+  } catch (err) {
+    console.error("send-contact-email (confirmación) error:", err);
   }
 
   return json({ success: true }, 200, cors);
