@@ -4,7 +4,7 @@ import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { canonicalLink, canonicalUrl, ORG } from "@/lib/site";
 import { Honeypot } from "@/components/site/Honeypot";
-import { getAttribution } from "@/lib/leads";
+import { getAttribution, submitLead } from "@/lib/leads";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
@@ -162,20 +162,47 @@ function Contacto() {
     try {
       if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error("not-configured");
       const campaign = getAttribution().campaign;
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/send-contact-email`, {
+      const origen = [servicio, campaign && `origen: ${campaign}`].filter(Boolean).join(" · ");
+
+      // Correo interno y lead en el ERP en paralelo: basta con que uno funcione
+      // para no perder el contacto; si fallan los dos, se avisa al visitante.
+      const email = fetch(`${SUPABASE_URL}/functions/v1/send-contact-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({
-          ...form,
-          urgencia,
-          servicio: [servicio, campaign && `origen: ${campaign}`].filter(Boolean).join(" · "),
-          website,
-        }),
+        body: JSON.stringify({ ...form, urgencia, servicio: origen, website }),
+      }).then((res) => {
+        if (!res.ok) throw new Error(`email-${res.status}`);
       });
-      if (!res.ok) throw new Error(`status-${res.status}`);
+
+      const lead = submitLead({
+        nombre: form.nombre,
+        correo: form.correo,
+        telefono: form.whatsapp,
+        empresa: form.empresa,
+        cargo: form.cargo,
+        industria: form.rubro,
+        fuente: "web_contacto",
+        canal: "web_contacto",
+        notas: [
+          servicio && `Servicio de interés: ${servicio}`,
+          `Proceso a mejorar: ${form.proceso}`,
+          form.herramientas && `Herramientas: ${form.herramientas}`,
+          `Urgencia: ${urgencia}`,
+        ]
+          .filter(Boolean)
+          .join(" | "),
+        website,
+      });
+
+      const [emailResult, leadResult] = await Promise.allSettled([email, lead]);
+      if (emailResult.status === "rejected") console.error("send-contact-email failed:", emailResult.reason);
+      if (leadResult.status === "rejected") console.error("submit-lead failed:", leadResult.reason);
+      if (emailResult.status === "rejected" && leadResult.status === "rejected") {
+        throw new Error("email-and-lead-failed");
+      }
       setSent(true);
     } catch (err) {
       console.error("send-contact-email failed:", err);

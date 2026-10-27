@@ -15,6 +15,7 @@ const links = [
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -61,7 +62,7 @@ export function Nav() {
             ) : "hash" in l && l.hash ? (
               <a
                 key={l.label}
-                href={l.hash}
+                href={`/${l.hash}`}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {l.label}
@@ -87,7 +88,44 @@ export function Nav() {
         >
           Cuéntanos tu proceso →
         </HoverBorderGradient>
+        <button
+          type="button"
+          className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-foreground"
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={open}
+          aria-controls="menu-movil"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span aria-hidden className="text-lg leading-none">
+            {open ? "✕" : "☰"}
+          </span>
+        </button>
       </div>
+      {open && (
+        <nav
+          id="menu-movil"
+          className="md:hidden border-t border-hairline bg-background/95 backdrop-blur-xl px-6 py-4 flex flex-col gap-1 text-base"
+        >
+          {links.map((l) => {
+            const href =
+              "external" in l && l.external
+                ? l.external
+                : "hash" in l && l.hash
+                  ? `/${l.hash}`
+                  : l.to;
+            return (
+              <a
+                key={l.label}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="py-3 text-muted-foreground hover:text-foreground transition-colors border-b border-hairline last:border-0"
+              >
+                {l.label}
+              </a>
+            );
+          })}
+        </nav>
+      )}
     </header>
   );
 }

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { submitLead } from "@/lib/leads";
 import {
   MODULES, QUESTIONS, FINAL_QUESTIONS,
   type ModuleId,
@@ -814,6 +815,26 @@ export function DiagnosticModal({
             urgencia: finalAnswers[2] ? URGENCIA_OPTS[finalAnswers[2] - 1] : "No especificada",
           }),
         }).catch((e) => console.error("send-diagnostic-email failed:", e));
+
+        // Además del correo, el lead entra al ERP con el resumen del diagnóstico.
+        submitLead({
+          nombre: payload.userName,
+          correo: payload.userEmail,
+          telefono: payload.userPhone,
+          empresa: payload.companyName,
+          fuente: "web_diagnostico",
+          canal: "web_diagnostico",
+          notas: [
+            `Madurez: ${getMaturityLevel(payload.maturityPercentage)} (${payload.maturityPercentage}%)`,
+            `Áreas críticas: ${payload.criticalAreas.join(", ") || "—"}`,
+            `Servicio recomendado: ${extractRecommendedService(diagnosticText)}`,
+            `Tamaño: ${payload.companySizeContext}`,
+            `Urgencia: ${finalAnswers[2] ? URGENCIA_OPTS[finalAnswers[2] - 1] : "No especificada"}`,
+            finalAnswers[4] ? `Operación: ${FINAL_QUESTIONS[4].opts[finalAnswers[4] - 1]}` : "",
+          ]
+            .filter(Boolean)
+            .join(" | "),
+        }).catch((e) => console.error("submit-lead (diagnóstico) failed:", e));
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
