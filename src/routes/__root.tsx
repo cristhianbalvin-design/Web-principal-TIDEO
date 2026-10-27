@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 import {
   Outlet,
   createRootRouteWithContext,
@@ -9,6 +10,7 @@ import {
 
 import { NotFound } from "@/components/site/NotFound";
 import { Preloader } from "@/components/site/Preloader";
+import { captureAttribution } from "@/lib/leads";
 import { SITE_URL } from "@/lib/site";
 import appCss from "../styles.css?url";
 
@@ -113,6 +115,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // Guarda los UTM de la primera página con parámetros (p. ej. llegada desde tideo.tech a OPERA).
+  useEffect(() => {
+    captureAttribution();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

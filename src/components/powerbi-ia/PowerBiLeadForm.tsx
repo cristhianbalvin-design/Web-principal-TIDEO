@@ -1,6 +1,7 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { CheckCircle2, AlertCircle, Sparkles, ArrowRight, BookOpen, Clock } from "lucide-react";
 import { SectionHeader } from "@/components/site/SectionHeader";
+import { Honeypot } from "@/components/site/Honeypot";
 import { submitLead } from "@/lib/leads";
 
 const WA_URL =
@@ -23,6 +24,7 @@ const initialLead: LeadData = {
 export function PowerBiLeadForm() {
   const [formData, setFormData] = useState<LeadData>(initialLead);
   const [loading, setLoading] = useState(false);
+  const [website, setWebsite] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submittedChoice, setSubmittedChoice] = useState<"si" | "no">("si");
   const [showInitialThanks, setShowInitialThanks] = useState(true);
@@ -82,6 +84,7 @@ export function PowerBiLeadForm() {
         tipo_documento: "DNI",
         notas,
         urgencia: hasBase ? "alta" : "media",
+        website,
       });
 
       if (result.success) {
@@ -229,7 +232,8 @@ export function PowerBiLeadForm() {
               </div>
             )
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="relative space-y-6">
+              <Honeypot value={website} onChange={setWebsite} />
               <div>
                 <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-2">
                   Nombre completo <span className="text-academy">*</span>
