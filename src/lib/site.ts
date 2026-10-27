@@ -94,6 +94,57 @@ export function jsonLdScript(data: unknown) {
 }
 
 export const OPERA_URL = "https://opera.tideo.tech/";
+export const POWERBI_URL = "https://powerbi-ia.tideo.tech/";
+
+/**
+ * Agrega parámetros UTM a un enlace hacia otro subdominio.
+ * Solo `utm_campaign` llega al CRM (ver lib/leads.ts), así que cada ubicación
+ * lleva su propia campaña (home_card_opera, home_hero, home_nav, …).
+ */
+export function trackedUrl(base: string, path: string, campaign: string): string {
+  const url = new URL(path, base);
+  url.searchParams.set("utm_source", "tideo.tech");
+  url.searchParams.set("utm_medium", "web");
+  url.searchParams.set("utm_campaign", campaign);
+  return url.toString();
+}
+
+/** Enlace a OPERA (landing, o una subpágina como "metalmecanica") con UTM por ubicación. */
+export function operaUrl(campaign: string, path = ""): string {
+  return trackedUrl(OPERA_URL, path, campaign);
+}
+
+/** Enlace al programa Power BI + IA con UTM por ubicación. */
+export function powerbiUrl(campaign: string): string {
+  return trackedUrl(POWERBI_URL, "", campaign);
+}
+
+/** Etiquetas sociales (Open Graph / Twitter) y de app propias de las páginas de OPERA. */
+export function operaSocialMeta({
+  title,
+  description,
+  url,
+}: {
+  title: string;
+  description: string;
+  url: string;
+}) {
+  const image = `${OPERA_URL}og-opera.png`;
+  return [
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:url", content: url },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "OPERA by TIDEO" },
+    { property: "og:image", content: image },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: image },
+    { name: "application-name", content: "OPERA" },
+    { name: "apple-mobile-web-app-title", content: "OPERA" },
+  ];
+}
 
 export const OPERA_DESCRIPTION =
   "OPERA es un ERP + MOM para talleres de mantenimiento, alquiler de maquinaria, metalmecánica, flotas de servicio, minería y contratistas: órdenes de trabajo, mantenimiento, almacén de repuestos, costos en tiempo real, HSE, compras, finanzas y RRHH en una sola base de datos.";

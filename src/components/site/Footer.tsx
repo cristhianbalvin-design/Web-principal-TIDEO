@@ -1,8 +1,38 @@
 import { Link } from "@tanstack/react-router";
 import tideoLogoVertical from "@/assets/tideo-logo-vertical.png";
-import { ORG } from "@/lib/site";
+import { OPERA_URL, ORG, POWERBI_URL, SITE_URL, WHATSAPP_URL, operaUrl } from "@/lib/site";
 
-export function Footer() {
+type FooterLink =
+  | { label: string; to: "/" | "/nosotros" | "/contacto" }
+  | { label: string; href: string };
+
+const mainLinks: FooterLink[] = [
+  { label: "Inicio", to: "/" },
+  { label: "Trabajo", href: "/#trabajo" },
+  { label: "OPERA (ERP)", href: operaUrl("home_footer") },
+  { label: "Ecosistema", href: "/#ecosistema" },
+  { label: "Insights", href: "/#insights" },
+  { label: "Nosotros", to: "/nosotros" },
+  { label: "Contacto", to: "/contacto" },
+];
+
+// En los subdominios (opera., powerbi-ia.) las rutas relativas no existen: todo es absoluto.
+const subdomainLinks: FooterLink[] = [
+  { label: "TIDEO Tech & Strategy", href: `${SITE_URL}/` },
+  { label: "OPERA (ERP)", href: OPERA_URL },
+  { label: "ERP para metalmecánica", href: `${OPERA_URL}metalmecanica` },
+  { label: "Power BI + IA", href: POWERBI_URL },
+  { label: "Nosotros", href: `${SITE_URL}/nosotros` },
+  { label: "Contacto", href: `${SITE_URL}/contacto` },
+];
+
+/**
+ * variant "main": sitio principal (www). variant "subdomain": landings en subdominio,
+ * con enlaces absolutos para que Contacto, Nosotros y Privacidad no den 404.
+ */
+export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } = {}) {
+  const links = variant === "subdomain" ? subdomainLinks : mainLinks;
+  const linkClass = "hover:text-primary transition-colors";
   return (
     <footer className="border-t border-hairline mt-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 grid gap-12 lg:grid-cols-3 lg:items-start">
@@ -14,44 +44,27 @@ export function Footer() {
             loading="lazy"
           />
           <p className="mt-5 text-xl md:text-2xl font-medium leading-tight max-w-xs">
-            Tecnologia que entiende tu{" "}
+            Tecnología que entiende tu{" "}
             <span className="font-serif-italic text-primary">negocio</span>.
           </p>
         </div>
 
         <div className="lg:order-1">
-          <h4 className="text-xs uppercase tracking-widest text-muted-foreground">Navegacion</h4>
+          <h4 className="text-xs uppercase tracking-widest text-muted-foreground">Navegación</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li>
-              <Link to="/" className="hover:text-primary transition-colors">
-                Inicio
-              </Link>
-            </li>
-            <li>
-              <a href="/#trabajo" className="hover:text-primary transition-colors">
-                Trabajo
-              </a>
-            </li>
-            <li>
-              <a href="/#ecosistema" className="hover:text-primary transition-colors">
-                Ecosistema
-              </a>
-            </li>
-            <li>
-              <a href="/#insights" className="hover:text-primary transition-colors">
-                Insights
-              </a>
-            </li>
-            <li>
-              <Link to="/nosotros" className="hover:text-primary transition-colors">
-                Nosotros
-              </Link>
-            </li>
-            <li>
-              <Link to="/contacto" className="hover:text-primary transition-colors">
-                Contacto
-              </Link>
-            </li>
+            {links.map((l) => (
+              <li key={l.label}>
+                {"to" in l ? (
+                  <Link to={l.to} className={linkClass}>
+                    {l.label}
+                  </Link>
+                ) : (
+                  <a href={l.href} className={linkClass}>
+                    {l.label}
+                  </a>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -107,14 +120,17 @@ export function Footer() {
                 <circle cx="4" cy="4" r="2" />
               </svg>
             </a>
-            <span
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background cursor-default"
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"
               aria-label="WhatsApp"
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
               </svg>
-            </span>
+            </a>
           </div>
         </div>
       </div>
@@ -122,9 +138,15 @@ export function Footer() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-6 flex flex-col sm:flex-row gap-3 items-center justify-between text-xs text-muted-foreground">
           <span>© 2026 TIDEO Tech & Strategy. Todos los derechos reservados.</span>
           <span className="flex items-center gap-4">
-            <Link to="/privacidad" className="hover:text-primary transition-colors">
-              Política de privacidad
-            </Link>
+            {variant === "subdomain" ? (
+              <a href={`${SITE_URL}/privacidad`} className={linkClass}>
+                Política de privacidad
+              </a>
+            ) : (
+              <Link to="/privacidad" className={linkClass}>
+                Política de privacidad
+              </Link>
+            )}
             <span>Lima · Perú</span>
           </span>
         </div>

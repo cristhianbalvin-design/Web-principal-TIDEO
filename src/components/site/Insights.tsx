@@ -41,10 +41,10 @@ export function Insights() {
 
         <div className="mt-16 grid gap-px bg-hairline border border-hairline rounded-2xl overflow-hidden md:grid-cols-2">
           {articles.map((a, i) => (
-            <a
+            // Sin artículos publicados todavía: se muestran como tarjetas, no como enlaces a "#".
+            <article
               key={a.title}
-              href="#"
-              className="insight-card group block bg-background p-8 md:p-10 transition-colors hover:bg-surface/60"
+              className="insight-card group block bg-background p-8 md:p-10"
               style={{ "--insight-color": a.color } as CSSProperties}
             >
               <div className="flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
@@ -54,10 +54,10 @@ export function Insights() {
               <h3 className="mt-8 text-2xl md:text-3xl font-semibold tracking-tight leading-snug max-w-md">
                 {a.title}
               </h3>
-              <div className="insight-card-link mt-8 inline-flex items-center gap-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                Leer artículo -&gt;
+              <div className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
+                Próximamente
               </div>
-            </a>
+            </article>
           ))}
         </div>
       </div>

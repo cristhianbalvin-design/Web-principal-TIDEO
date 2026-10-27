@@ -13,23 +13,23 @@ import { TracingBeam } from "@/components/ui/tracing-beam";
 import { OperaNav } from "@/components/opera/OperaNav";
 import { Footer } from "@/components/site/Footer";
 import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
-import { OPERA_URL, jsonLdScript, operaJsonLd, whatsappUrl } from "@/lib/site";
+import { OPERA_URL, jsonLdScript, operaJsonLd, operaSocialMeta, whatsappUrl } from "@/lib/site";
+
+const OPERA_TITLE = "OPERA | ERP para talleres, alquiler de maquinaria y servicios en campo";
+const OPERA_META_DESCRIPTION =
+  "OPERA es el ERP para talleres de mantenimiento, alquiler de maquinaria y servicios en campo: órdenes de trabajo, repuestos, mantenimiento y costos en tiempo real en una sola plataforma ERP + MOM.";
 
 export const Route = createFileRoute("/opera/")({
   component: OperaLanding,
   head: () => ({
     meta: [
-      { title: "OPERA | ERP para talleres, alquiler de maquinaria y servicios en campo" },
-      {
-        name: "description",
-        content:
-          "OPERA es el ERP para talleres de mantenimiento, alquiler de maquinaria y servicios en campo: órdenes de trabajo, repuestos, mantenimiento y costos en tiempo real en una sola plataforma ERP + MOM.",
-      },
-      {
-        property: "og:title",
-        content: "OPERA | ERP para talleres, alquiler de maquinaria y servicios en campo",
-      },
-      { property: "og:url", content: OPERA_URL },
+      { title: OPERA_TITLE },
+      { name: "description", content: OPERA_META_DESCRIPTION },
+      ...operaSocialMeta({
+        title: OPERA_TITLE,
+        description: OPERA_META_DESCRIPTION,
+        url: OPERA_URL,
+      }),
     ],
     // La landing vive en su subdominio; /opera en www es la misma página.
     links: [{ rel: "canonical", href: OPERA_URL }],
@@ -55,7 +55,7 @@ function OperaLanding() {
           <QualificationForm />
         </TracingBeam>
       </main>
-      <Footer />
+      <Footer variant="subdomain" />
       <WhatsAppFloat
         href={whatsappUrl("Hola TIDEO, quiero información sobre OPERA, el ERP para mi operación.")}
       />

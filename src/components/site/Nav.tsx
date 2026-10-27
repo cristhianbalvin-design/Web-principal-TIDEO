@@ -2,10 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import isotipo from "@/assets/tideo-isotipo.png";
+import { operaUrl } from "@/lib/site";
 
 const links = [
   { to: "/", label: "Inicio" },
   { to: "/", label: "Trabajo", hash: "#trabajo" },
+  { to: "/", label: "OPERA", external: operaUrl("home_nav") },
   { to: "/", label: "Ecosistema", hash: "#ecosistema" },
   { to: "/", label: "Insights", hash: "#insights" },
   { to: "/contacto", label: "Contacto" },
@@ -43,7 +45,20 @@ export function Nav() {
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm">
           {links.map((l) =>
-            "hash" in l && l.hash ? (
+            "external" in l && l.external ? (
+              <a
+                key={l.label}
+                href={l.external}
+                className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: "var(--color-consulting)" }}
+                />
+                {l.label}
+              </a>
+            ) : "hash" in l && l.hash ? (
               <a
                 key={l.label}
                 href={l.hash}

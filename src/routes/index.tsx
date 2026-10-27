@@ -26,19 +26,20 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "TIDEO Tech & Strategy | ERP a medida, automatización e IA para empresas" },
+      { title: "TIDEO Tech & Strategy | OPERA ERP y sistemas a medida para empresas" },
       {
         name: "description",
         content:
-          "TIDEO desarrolla ERP a medida, CRM, automatizaciones y soluciones con IA para empresas que buscan ordenar procesos, integrar datos y crecer con tecnología y desarrollo ágil.",
+          "TIDEO ofrece OPERA, su ERP para talleres, flotas y empresas con activos, y desarrolla sistemas a medida, CRM, automatizaciones, BI, IA y MVP en semanas para ordenar procesos y crecer con tecnología.",
       },
       {
         property: "og:title",
-        content: "TIDEO Tech & Strategy | ERP a medida, automatización e IA",
+        content: "TIDEO Tech & Strategy | OPERA ERP y sistemas a medida",
       },
       {
         property: "og:description",
-        content: "Tecnología que entiende tu negocio. Procesos, datos e IA para empresas medianas.",
+        content:
+          "Tecnología que entiende tu negocio. OPERA ERP, sistemas a medida, datos e IA para empresas medianas.",
       },
       { property: "og:url", content: canonicalUrl("/") },
     ],
