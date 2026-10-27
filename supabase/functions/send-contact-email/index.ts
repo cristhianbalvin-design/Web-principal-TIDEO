@@ -119,7 +119,7 @@ serve(async (req) => {
     proceso: clip(raw.proceso, 4000),
     herramientas: clip(raw.herramientas, 2000),
     urgencia: clip(raw.urgencia, 120),
-    servicio: clip(raw.servicio, 80),
+    servicio: clip(raw.servicio, 160),
   };
   if (!p.nombre || !p.empresa || !p.proceso || !EMAIL_RE.test(p.correo)) {
     return json({ error: "Datos inválidos" }, 400, cors);

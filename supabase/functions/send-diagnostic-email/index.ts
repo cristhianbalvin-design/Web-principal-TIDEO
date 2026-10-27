@@ -281,13 +281,13 @@ serve(async (req) => {
       sendEmail({
         from: "TIDEO <hola@tideo.tech>",
         to: p.userEmail,
-        subject: `${esc(p.userName)}, tu diagnóstico de madurez digital está aquí`,
+        subject: `${p.userName}, tu diagnóstico de madurez digital está aquí`.replace(/[\r\n]+/g, " "),
         html: buildUserEmail(p),
       }),
       sendEmail({
         from: "TIDEO <hola@tideo.tech>",
         to: "cristhian@tideo.tech",
-        subject: `Nuevo lead — ${esc(p.companyName)} | ${esc(p.maturityLevel)}`,
+        subject: `Nuevo lead — ${p.companyName} | ${p.maturityLevel}`.replace(/[\r\n]+/g, " "),
         html: buildInternalEmail(p),
       }),
     ]);

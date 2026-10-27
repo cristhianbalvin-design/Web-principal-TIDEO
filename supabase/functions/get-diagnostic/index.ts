@@ -141,8 +141,8 @@ serve(async (req) => {
       throw new Error(`Anthropic error ${anthropicRes.status}`);
     }
 
-    const json = await anthropicRes.json() as { content: Array<{ text: string }> };
-    const diagnostic = json.content?.[0]?.text ?? "";
+    const data = await anthropicRes.json() as { content: Array<{ text: string }> };
+    const diagnostic = data.content?.[0]?.text ?? "";
 
     return json({ diagnostic }, 200, corsHeaders);
   } catch (_err) {
