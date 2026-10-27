@@ -3,7 +3,8 @@ import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { InlineWidget } from "react-calendly";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
-import { submitLead } from "@/lib/leads";
+import { Honeypot } from "@/components/site/Honeypot";
+import { getAttribution, submitLead } from "@/lib/leads";
 
 interface FormData {
   nombre: string;
@@ -40,6 +41,7 @@ export function QualificationForm({
   const [showCalendar, setShowCalendar] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [website, setWebsite] = useState("");
 
   useEffect(() => {
     if (submitted && isQualified) {
@@ -76,6 +78,7 @@ export function QualificationForm({
       urgencia: urgencyMap[formData.plazo] || "media",
       presupuesto_mayor_7000: formData.presupuesto,
       notas: `Herramienta actual: ${formData.herramienta_actual}`,
+      website,
     };
 
     try {
@@ -182,13 +185,15 @@ export function QualificationForm({
                     }}
                     utm={{
                       utmSource: "opera_landing",
+                      utmCampaign: getAttribution().campaign,
                     }}
                   />
                 </div>
               </div>
             )
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="relative space-y-6">
+              <Honeypot value={website} onChange={setWebsite} />
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Nombre completo</label>

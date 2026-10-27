@@ -1,9 +1,15 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import {
+  clientIp,
+  clip,
+  corsFor,
+  EMAIL_RE,
+  escapeHtml as esc,
+  json,
+  originRejected,
+  rateLimited,
+  readJson,
+} from "../_shared/guard.ts";
 
 interface EmailPayload {
   userName: string;
@@ -20,7 +26,7 @@ interface EmailPayload {
 
 function buildUserEmail(p: EmailPayload): string {
   const criticalList = p.criticalAreas
-    .map((a) => `<li style="margin-bottom:6px;color:#C8D6E5;">${a}</li>`)
+    .map((a) => `<li style="margin-bottom:6px;color:#C8D6E5;">${esc(a)}</li>`)
     .join("");
 
   const diagLines = p.diagnosticResult
@@ -28,12 +34,12 @@ function buildUserEmail(p: EmailPayload): string {
     .filter(Boolean)
     .map((line) => {
       if (line.startsWith("- ")) {
-        return `<p style="margin:6px 0;padding-left:14px;color:#C8D6E5;line-height:1.7;font-size:15px;">· ${line.slice(2)}</p>`;
+        return `<p style="margin:6px 0;padding-left:14px;color:#C8D6E5;line-height:1.7;font-size:15px;">· ${esc(line.slice(2))}</p>`;
       }
       if (line.startsWith("**") || line.match(/^[A-ZÁÉÍÓÚ][^:]{2,30}:/)) {
-        return `<p style="margin:20px 0 6px;font-weight:700;color:#F7F8FA;font-size:15px;">${line.replace(/\*\*/g, "")}</p>`;
+        return `<p style="margin:20px 0 6px;font-weight:700;color:#F7F8FA;font-size:15px;">${esc(line.replace(/\*\*/g, ""))}</p>`;
       }
-      return `<p style="margin:6px 0;color:#C8D6E5;line-height:1.7;font-size:15px;">${line}</p>`;
+      return `<p style="margin:6px 0;color:#C8D6E5;line-height:1.7;font-size:15px;">${esc(line)}</p>`;
     })
     .join("");
 
@@ -54,12 +60,12 @@ function buildUserEmail(p: EmailPayload): string {
         <!-- Title -->
         <tr><td style="padding-bottom:8px;">
           <h1 style="margin:0;font-size:24px;font-weight:700;color:#F7F8FA;line-height:1.3;">
-            ${p.userName}, este es tu diagnóstico de madurez digital
+            ${esc(p.userName)}, este es tu diagnóstico de madurez digital
           </h1>
         </td></tr>
         <tr><td style="padding-bottom:32px;">
           <p style="margin:0;font-size:14px;color:#607D8B;">
-            Basado en las respuestas de tu evaluación — ${p.companyName}
+            Basado en las respuestas de tu evaluación — ${esc(p.companyName)}
           </p>
         </td></tr>
 
@@ -69,8 +75,8 @@ function buildUserEmail(p: EmailPayload): string {
             <p style="margin:0 0 6px;font-size:10px;font-weight:700;letter-spacing:2px;color:#607D8B;text-transform:uppercase;">
               NIVEL DE MADUREZ DIGITAL
             </p>
-            <p style="margin:0;font-size:28px;font-weight:800;color:#00BCD4;line-height:1.2;">${p.maturityLevel}</p>
-            <p style="margin:6px 0 0;font-size:16px;color:#F7F8FA;">${p.maturityPercentage}%</p>
+            <p style="margin:0;font-size:28px;font-weight:800;color:#00BCD4;line-height:1.2;">${esc(p.maturityLevel)}</p>
+            <p style="margin:6px 0 0;font-size:16px;color:#F7F8FA;">${esc(p.maturityPercentage)}%</p>
           </div>
         </td></tr>
 
@@ -91,7 +97,7 @@ function buildUserEmail(p: EmailPayload): string {
           <div style="background:#1A2B4A;border-radius:8px;padding:32px;text-align:center;">
             <p style="margin:0 0 10px;font-size:18px;font-weight:700;color:#F7F8FA;">El primer paso no cuesta nada.</p>
             <p style="margin:0 0 24px;font-size:14px;color:#607D8B;line-height:1.6;">
-              Cuéntanos cómo debe operar tu negocio y construimos el sistema que lo haga posible.
+              Cuéntanos cómo debe operar tu negocio y adaptamos el sistema que lo haga posible.
             </p>
             <a href="https://www.tideo.tech/contacto"
               style="display:inline-block;background:#00BCD4;color:#060B14;text-decoration:none;font-weight:700;font-size:14px;padding:14px 32px;border-radius:6px;">
@@ -116,16 +122,16 @@ function buildUserEmail(p: EmailPayload): string {
 }
 
 function buildInternalEmail(p: EmailPayload): string {
-  const criticalStr = p.criticalAreas.join(", ") || "—";
+  const criticalStr = esc(p.criticalAreas.join(", ")) || "—";
 
   const diagLines = p.diagnosticResult
     .split("\n")
     .filter(Boolean)
     .map((line) => {
       if (line.startsWith("**") || line.match(/^[A-ZÁÉÍÓÚ][^:]{2,30}:/)) {
-        return `<p style="margin:10px 0 4px;font-weight:700;color:#060B14;font-size:14px;">${line.replace(/\*\*/g, "")}</p>`;
+        return `<p style="margin:10px 0 4px;font-weight:700;color:#060B14;font-size:14px;">${esc(line.replace(/\*\*/g, ""))}</p>`;
       }
-      return `<p style="margin:4px 0;color:#374151;line-height:1.7;font-size:14px;">${line}</p>`;
+      return `<p style="margin:4px 0;color:#374151;line-height:1.7;font-size:14px;">${esc(line)}</p>`;
     })
     .join("");
 
@@ -148,33 +154,33 @@ function buildInternalEmail(p: EmailPayload): string {
           <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:20px;">
             <tr>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;width:40%;font-size:13px;font-weight:600;color:#607D8B;">Nombre</td>
-              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${p.userName}</td>
+              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${esc(p.userName)}</td>
             </tr>
             <tr>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:600;color:#607D8B;">Empresa</td>
-              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${p.companyName}</td>
+              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${esc(p.companyName)}</td>
             </tr>
             <tr>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:600;color:#607D8B;">Teléfono</td>
-              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${p.userPhone}</td>
+              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${esc(p.userPhone)}</td>
             </tr>
             <tr>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:600;color:#607D8B;">Correo</td>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">
-                <a href="mailto:${p.userEmail}" style="color:#00BCD4;text-decoration:none;">${p.userEmail}</a>
+                <a href="mailto:${esc(p.userEmail)}" style="color:#00BCD4;text-decoration:none;">${esc(p.userEmail)}</a>
               </td>
             </tr>
             <tr>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:600;color:#607D8B;">Madurez</td>
-              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${p.maturityLevel} — ${p.maturityPercentage}%</td>
+              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${esc(p.maturityLevel)} — ${esc(p.maturityPercentage)}%</td>
             </tr>
             <tr>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:600;color:#607D8B;">Urgencia</td>
-              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${p.urgencia}</td>
+              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#060B14;">${esc(p.urgencia)}</td>
             </tr>
             <tr>
               <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:600;color:#607D8B;">Servicio recomendado</td>
-              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:700;color:#00BCD4;">${p.recommendedService}</td>
+              <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:700;color:#00BCD4;">${esc(p.recommendedService)}</td>
             </tr>
             <tr>
               <td style="padding:10px 0;font-size:13px;font-weight:600;color:#607D8B;">Áreas críticas</td>
@@ -204,12 +210,35 @@ function buildInternalEmail(p: EmailPayload): string {
 }
 
 serve(async (req) => {
+  const corsHeaders = corsFor(req);
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
+  if (req.method !== "POST") return json({ error: "Method Not Allowed" }, 405, corsHeaders);
+  if (originRejected(req)) return json({ error: "Forbidden" }, 403, corsHeaders);
+  if (rateLimited(`diagmail:${clientIp(req)}`, 3, 10 * 60_000)) {
+    return json({ error: "Too Many Requests" }, 429, corsHeaders);
+  }
 
   try {
-    const p = await req.json() as EmailPayload;
+    const raw = await readJson<EmailPayload>(req, 128 * 1024);
+    if (!EMAIL_RE.test(clip(raw.userEmail, 200))) {
+      return json({ error: "Datos inválidos" }, 400, corsHeaders);
+    }
+    const p: EmailPayload = {
+      userName: clip(raw.userName, 200),
+      companyName: clip(raw.companyName, 200),
+      userEmail: clip(raw.userEmail, 200),
+      userPhone: clip(raw.userPhone, 50),
+      diagnosticResult: clip(raw.diagnosticResult, 12000),
+      maturityLevel: clip(raw.maturityLevel, 80),
+      maturityPercentage: Number(raw.maturityPercentage) || 0,
+      criticalAreas: Array.isArray(raw.criticalAreas)
+        ? raw.criticalAreas.slice(0, 10).map((a) => clip(a, 200))
+        : [],
+      recommendedService: clip(raw.recommendedService, 120),
+      urgencia: clip(raw.urgencia, 80),
+    };
     const apiKey = Deno.env.get("RESEND_API_KEY") ?? "";
     const makeWebhookUrl = Deno.env.get("MAKE_WEBHOOK_URL");
 
@@ -252,13 +281,13 @@ serve(async (req) => {
       sendEmail({
         from: "TIDEO <hola@tideo.tech>",
         to: p.userEmail,
-        subject: `${p.userName}, tu diagnóstico de madurez digital está aquí`,
+        subject: `${p.userName}, tu diagnóstico de madurez digital está aquí`.replace(/[\r\n]+/g, " "),
         html: buildUserEmail(p),
       }),
       sendEmail({
         from: "TIDEO <hola@tideo.tech>",
         to: "cristhian@tideo.tech",
-        subject: `Nuevo lead — ${p.companyName} | ${p.maturityLevel}`,
+        subject: `Nuevo lead — ${p.companyName} | ${p.maturityLevel}`.replace(/[\r\n]+/g, " "),
         html: buildInternalEmail(p),
       }),
     ]);
@@ -273,7 +302,5 @@ serve(async (req) => {
     console.error("send-diagnostic-email error:", err);
   }
 
-  return new Response(JSON.stringify({ success: true }), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+  return json({ success: true }, 200, corsHeaders);
 });

@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
-import { canonicalLink, canonicalUrl } from "@/lib/site";
+import { canonicalLink, canonicalUrl, ORG } from "@/lib/site";
+import { Honeypot } from "@/components/site/Honeypot";
+import { getAttribution, submitLead } from "@/lib/leads";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
@@ -21,6 +23,16 @@ export const Route = createFileRoute("/contacto")({
     links: [canonicalLink(canonicalUrl("/contacto"))],
   }),
 });
+
+/** Servicios que llegan desde las tarjetas de la home (`/contacto?servicio=<slug>`). */
+const SERVICIOS: Record<string, string> = {
+  "sistemas-a-medida": "Sistemas a medida sobre OPERA",
+  comercial: "Gestión comercial y clientes",
+  automatizacion: "Automatización e integraciones",
+  "datos-bi": "Datos y BI",
+  ia: "IA aplicada",
+  mvp: "MVP en semanas",
+};
 
 const urgencias = [
   "Estoy explorando opciones",
@@ -104,6 +116,15 @@ function Contacto() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<ContactFormState>(emptyForm);
+  const [error, setError] = useState<string | null>(null);
+  const [website, setWebsite] = useState("");
+  const [servicio, setServicio] = useState("");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const slug = new URLSearchParams(window.location.search).get("servicio") ?? "";
+    if (SERVICIOS[slug]) setServicio(SERVICIOS[slug]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -136,23 +157,60 @@ function Contacto() {
   const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     const urgencia = (e.currentTarget.elements.namedItem("urgencia") as HTMLInputElement)?.value ?? "";
     try {
-      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-        await fetch(`${SUPABASE_URL}/functions/v1/send-contact-email`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ ...form, urgencia }),
-        });
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error("not-configured");
+      const campaign = getAttribution().campaign;
+      const origen = [servicio, campaign && `origen: ${campaign}`].filter(Boolean).join(" · ");
+
+      // Correo interno y lead en el ERP en paralelo: basta con que uno funcione
+      // para no perder el contacto; si fallan los dos, se avisa al visitante.
+      const email = fetch(`${SUPABASE_URL}/functions/v1/send-contact-email`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ ...form, urgencia, servicio: origen, website }),
+      }).then((res) => {
+        if (!res.ok) throw new Error(`email-${res.status}`);
+      });
+
+      const lead = submitLead({
+        nombre: form.nombre,
+        correo: form.correo,
+        telefono: form.whatsapp,
+        empresa: form.empresa,
+        cargo: form.cargo,
+        industria: form.rubro,
+        fuente: "web_contacto",
+        canal: "web_contacto",
+        notas: [
+          servicio && `Servicio de interés: ${servicio}`,
+          `Proceso a mejorar: ${form.proceso}`,
+          form.herramientas && `Herramientas: ${form.herramientas}`,
+          `Urgencia: ${urgencia}`,
+        ]
+          .filter(Boolean)
+          .join(" | "),
+        website,
+      });
+
+      const [emailResult, leadResult] = await Promise.allSettled([email, lead]);
+      if (emailResult.status === "rejected") console.error("send-contact-email failed:", emailResult.reason);
+      if (leadResult.status === "rejected") console.error("submit-lead failed:", leadResult.reason);
+      if (emailResult.status === "rejected" && leadResult.status === "rejected") {
+        throw new Error("email-and-lead-failed");
       }
+      setSent(true);
     } catch (err) {
       console.error("send-contact-email failed:", err);
+      setError(
+        `No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos a ${ORG.email} o por WhatsApp al ${ORG.telephone}.`,
+      );
     } finally {
       setLoading(false);
-      setSent(true);
     }
   };
   return (
@@ -182,7 +240,18 @@ function Contacto() {
               </p>
             </div>
           ) : (
-            <form onSubmit={onSubmit} className="mt-16 grid gap-8 md:grid-cols-2">
+            <form onSubmit={onSubmit} className="relative mt-16 grid gap-8 md:grid-cols-2">
+              <Honeypot value={website} onChange={setWebsite} />
+              {servicio && (
+                <div className="md:col-span-2 flex items-center gap-3 text-sm">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground">
+                    Servicio de interés
+                  </span>
+                  <span className="rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-primary">
+                    {servicio}
+                  </span>
+                </div>
+              )}
               <Field label="Nombre" name="nombre" value={form.nombre} onChange={handleFieldChange} required />
               <Field label="Empresa" name="empresa" value={form.empresa} onChange={handleFieldChange} required />
               <Field label="Cargo" name="cargo" value={form.cargo} onChange={handleFieldChange} />
@@ -231,6 +300,12 @@ function Contacto() {
                   ))}
                 </div>
               </div>
+
+              {error && (
+                <p role="alert" className="md:col-span-2 text-sm text-red-400">
+                  {error}
+                </p>
+              )}
 
               <div className="md:col-span-2 mt-4 flex items-center justify-between gap-6 flex-wrap">
                 <p className="text-sm text-muted-foreground max-w-md">

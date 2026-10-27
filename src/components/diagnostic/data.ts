@@ -12,6 +12,8 @@ export interface Module {
 export interface Question {
   q: string;
   opts: string[];
+  /** Respuesta categórica (no es un nivel de madurez de 1 a 4). */
+  categorical?: boolean;
 }
 
 export interface RadarAxis {
@@ -268,6 +270,17 @@ export const FINAL_QUESTIONS: Question[] = [
       "Tenemos un sistema de producción de contenido consistente y de alto impacto",
     ],
   },
+  {
+    q: "¿Qué tipo de operación describe mejor a tu empresa?",
+    categorical: true,
+    opts: [
+      "Taller de mantenimiento o reparación",
+      "Alquiler de maquinaria o flota de servicios",
+      "Metalmecánica: fabricación o reparación de piezas",
+      "Minería, construcción o contratista de mantenimiento",
+      "Otro tipo de operación",
+    ],
+  },
 ];
 
 export const RADAR_AXES: RadarAxis[] = [
@@ -406,7 +419,9 @@ export function buildDiagPayload(
     FINAL_QUESTIONS.forEach((q, i) => {
       const s = finalAnswers[i];
       if (!s) return;
-      prompt += `  ${q.q}\n  → ${q.opts[s - 1]} (nivel ${s}/4)\n`;
+      prompt += q.categorical
+        ? `  ${q.q}\n  → ${q.opts[s - 1]}\n`
+        : `  ${q.q}\n  → ${q.opts[s - 1]} (nivel ${s}/4)\n`;
     });
   }
 

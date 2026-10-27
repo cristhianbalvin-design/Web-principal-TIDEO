@@ -18,7 +18,7 @@ import { Footer } from "@/components/site/Footer";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { METALMECANICA_URL, metalmecanica, metalmecanicaJsonLd } from "@/lib/metalmecanica-content";
 import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
-import { jsonLdScript, whatsappUrl } from "@/lib/site";
+import { jsonLdScript, operaSocialMeta, whatsappUrl } from "@/lib/site";
 
 const navLinks = [
   { href: "#para-quien", label: "Para quién" },
@@ -35,9 +35,11 @@ export const Route = createFileRoute("/opera/metalmecanica")({
     meta: [
       { title: metalmecanica.metaTitle },
       { name: "description", content: metalmecanica.metaDescription },
-      { property: "og:title", content: metalmecanica.metaTitle },
-      { property: "og:description", content: metalmecanica.metaDescription },
-      { property: "og:url", content: METALMECANICA_URL },
+      ...operaSocialMeta({
+        title: metalmecanica.metaTitle,
+        description: metalmecanica.metaDescription,
+        url: METALMECANICA_URL,
+      }),
     ],
     links: [{ rel: "canonical", href: METALMECANICA_URL }],
     scripts: metalmecanicaJsonLd.map((d) => jsonLdScript(d)),
@@ -79,7 +81,7 @@ function OperaMetalmecanica() {
           <QualificationForm defaultTipoOperacion="Metalmecánica-producción" />
         </TracingBeam>
       </main>
-      <Footer />
+      <Footer variant="subdomain" />
       <WhatsAppFloat
         href={whatsappUrl(
           "Hola TIDEO, tengo un taller metalmecánico y quiero información sobre OPERA.",

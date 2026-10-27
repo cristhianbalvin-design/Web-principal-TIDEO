@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { operaUrl } from "@/lib/site";
 
 const pillars = [
   { t: "Proceso antes que software", d: "Mapeamos cómo trabaja tu empresa, qué decisiones se toman y qué información necesita cada rol." },
@@ -30,14 +31,24 @@ export function LabsFeature() {
           <p className="mt-8 text-lg font-medium">
             El código viene después. Primero entendemos el proceso.
           </p>
-          <HoverBorderGradient
-            as={Link}
-            to="/contacto"
-            containerClassName="mt-10 rounded-full"
-            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium transition shadow-glow"
-          >
-            Solicitar auditoría gratuita →
-          </HoverBorderGradient>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <HoverBorderGradient
+              as={Link}
+              to="/contacto"
+              containerClassName="rounded-full"
+              className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium transition shadow-glow"
+            >
+              Solicitar auditoría gratuita →
+            </HoverBorderGradient>
+            <HoverBorderGradient
+              as="a"
+              href={operaUrl("home_labs")}
+              containerClassName="rounded-full"
+              className="inline-flex items-center gap-2 rounded-full bg-background/70 px-6 py-3 text-sm font-medium transition hover:bg-surface"
+            >
+              Ver nuestro ERP: OPERA →
+            </HoverBorderGradient>
+          </div>
         </div>
 
         <div className="lg:col-span-7">

@@ -119,7 +119,7 @@ function PowerBiIaLanding() {
       <PowerBiFloatingWhatsApp />
 
       {/* Footer */}
-      <Footer />
+      <Footer variant="subdomain" />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import heroImg from "@/assets/hero-tideo.jpg";
 import heroVideo from "@/assets/hero-tideo-animated.webm";
+import { operaUrl } from "@/lib/site";
 
 export function Hero() {
   return (
@@ -33,7 +34,25 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24">
-        <div className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <a
+          href={operaUrl("home_hero")}
+          className="group inline-flex items-center gap-2.5 rounded-full border border-hairline bg-background/60 px-4 py-1.5 text-xs text-muted-foreground backdrop-blur transition-colors hover:border-primary/40 hover:text-foreground"
+        >
+          <span
+            aria-hidden
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ background: "var(--color-consulting)" }}
+          />
+          <span>
+            <span className="font-semibold text-foreground">Nuevo:</span> OPERA, nuestro ERP para
+            operaciones con activos
+          </span>
+          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+            →
+          </span>
+        </a>
+
+        <div className="mt-8 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
           <span className="w-8 h-px bg-primary/60" />
           TIDEO · Tech & Strategy
         </div>

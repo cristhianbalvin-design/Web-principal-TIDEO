@@ -36,10 +36,37 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(html).toContain('property="og:type" content="website"');
   });
 
-  it("el título de la home nombra el producto principal (ERP a medida)", () => {
+  it("el título de la home nombra OPERA y los sistemas a medida", () => {
     const html = page("index.html");
-    expect(html).toMatch(/<title>TIDEO[^<]*ERP a medida[^<]*<\/title>/);
-    expect(html).toContain('property="og:title" content="TIDEO Tech &amp; Strategy | ERP a medida');
+    expect(html).toMatch(/<title>TIDEO[^<]*OPERA[^<]*sistemas a medida[^<]*<\/title>/);
+    expect(html).toContain(
+      'property="og:title" content="TIDEO Tech &amp; Strategy | OPERA ERP y sistemas a medida',
+    );
+  });
+
+  it("la home enlaza a OPERA con utm_campaign por ubicación", () => {
+    const html = page("index.html");
+    for (const c of ["home_hero", "home_nav", "home_card_opera", "home_footer"])
+      expect(html).toContain(`utm_campaign=${c}`);
+    expect(html).not.toContain("se construye desde cero");
+  });
+
+  it.each(["opera/index.html", "opera/metalmecanica/index.html"])(
+    "%s tiene og:image y application-name únicos de OPERA",
+    (file) => {
+      const html = page(file);
+      const og = [...html.matchAll(/property="og:image" content="([^"]+)"/g)].map((m) => m[1]);
+      expect(og).toEqual(["https://opera.tideo.tech/og-opera.png"]);
+      const app = [...html.matchAll(/name="application-name" content="([^"]+)"/g)].map((m) => m[1]);
+      expect(app).toEqual(["OPERA"]);
+    },
+  );
+
+  it("el footer de los subdominios enlaza con URLs absolutas al sitio principal", () => {
+    const html = page("opera/index.html");
+    expect(html).toContain('href="https://www.tideo.tech/contacto"');
+    expect(html).toContain('href="https://www.tideo.tech/nosotros"');
+    expect(html).toContain('href="https://www.tideo.tech/privacidad"');
   });
 
   it("el botón flotante de WhatsApp de la home abre el chat con el número de TIDEO", () => {

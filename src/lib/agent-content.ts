@@ -66,16 +66,22 @@ Para empresas medianas que ya no quieren seguir operando con Excel, WhatsApp, co
 - Formulario: ${SITE_URL}/contacto
 - Índice para agentes: ${SITE_URL}/llms.txt
 
-## Soluciones
+## Qué ofrecemos
 
-Cada solución nace de un proceso de negocio concreto: ventas, operaciones, logística, mantenimiento, finanzas, capacitación o gestión comercial.
+Un producto listo y servicios a medida. Cada solución nace de un proceso de negocio concreto: ventas, operaciones, logística, mantenimiento, finanzas, capacitación o gestión comercial.
 
-1. **ERP operativo a medida** — para empresas de servicios, operaciones o mantenimiento. Procesos, costos, órdenes de trabajo, compras, almacén y reportes. Resultado esperado: control integral de la operación desde una sola plataforma.
-2. **CRM comercial inteligente** — para empresas B2B con venta consultiva. Pipeline, tareas, interacciones y reportes comerciales. Resultado esperado: menos oportunidades perdidas y mayor trazabilidad comercial.
-3. **Automatización administrativa** — para áreas administrativas, finanzas, RRHH y operaciones. Aprobaciones, notificaciones, registros y control documental. Resultado esperado: menos tareas manuales, menos errores y mayor velocidad.
-4. **Dashboards gerenciales** — para gerencias que necesitan visibilidad. Power BI, KPIs, modelos de datos y reportes ejecutivos. Resultado esperado: decisiones con información centralizada y confiable.
-5. **Portales y apps internas** — para equipos de campo, ventas, operaciones o soporte. Captura de datos, formularios y trazabilidad en tiempo real.
-6. **Agentes e IA aplicada** — para empresas que buscan aumentar productividad. Atención, clasificación, resumen y generación con IA.
+### Producto
+
+- **OPERA — ERP Operativo** — ERP + MOM para talleres de mantenimiento, alquiler de maquinaria, metalmecánica, flotas de servicio y minería: órdenes de trabajo, repuestos, mantenimiento y costos en tiempo real en una sola base de datos. ${OPERA_URL} · para talleres metalmecánicos: ${OPERA_URL}metalmecanica
+
+### Servicios (cotizados caso por caso)
+
+1. **Sistemas a medida sobre OPERA** — partimos de OPERA y lo adaptamos: módulos nuevos, integraciones y reglas de tu operación (por ejemplo, ampliar almacén, flota o producción, o sumar transporte). Resultado esperado: un sistema que ya funciona, adaptado a cómo genera valor tu negocio.
+2. **Gestión comercial y clientes** — CRM, cotizaciones, seguimiento de oportunidades, portal de clientes y postventa. Resultado esperado: menos oportunidades perdidas y trazabilidad de la consulta a la postventa.
+3. **Automatización e integraciones** — aprobaciones, notificaciones, registros, control documental, apps de campo y conexión entre sistemas. Resultado esperado: menos tareas manuales, menos errores y mayor velocidad.
+4. **Datos y BI** — Power BI, KPIs, modelos de datos y reportes ejecutivos. Resultado esperado: decisiones con información centralizada y confiable.
+5. **IA aplicada** — agentes sobre tus sistemas u OPERA: atención, clasificación, resúmenes y alertas. Resultado esperado: procesos más rápidos y equipos mejor asistidos.
+6. **MVP en semanas** — para emprendedores, startups y áreas que quieren validar antes de invertir: alcance definido, versión mínima probada con usuarios reales y medición antes de escalar.
 
 ## Ecosistema TIDEO
 
@@ -98,9 +104,8 @@ Cuatro unidades dentro del mismo ciclo: entender, diseñar, construir y lograr a
 
 Una agencia construye rápido. Un ERP estándar se activa en días. Un consultor entrega un diagnóstico. TIDEO combina procesos, tecnología y adopción: no automatizamos problemas, rediseñamos procesos para que la tecnología tenga impacto real.
 
-## Productos y programas
+## Programas
 
-- **OPERA** — ERP + MOM para operaciones con activos intensivos (alquiler de maquinaria, talleres y servicios en campo): https://opera.tideo.tech/
 - **Power BI + IA Agéntica** (TIDEO Academy) — programa de formación: https://powerbi-ia.tideo.tech/
 
 ## Siguiente paso
