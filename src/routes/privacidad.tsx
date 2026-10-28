@@ -44,7 +44,7 @@ function Privacidad() {
             Política de privacidad
           </h1>
           <p className="mt-6 text-sm text-muted-foreground">
-            Última actualización: 26 de octubre de 2026
+            Última actualización: 28 de octubre de 2026
           </p>
 
           <Bloque titulo="Quién es responsable de tus datos">
@@ -84,9 +84,12 @@ function Privacidad() {
               </li>
             </ul>
             <p>
-              Este sitio no usa cookies de analítica ni de publicidad. Usamos almacenamiento
-              temporal del navegador (sessionStorage) solo para no pedirte dos veces los mismos
-              datos entre el diagnóstico y el formulario de contacto; se borra al cerrar la pestaña.
+              Este sitio usa el Píxel de Meta (Facebook e Instagram): un código y una cookie que le
+              informan a Meta qué páginas visitas y cuándo envías un formulario, para medir y
+              mejorar nuestros anuncios. No usamos otras cookies de analítica ni de publicidad.
+              Usamos almacenamiento temporal del navegador (sessionStorage) solo para no pedirte dos
+              veces los mismos datos entre el diagnóstico y el formulario de contacto; se borra al
+              cerrar la pestaña.
             </p>
           </Bloque>
 
@@ -97,7 +100,11 @@ function Privacidad() {
               <li>Agendar reuniones cuando lo solicitas.</li>
               <li>Registrar tu solicitud en nuestro sistema de seguimiento comercial.</li>
             </ul>
-            <p>No vendemos ni cedemos tus datos a terceros para fines publicitarios.</p>
+            <p>
+              No vendemos tus datos. La información que recoge el Píxel de Meta la trata Meta según
+              su propia política de datos; puedes limitar los anuncios personalizados desde la
+              configuración de tus cuentas de Facebook e Instagram.
+            </p>
           </Bloque>
 
           <Bloque titulo="Con quién los compartimos">

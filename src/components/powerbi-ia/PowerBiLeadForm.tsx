@@ -3,6 +3,7 @@ import { CheckCircle2, AlertCircle, Sparkles, ArrowRight, BookOpen, Clock } from
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { Honeypot } from "@/components/site/Honeypot";
 import { submitLead } from "@/lib/leads";
+import { trackLead } from "@/lib/meta-pixel";
 
 const WA_URL =
   "https://wa.me/51919102556?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20del%20curso%20Power%20BI%20%2B%20IA%20Ag%C3%A9ntica%20%F0%9F%9A%80";
@@ -88,6 +89,7 @@ export function PowerBiLeadForm() {
       });
 
       if (result.success) {
+        trackLead("powerbi_ia");
         setSubmitted(true);
       }
     } catch (err) {

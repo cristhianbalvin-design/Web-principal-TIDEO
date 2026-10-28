@@ -122,6 +122,29 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     },
   );
 
+  it.each([
+    "index.html",
+    "contacto/index.html",
+    "nosotros/index.html",
+    "privacidad/index.html",
+    "opera/index.html",
+    "opera/metalmecanica/index.html",
+    "powerbi-ia/index.html",
+    "404.html",
+  ])("%s carga el Píxel de Meta una sola vez dentro del head", (file) => {
+    const html = page(file);
+    const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? "";
+    expect(head).toContain("https://connect.facebook.net/en_US/fbevents.js");
+    expect(html.match(/fbq\('init','1680592706979697'\)/g)).toHaveLength(1);
+    expect(html.match(/fbq\('track','PageView'\)/g)).toHaveLength(1);
+  });
+
+  it("la política de privacidad declara el uso del Píxel de Meta", () => {
+    const text = mainText(page("privacidad/index.html"));
+    expect(text).toContain("Píxel de Meta");
+    expect(text).not.toContain("no usa cookies de analítica ni de publicidad");
+  });
+
   it("ninguna página normal lleva la marca de 404", () => {
     for (const f of [
       "index.html",

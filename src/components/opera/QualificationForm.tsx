@@ -5,6 +5,7 @@ import { SectionHeader } from "@/components/site/SectionHeader";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { Honeypot } from "@/components/site/Honeypot";
 import { getAttribution, submitLead } from "@/lib/leads";
+import { trackLead } from "@/lib/meta-pixel";
 
 interface FormData {
   nombre: string;
@@ -90,6 +91,7 @@ export function QualificationForm({
       if (result.leadId) {
         setLeadId(result.leadId);
       }
+      trackLead("opera");
       setSubmitted(true);
     } catch (err) {
       console.error("Error al enviar formulario de calificación:", err);

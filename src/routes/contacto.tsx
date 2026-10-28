@@ -5,6 +5,7 @@ import { Footer } from "@/components/site/Footer";
 import { canonicalLink, canonicalUrl, ORG } from "@/lib/site";
 import { Honeypot } from "@/components/site/Honeypot";
 import { getAttribution, submitLead } from "@/lib/leads";
+import { trackLead } from "@/lib/meta-pixel";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
@@ -203,6 +204,7 @@ function Contacto() {
       if (emailResult.status === "rejected" && leadResult.status === "rejected") {
         throw new Error("email-and-lead-failed");
       }
+      trackLead("contacto");
       setSent(true);
     } catch (err) {
       console.error("send-contact-email failed:", err);
