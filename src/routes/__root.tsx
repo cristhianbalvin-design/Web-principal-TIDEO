@@ -8,9 +8,11 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
+import { MetaPixelRouteTracker } from "@/components/site/MetaPixelRouteTracker";
 import { NotFound } from "@/components/site/NotFound";
 import { Preloader } from "@/components/site/Preloader";
 import { captureAttribution } from "@/lib/leads";
+import { META_PIXEL_SNIPPET } from "@/lib/meta-pixel";
 import { SITE_URL } from "@/lib/site";
 import appCss from "../styles.css?url";
 
@@ -92,6 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [{ children: META_PIXEL_SNIPPET }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -123,6 +126,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <MetaPixelRouteTracker />
       <Preloader />
       <Outlet />
     </QueryClientProvider>

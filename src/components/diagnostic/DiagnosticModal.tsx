@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { submitLead } from "@/lib/leads";
+import { trackLead } from "@/lib/meta-pixel";
 import {
   MODULES, QUESTIONS, FINAL_QUESTIONS,
   type ModuleId,
@@ -793,6 +794,7 @@ export function DiagnosticModal({
       const json = await res.json() as { diagnostic?: string; error?: string };
       const diagnosticText = json.diagnostic ?? json.error ?? "Sin resultado";
       setDiagnosis(diagnosticText);
+      if (json.diagnostic) trackLead("diagnostico");
 
       // Fire-and-forget: send emails without blocking the UI
       if (json.diagnostic && SUPABASE_URL && SUPABASE_ANON_KEY) {
