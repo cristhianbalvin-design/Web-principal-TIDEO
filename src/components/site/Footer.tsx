@@ -86,7 +86,7 @@ export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } 
           </ul>
           <div className="mt-6 flex items-center justify-end gap-3">
             <a
-              href="https://www.facebook.com/tideomarketing"
+              href={ORG.facebook}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"
