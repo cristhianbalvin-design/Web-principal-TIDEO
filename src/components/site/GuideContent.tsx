@@ -256,3 +256,45 @@ export function GuideContent({ guide }: { guide: Publicacion }) {
     </div>
   );
 }
+
+/** Video de la pieza de redes (4:5). Con sonido: no se reproduce solo. */
+export function GuideVideo({ src, poster }: { src: string; poster: string }) {
+  return (
+    <figure className="mx-auto w-full max-w-[340px] lg:mx-0">
+      <video
+        className="aspect-[4/5] w-full rounded-2xl border border-hairline bg-surface object-cover shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
+        src={src}
+        poster={poster}
+        controls
+        playsInline
+        preload="none"
+      />
+      <figcaption className="mt-3 text-center text-xs text-muted-foreground">
+        La pieza en video · 53 s, con sonido
+      </figcaption>
+    </figure>
+  );
+}
+
+/** Compartir: WhatsApp (canal principal en Perú) y copiar enlace. Sin datos personales. */
+export function GuideShare({ url, titulo }: { url: string; titulo: string }) {
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+  const wa = `https://wa.me/?text=${encodeURIComponent(`${titulo} ${url}`)}`;
+  const base =
+    "inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline px-5 text-sm text-foreground transition-colors hover:border-primary/50 hover:text-primary";
+  return (
+    <div className="mt-8 flex flex-wrap gap-3">
+      <a href={wa} target="_blank" rel="noopener noreferrer" className={base}>
+        Compartir por WhatsApp
+      </a>
+      <button type="button" className={base} onClick={async () => setCopied(await copyText(url))}>
+        {copied ? "Enlace copiado" : "Copiar enlace"}
+      </button>
+    </div>
+  );
+}
