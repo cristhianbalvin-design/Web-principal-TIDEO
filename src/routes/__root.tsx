@@ -68,6 +68,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: `${SITE_URL}/og-image.png` },
       { name: "apple-mobile-web-app-title", content: "TIDEO" },
       { name: "application-name", content: "TIDEO" },
+      // Verificación del dominio tideo.tech en el portafolio comercial de Meta.
+      { name: "facebook-domain-verification", content: "r7j4k3g6yfyerg5lee0jj0tp8m4929" },
     ],
     links: [
       {

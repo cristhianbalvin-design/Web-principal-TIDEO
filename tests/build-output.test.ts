@@ -139,6 +139,21 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     expect(html.match(/fbq\('track','PageView'\)/g)).toHaveLength(1);
   });
 
+  it.each([
+    "index.html",
+    "contacto/index.html",
+    "nosotros/index.html",
+    "privacidad/index.html",
+    "opera/index.html",
+    "opera/metalmecanica/index.html",
+    "powerbi-ia/index.html",
+    "404.html",
+  ])("%s lleva la etiqueta de verificación de dominio de Meta dentro del head", (file) => {
+    const head = page(file).match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? "";
+    const tags = head.match(/<meta name="facebook-domain-verification" content="[a-z0-9]+"/g);
+    expect(tags).toEqual(['<meta name="facebook-domain-verification" content="r7j4k3g6yfyerg5lee0jj0tp8m4929"']);
+  });
+
   it("la política de privacidad declara el uso del Píxel de Meta", () => {
     const text = mainText(page("privacidad/index.html"));
     expect(text).toContain("Píxel de Meta");
