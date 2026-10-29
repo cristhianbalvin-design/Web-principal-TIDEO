@@ -19,6 +19,6 @@ describe("IndexNow", () => {
       expect(p.keyLocation).toBe(`https://${p.host}/${"k".repeat(32)}.txt`);
       for (const u of p.urlList) expect(new URL(u).host).toBe(p.host);
     }
-    expect(payloads.find((p) => p.host === "www.tideo.tech")?.urlList).toHaveLength(4);
+    expect(payloads.find((p) => p.host === "www.tideo.tech")?.urlList).toHaveLength(6);
   });
 });

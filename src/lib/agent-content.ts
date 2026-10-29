@@ -8,6 +8,7 @@
  * Si agregas una ruta, agrégala a KNOWN_PATHS, a public/sitemap.xml y a vite.config.ts.
  */
 import { METALMECANICA_URL, metalmecanica as mm } from "./metalmecanica-content";
+import { delTableroAlAgente, type BloqueContenido } from "../content/guias";
 import { OPERA_URL, ORG, SITE_URL } from "./site";
 
 export const KNOWN_PATHS = [
@@ -15,6 +16,8 @@ export const KNOWN_PATHS = [
   "/contacto",
   "/nosotros",
   "/privacidad",
+  "/guias",
+  "/guias/del-tablero-al-agente",
   "/opera",
   "/opera/metalmecanica",
   "/powerbi-ia",
@@ -31,6 +34,36 @@ export function normalizePath(pathname: string): string {
 export function isKnownPath(pathname: string): boolean {
   return (KNOWN_PATHS as readonly string[]).includes(normalizePath(pathname));
 }
+
+function blockMarkdown(block: BloqueContenido): string {
+  if (block.tipo === "parrafo") return block.texto;
+  if (block.tipo === "prompts")
+    return block.items.map((item, i) => `${i + 1}. «${item}»`).join("\n");
+  if (block.tipo === "lista")
+    return block.items.map((item, i) => `${block.ordenada ? `${i + 1}.` : "-"} ${item}`).join("\n");
+  return [
+    `| ${block.columnas.join(" | ")} |`,
+    `| ${block.columnas.map(() => "---").join(" | ")} |`,
+    ...block.filas.map((row) => `| ${row.join(" | ")} |`),
+  ].join("\n");
+}
+
+/** Guía "Del tablero al agente" en Markdown (Accept: text/markdown en su ruta). */
+export const GUIA_MARKDOWN = [
+  `# ${delTableroAlAgente.titulo}`,
+  delTableroAlAgente.bajada,
+  `Serie: ${delTableroAlAgente.serie} · Fecha: ${delTableroAlAgente.fecha} · Lectura: ${delTableroAlAgente.lectura}`,
+  ...delTableroAlAgente.introduccion.map(blockMarkdown),
+  ...delTableroAlAgente.secciones.flatMap((section) => [
+    `## ${section.numero} — ${section.titulo}`,
+    ...section.bloques.map(blockMarkdown),
+  ]),
+  `*${delTableroAlAgente.nota}*`,
+  `**¿Quieres que revisemos tu modelo de datos?** Conversemos → ${SITE_URL}/contacto?servicio=datos-bi`,
+  "Síguenos en Instagram y LinkedIn para más casos de BI con IA agéntica.",
+  "### Fuentes",
+  ...delTableroAlAgente.fuentes.map((source) => `- ${source.titulo}: ${source.url}`),
+].join("\n\n");
 
 /** Calidad (q) que el header Accept asigna a un media type exacto; 0 si no aparece. */
 function qualityFor(accept: string, mediaType: string): number {

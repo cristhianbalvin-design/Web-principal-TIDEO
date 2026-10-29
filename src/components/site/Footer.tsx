@@ -3,7 +3,7 @@ import tideoLogoVertical from "@/assets/tideo-logo-vertical.png";
 import { OPERA_URL, ORG, POWERBI_URL, SITE_URL, WHATSAPP_URL, operaUrl } from "@/lib/site";
 
 type FooterLink =
-  | { label: string; to: "/" | "/nosotros" | "/contacto" }
+  | { label: string; to: "/" | "/nosotros" | "/contacto" | "/guias" }
   | { label: string; href: string };
 
 const mainLinks: FooterLink[] = [
@@ -12,6 +12,7 @@ const mainLinks: FooterLink[] = [
   { label: "OPERA (ERP)", href: operaUrl("home_footer") },
   { label: "Ecosistema", href: "/#ecosistema" },
   { label: "Insights", href: "/#insights" },
+  { label: "Guías", to: "/guias" },
   { label: "Nosotros", to: "/nosotros" },
   { label: "Contacto", to: "/contacto" },
 ];
@@ -22,6 +23,7 @@ const subdomainLinks: FooterLink[] = [
   { label: "OPERA (ERP)", href: OPERA_URL },
   { label: "ERP para metalmecánica", href: `${OPERA_URL}metalmecanica` },
   { label: "Power BI + IA", href: POWERBI_URL },
+  { label: "Guías", href: `${SITE_URL}/guias` },
   { label: "Nosotros", href: `${SITE_URL}/nosotros` },
   { label: "Contacto", href: `${SITE_URL}/contacto` },
 ];
@@ -95,7 +97,7 @@ export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } 
               </svg>
             </a>
             <a
-              href="https://www.instagram.com/tideo.marketing/"
+              href={ORG.instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"

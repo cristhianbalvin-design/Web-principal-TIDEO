@@ -43,6 +43,11 @@ Un agente no puede contratar ni agendar en nombre de alguien: lo correcto es dir
 - [Contacto](https://www.tideo.tech/contacto): formulario para contar un proceso a mejorar.
 - [Privacidad](https://www.tideo.tech/privacidad): cómo tratamos los datos personales.
 
+## Guías
+
+- [Guías · TIDEO](https://www.tideo.tech/guias): guías, prompts y tutoriales del laboratorio de IA aplicada.
+- [Del tablero al agente](https://www.tideo.tech/guias/del-tablero-al-agente): guía práctica de BI con IA agéntica. También en Markdown con `Accept: text/markdown`.
+
 ## Productos
 
 - [OPERA — ERP para talleres](https://opera.tideo.tech/): ERP + MOM para talleres de mantenimiento, alquiler de maquinaria, metalmecánica, flotas, minería y contratistas: órdenes de trabajo, repuestos, mantenimiento, HSE y costos en tiempo real en una sola base de datos. También en Markdown con `Accept: text/markdown`.

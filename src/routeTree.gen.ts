@@ -14,6 +14,8 @@ import { Route as R404RouteImport } from './routes/404'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as NosotrosRouteImport } from './routes/nosotros'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
+import { Route as GuiasIndexRouteImport } from './routes/guias/index'
+import { Route as GuiasDelTableroAlAgenteRouteImport } from './routes/guias/del-tablero-al-agente'
 import { Route as OperaIndexRouteImport } from './routes/opera/index'
 import { Route as OperaMetalmecanicaRouteImport } from './routes/opera/metalmecanica'
 import { Route as PowerbiIaIndexRouteImport } from './routes/powerbi-ia/index'
@@ -43,6 +45,16 @@ const PrivacidadRoute = PrivacidadRouteImport.update({
   path: '/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuiasIndexRoute = GuiasIndexRouteImport.update({
+  id: '/guias/',
+  path: '/guias/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuiasDelTableroAlAgenteRoute = GuiasDelTableroAlAgenteRouteImport.update({
+  id: '/guias/del-tablero-al-agente',
+  path: '/guias/del-tablero-al-agente',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OperaIndexRoute = OperaIndexRouteImport.update({
   id: '/opera/',
   path: '/opera/',
@@ -65,7 +77,9 @@ export interface FileRoutesByFullPath {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
+  '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
+  '/guias/': typeof GuiasIndexRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
@@ -75,7 +89,9 @@ export interface FileRoutesByTo {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
+  '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
+  '/guias': typeof GuiasIndexRoute
   '/opera': typeof OperaIndexRoute
   '/powerbi-ia': typeof PowerbiIaIndexRoute
 }
@@ -86,7 +102,9 @@ export interface FileRoutesById {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
+  '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
+  '/guias/': typeof GuiasIndexRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
 }
@@ -98,7 +116,9 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/privacidad'
+    | '/guias/del-tablero-al-agente'
     | '/opera/metalmecanica'
+    | '/guias/'
     | '/opera/'
     | '/powerbi-ia/'
   fileRoutesByTo: FileRoutesByTo
@@ -108,7 +128,9 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/privacidad'
+    | '/guias/del-tablero-al-agente'
     | '/opera/metalmecanica'
+    | '/guias'
     | '/opera'
     | '/powerbi-ia'
   id:
@@ -118,7 +140,9 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/privacidad'
+    | '/guias/del-tablero-al-agente'
     | '/opera/metalmecanica'
+    | '/guias/'
     | '/opera/'
     | '/powerbi-ia/'
   fileRoutesById: FileRoutesById
@@ -129,7 +153,9 @@ export interface RootRouteChildren {
   ContactoRoute: typeof ContactoRoute
   NosotrosRoute: typeof NosotrosRoute
   PrivacidadRoute: typeof PrivacidadRoute
+  GuiasDelTableroAlAgenteRoute: typeof GuiasDelTableroAlAgenteRoute
   OperaMetalmecanicaRoute: typeof OperaMetalmecanicaRoute
+  GuiasIndexRoute: typeof GuiasIndexRoute
   OperaIndexRoute: typeof OperaIndexRoute
   PowerbiIaIndexRoute: typeof PowerbiIaIndexRoute
 }
@@ -171,6 +197,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guias/': {
+      id: '/guias/'
+      path: '/guias'
+      fullPath: '/guias/'
+      preLoaderRoute: typeof GuiasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guias/del-tablero-al-agente': {
+      id: '/guias/del-tablero-al-agente'
+      path: '/guias/del-tablero-al-agente'
+      fullPath: '/guias/del-tablero-al-agente'
+      preLoaderRoute: typeof GuiasDelTableroAlAgenteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/opera/': {
       id: '/opera/'
       path: '/opera'
@@ -201,7 +241,9 @@ const rootRouteChildren: RootRouteChildren = {
   ContactoRoute: ContactoRoute,
   NosotrosRoute: NosotrosRoute,
   PrivacidadRoute: PrivacidadRoute,
+  GuiasDelTableroAlAgenteRoute: GuiasDelTableroAlAgenteRoute,
   OperaMetalmecanicaRoute: OperaMetalmecanicaRoute,
+  GuiasIndexRoute: GuiasIndexRoute,
   OperaIndexRoute: OperaIndexRoute,
   PowerbiIaIndexRoute: PowerbiIaIndexRoute,
 }

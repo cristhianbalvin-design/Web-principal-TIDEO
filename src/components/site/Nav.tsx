@@ -10,6 +10,7 @@ const links = [
   { to: "/", label: "OPERA", external: operaUrl("home_nav") },
   { to: "/", label: "Ecosistema", hash: "#ecosistema" },
   { to: "/", label: "Insights", hash: "#insights" },
+  { to: "/guias", label: "Guías" },
   { to: "/contacto", label: "Contacto" },
 ] as const;
 
