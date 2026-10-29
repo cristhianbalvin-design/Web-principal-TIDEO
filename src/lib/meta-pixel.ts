@@ -19,7 +19,11 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init','${META_PIXEL_ID}');
 fbq('track','PageView');`;
 
-type Fbq = (command: "track", event: string, params?: Record<string, unknown>) => void;
+type Fbq = (
+  command: "track" | "trackCustom",
+  event: string,
+  params?: Record<string, unknown>,
+) => void;
 
 declare global {
   interface Window {
@@ -44,4 +48,19 @@ export function trackPageView() {
 /** Alguien envió un formulario con éxito. `source` identifica cuál (sin datos personales). */
 export function trackLead(source: "contacto" | "diagnostico" | "opera" | "powerbi_ia") {
   track("Lead", { content_name: source });
+}
+
+/** Alguien abrió una guía (para audiencias de remarketing, sin datos personales). */
+export function trackGuideViewContent(slug: string) {
+  track("ViewContent", { content_name: slug, content_category: "guia" });
+}
+
+/** Clic en el CTA de contacto al final de una guía. */
+export function trackGuiaCTA() {
+  if (typeof window === "undefined" || typeof window.fbq !== "function") return;
+  try {
+    window.fbq("trackCustom", "GuiaCTA");
+  } catch {
+    // La medición nunca debe romper la navegación.
+  }
 }

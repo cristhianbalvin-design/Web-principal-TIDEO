@@ -21,6 +21,8 @@ export default defineConfig({
       { path: "/contacto" },
       { path: "/nosotros" },
       { path: "/privacidad" },
+      { path: "/guias" },
+      { path: "/guias/del-tablero-al-agente" },
       { path: "/opera" },
       { path: "/powerbi-ia" },
       { path: "/opera/metalmecanica" },

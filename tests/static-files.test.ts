@@ -23,9 +23,14 @@ describe("public/sitemap.xml", () => {
       expect(KNOWN_PATHS).toContain(path);
     }
     expect(locs).toEqual([
-      ...["/", "/contacto", "/nosotros", "/privacidad"].map((p) =>
-        p === "/" ? `${SITE_URL}/` : SITE_URL + p,
-      ),
+      ...[
+        "/",
+        "/contacto",
+        "/nosotros",
+        "/privacidad",
+        "/guias",
+        "/guias/del-tablero-al-agente",
+      ].map((p) => (p === "/" ? `${SITE_URL}/` : SITE_URL + p)),
       "https://opera.tideo.tech/",
       "https://opera.tideo.tech/metalmecanica",
       "https://powerbi-ia.tideo.tech/",

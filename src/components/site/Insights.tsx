@@ -1,7 +1,10 @@
 import type { CSSProperties } from "react";
+import { Link } from "@tanstack/react-router";
 import { SectionHeader } from "./SectionHeader";
 
-const articles = [
+type Article = { cat: string; title: string; color: string; href?: "/guias/del-tablero-al-agente" };
+
+const articles: Article[] = [
   {
     cat: "Procesos",
     title: "Por qué digitalizar no es automatizar el caos",
@@ -19,8 +22,9 @@ const articles = [
   },
   {
     cat: "Datos & BI",
-    title: "El rol de Power BI cuando se quiere decidir con datos",
+    title: "Del tablero al agente: guía práctica de BI con IA agéntica",
     color: "var(--color-academy)",
+    href: "/guias/del-tablero-al-agente",
   },
 ];
 
@@ -41,7 +45,7 @@ export function Insights() {
 
         <div className="mt-16 grid gap-px bg-hairline border border-hairline rounded-2xl overflow-hidden md:grid-cols-2">
           {articles.map((a, i) => (
-            // Sin artículos publicados todavía: se muestran como tarjetas, no como enlaces a "#".
+            // Las tarjetas sin guía publicada se muestran como "Próximamente", no como enlaces a "#".
             <article
               key={a.title}
               className="insight-card group block bg-background p-8 md:p-10"
@@ -52,11 +56,26 @@ export function Insights() {
                 <span className="insight-card-number font-mono">0{i + 1}</span>
               </div>
               <h3 className="mt-8 text-2xl md:text-3xl font-semibold tracking-tight leading-snug max-w-md">
-                {a.title}
+                {a.href ? (
+                  <Link to={a.href} className="hover:text-primary transition-colors">
+                    {a.title}
+                  </Link>
+                ) : (
+                  a.title
+                )}
               </h3>
-              <div className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
-                Próximamente
-              </div>
+              {a.href ? (
+                <Link
+                  to={a.href}
+                  className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary hover:underline"
+                >
+                  Leer guía →
+                </Link>
+              ) : (
+                <div className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
+                  Próximamente
+                </div>
+              )}
             </article>
           ))}
         </div>
