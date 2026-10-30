@@ -177,7 +177,8 @@ export const delTableroAlAgente: Publicacion = {
           items: [
             '**Copilot en Power BI y "Prep data for AI"** (en vista previa al momento de escribir esta guía): permite definir qué parte del modelo usa la IA, guardar *respuestas verificadas* asociadas a frases frecuentes y escribir *instrucciones para la IA* con el contexto del negocio. Microsoft advierte que las respuestas no son deterministas: la misma pregunta puede dar salidas distintas.',
             "**Agentes de datos de Microsoft Fabric:** responden preguntas en lenguaje natural sobre modelos semánticos y otras fuentes, generando la consulta por detrás y respetando los permisos de quien pregunta. Requieren capacidad de Fabric; revisa los requisitos de licencia de tu organización.",
-            "**Para quienes construyen modelos:** Microsoft publicó un servidor MCP que permite a un agente de código inspeccionar el modelo, ejecutar DAX y proponer cambios. Útil para documentar y ordenar modelos, siempre con revisión humana antes de publicar.",
+            "**Para quienes construyen modelos:** Microsoft publicó un servidor MCP local (en vista previa) que permite a un agente inspeccionar el modelo, ejecutar DAX y proponer cambios. Microsoft lo documenta con GitHub Copilot en VS Code, pero es un servidor MCP estándar: también se conecta a otros clientes que aceptan servidores MCP locales, como **Claude** (la app de escritorio o Claude Code) o **Gemini CLI**. **ChatGPT**, en cambio, solo se conecta a servidores MCP remotos, así que no funciona directo con este servidor local. Haz una copia del modelo antes de empezar y revisa cada cambio antes de publicar.",
+            "**Para consultar modelos ya publicados:** Microsoft tiene además un servidor MCP remoto (también en vista previa) que permite a un agente consultar un modelo semántico con los permisos de quien pregunta. Hoy lo documenta con GitHub Copilot en VS Code.",
           ],
         },
       ],
@@ -261,6 +262,14 @@ export const delTableroAlAgente: Publicacion = {
     {
       titulo: "GitHub — microsoft/powerbi-modeling-mcp",
       url: "https://github.com/microsoft/powerbi-modeling-mcp",
+    },
+    {
+      titulo: "Model Context Protocol — Conectar servidores MCP locales (Claude Desktop)",
+      url: "https://modelcontextprotocol.io/docs/develop/connect-local-servers",
+    },
+    {
+      titulo: "Gemini CLI — Servidores MCP",
+      url: "https://geminicli.com/docs/tools/mcp-server/",
     },
   ],
 };
