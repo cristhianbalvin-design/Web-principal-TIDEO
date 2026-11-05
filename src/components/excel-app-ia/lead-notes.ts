@@ -21,6 +21,6 @@ export function buildLeadNotes(f: ExcelAppFormState): string {
     `Experiencia con IA: ${exp}`,
     `Disponibilidad 6 fechas: ${f.disponibilidad === "si" ? "Sí" : "Necesita consultar"}`,
     `Acepta comunicaciones comerciales: ${f.acepta_comercial ? "Sí" : "No"}`,
-    "Origen: excel-app.tideo.tech",
+    "Origen: app-ia.tideo.tech",
   ].join(" | ");
 }

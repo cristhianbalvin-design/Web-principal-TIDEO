@@ -21,8 +21,9 @@ export const KNOWN_PATHS = [
   "/opera",
   "/opera/metalmecanica",
   "/powerbi-ia",
-  "/excel-app-ia",
+  "/app-ia",
   // Redirecciones definidas en vercel.json:
+  "/excel-app-ia",
   "/about",
   "/privacy",
 ] as const;

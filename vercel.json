@@ -3,7 +3,8 @@
   "outputDirectory": "dist/client",
   "redirects": [
     { "source": "/about", "destination": "/nosotros", "permanent": true },
-    { "source": "/privacy", "destination": "/privacidad", "permanent": true }
+    { "source": "/privacy", "destination": "/privacidad", "permanent": true },
+    { "source": "/excel-app-ia", "destination": "/app-ia", "permanent": true }
   ],
   "headers": [
     {

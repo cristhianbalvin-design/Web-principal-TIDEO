@@ -25,7 +25,7 @@ export default defineConfig({
       { path: "/guias/del-tablero-al-agente" },
       { path: "/opera" },
       { path: "/powerbi-ia" },
-      { path: "/excel-app-ia" },
+      { path: "/app-ia" },
       { path: "/opera/metalmecanica" },
       // Se escribe como dist/client/404.html: Vercel lo sirve con estado 404
       // para cualquier ruta que no exista.
