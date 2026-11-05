@@ -96,11 +96,11 @@ export function ExcelAppStory() {
           <Target className="w-5 h-5 text-academy shrink-0 mt-0.5" />
           <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
             <strong className="text-foreground">
-              El objetivo es que termines con un MVP funcional y demostrable: una aplicación real
-              que resuelve un proceso de tu negocio.
+              El objetivo es que termines con tu propia aplicación empresarial funcionando y lista
+              para usarse: una aplicación real que resuelve un proceso de tu negocio.
             </strong>{" "}
             Los temas más avanzados —automatizaciones, agentes de IA, integraciones con otros
-            sistemas y operación productiva— quedan para los siguientes niveles de la ruta. El
+            sistemas y extensión a más áreas— quedan para los siguientes niveles de la ruta. El
             alcance de cada proyecto se revisará antes de la etapa personalizada para hacerlo viable
             dentro de las 24 horas.
           </p>

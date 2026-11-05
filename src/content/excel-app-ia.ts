@@ -64,8 +64,8 @@ export const PROMISE = [
     text: "Aprenderás a probar funcionalidades, detectar errores y pedir correcciones de manera estructurada.",
   },
   {
-    title: "Preparar una demostración funcional",
-    text: "Presentarás el avance de tu MVP y recibirás observaciones y una ruta clara para seguir evolucionándolo.",
+    title: "Publicar tu aplicación",
+    text: "Presentarás tu aplicación funcionando, la dejarás publicada y lista para usarse, y recibirás una ruta clara para seguir evolucionándola.",
   },
 ] as const;
 
@@ -81,7 +81,7 @@ export const AUDIENCE_YES = [
 ] as const;
 
 export const AUDIENCE_NO =
-  "No es el programa adecuado si buscas aprender ingeniería de software desde cero con profundidad académica, construir un ERP completo en seis sesiones o entregar un sistema crítico listo para producción sin pruebas de seguridad, arquitectura ni validación profesional.";
+  "No es el programa adecuado si buscas aprender ingeniería de software desde cero con profundidad académica, o construir en seis sesiones un ERP completo o un sistema crítico que integre toda la operación de la empresa.";
 
 /* ───────────────────────── 5 · Diferencia ───────────────────────── */
 
@@ -134,7 +134,7 @@ export const PHASES = [
     title: "Complementos y preguntas grupales",
     hours: 6,
     when: "2 h en la sesión 2 y 1 h en cada sesión 3 a 6",
-    text: "Conceptos prácticos sobre alcance del MVP, datos, prompts, depuración, pruebas, fundamentos de seguridad, publicación de demostraciones y siguientes pasos. También resolvemos dudas que pueden beneficiar a todo el grupo.",
+    text: "Conceptos prácticos sobre alcance del MVP, datos, prompts, depuración, pruebas, fundamentos de seguridad, publicación de la aplicación y siguientes pasos. También resolvemos dudas que pueden beneficiar a todo el grupo.",
   },
 ] as const;
 
@@ -228,7 +228,7 @@ export const SESSIONS: Session[] = [
       "Corrección de errores, mejora del flujo de usuario y revisión de datos.",
       "1 hora grupal: pruebas funcionales, permisos y fundamentos de seguridad.",
     ],
-    deliverable: "MVP preparado para pruebas y demostración.",
+    deliverable: "Aplicación probada y lista para publicar.",
   },
   {
     n: 6,
@@ -238,10 +238,10 @@ export const SESSIONS: Session[] = [
     phase: 2,
     topics: [
       "3 horas de laboratorio con últimos ajustes y turnos de asesoría individual.",
-      "Demostración del flujo principal y revisión de criterios de aceptación.",
-      "1 hora grupal: despliegue o publicación de demo, límites del MVP y plan de mejoras.",
+      "Presentación de tu aplicación y revisión de criterios de aceptación.",
+      "1 hora grupal: publicación de la aplicación, puesta en uso con tu equipo y plan de mejoras.",
     ],
-    deliverable: "MVP demostrable y hoja de ruta de evolución.",
+    deliverable: "Tu aplicación publicada y lista para usarse, y su hoja de ruta de evolución.",
     plural: true,
   },
 ];
@@ -302,7 +302,7 @@ export const MVP_FEATURES = [
   "Base de datos en la nube con la estructura de información de tu caso.",
   "Acceso con usuarios y permisos según el rol de cada persona.",
   "Formularios, consultas, filtros y reglas de negocio que validan la información.",
-  "Aplicación publicada en la web y código versionado, lista para demostrarla y probarla con usuarios.",
+  "Aplicación publicada en la web, con tus datos y tu código versionado, lista para que tu equipo la use.",
 ] as const;
 
 /** Temas avanzados que no forman parte del MVP del Nivel 1. */
@@ -312,7 +312,7 @@ export const ADVANCED_TOPICS = [
   "Integraciones con ERP, contabilidad u otros sistemas corporativos.",
   "Pagos en línea y módulos contables o tributarios.",
   "Arquitecturas multiempresa (multitenant) y alta concurrencia.",
-  "Endurecimiento de seguridad, monitoreo y soporte para operación productiva crítica.",
+  "Alta disponibilidad, monitoreo y soporte para operaciones críticas a gran escala.",
 ] as const;
 
 /* ───────────────────────── Stack tecnológico ───────────────────────── */
@@ -320,8 +320,9 @@ export const ADVANCED_TOPICS = [
 export const STACK = [
   {
     name: "Lovable",
-    role: "Construye la aplicación",
-    text: "Genera la interfaz y la lógica de tu aplicación web a partir de instrucciones en lenguaje natural. Aquí das forma a pantallas, formularios y flujos de trabajo.",
+    alt: "Claude Design",
+    role: "Construyen la aplicación",
+    text: "Generan la interfaz y la lógica de tu aplicación web a partir de instrucciones en lenguaje natural. Aquí das forma a pantallas, formularios y flujos de trabajo; usarás la que mejor se adapte a tu proyecto.",
   },
   {
     name: "Supabase",
@@ -336,12 +337,12 @@ export const STACK = [
   {
     name: "Vercel",
     role: "Publica en la web",
-    text: "Despliega tu aplicación en internet con su propia URL, para demostrarla y probarla con usuarios reales.",
+    text: "Publica tu aplicación en internet con su propia URL, para que tu equipo la use desde cualquier dispositivo.",
   },
 ] as const;
 
 export const AGENTS_INTRO =
-  "Trabajan directamente sobre el código de tu proyecto: leen el repositorio, proponen y aplican cambios, corrigen errores y explican lo que hicieron. Los usamos cuando la aplicación necesita ajustes que van más allá de lo que conviene pedir en Lovable.";
+  "Trabajan directamente sobre el código de tu proyecto: leen el repositorio, proponen y aplican cambios, corrigen errores y explican lo que hicieron. Los usamos cuando la aplicación necesita ajustes que van más allá de lo que conviene pedir en Lovable o Claude Design.";
 
 export const AGENTS = [
   {
@@ -435,12 +436,13 @@ export const INCLUDES = [
   "Ejercicios, criterios de prueba y lista de verificación del MVP.",
   "Espacios grupales de preguntas y resolución de problemas comunes.",
   "Orientación sobre cómo continuar evolucionando tu aplicación.",
+  "Certificado de TIDEO Tech & Strategy avalado por el docente.",
 ] as const;
 
 export const REQUIREMENTS = [
   "Computadora personal con navegador actualizado, conexión estable y posibilidad de instalar o autorizar herramientas cuando sea necesario.",
   "Manejo habitual de archivos, hojas de cálculo y aplicaciones web.",
-  "Cuentas en Lovable, Supabase, GitHub y Vercel; te indicaremos cómo crearlas antes del inicio.",
+  "Cuentas en Lovable o Claude, Supabase, GitHub y Vercel; te indicaremos cómo crearlas antes del inicio.",
   "Una idea de proceso, registro o problema empresarial que te interese convertir en aplicación.",
   "Disponibilidad para trabajar en tu MVP durante las sesiones y, si lo deseas, seguir avanzando entre clases.",
   "Disposición para realizar pruebas, corregir errores y adaptar tu proyecto al alcance permitido por el curso.",
@@ -482,16 +484,16 @@ export const FAQS: { q: string; a: string }[] = [
     a: "Para evitar las fechas más cercanas a Navidad y Año Nuevo. No tendremos clases el 26 de diciembre ni el 2 de enero. Retomamos el 9 de enero de 2027.",
   },
   {
-    q: "¿Mi aplicación quedará lista para venderse o usarse en una empresa?",
-    a: "El objetivo del curso es crear un MVP funcional y demostrable. La puesta en producción puede requerir pruebas adicionales, revisión de seguridad, protección de datos, soporte, integraciones y decisiones de arquitectura que quedan fuera del alcance del Nivel 1.",
+    q: "¿Mi aplicación quedará lista para usarse en mi empresa?",
+    a: "Sí. Al terminar el curso tendrás tu propia aplicación empresarial funcionando y lista para que tu equipo la use en el proceso para el que la diseñaste: publicada en la web, con usuarios, permisos y tus datos. Si más adelante necesitas integrarla con otros sistemas, automatizar procesos, sumar agentes de IA o extenderla a más áreas, lo trabajamos en los siguientes niveles de AI Business Builder.",
   },
   {
     q: "¿Tengo que pagar licencias aparte?",
-    a: "Trabajaremos con Lovable, Supabase, GitHub y Vercel, y con agentes de desarrollo como Claude Code, Codex y Gemini. Varias ofrecen planes gratuitos o de prueba, pero sus condiciones y límites cambian, y algunas funciones requieren un plan de pago. Antes de comenzar informaremos qué costos externos, si los hubiera, deberá asumir cada participante. No se incluyen licencias o servicios de terceros que no estén indicados expresamente.",
+    a: "Trabajaremos con Lovable o Claude Design, Supabase, GitHub y Vercel, y con agentes de desarrollo como Claude Code, Codex y Gemini. Varias ofrecen planes gratuitos o de prueba, pero sus condiciones y límites cambian, y algunas funciones requieren un plan de pago. Antes de comenzar informaremos qué costos externos, si los hubiera, deberá asumir cada participante. No se incluyen licencias o servicios de terceros que no estén indicados expresamente.",
   },
   {
     q: "¿Puedo utilizar datos reales de mi empresa?",
-    a: "Recomendamos trabajar con datos sintéticos o anonimizados. Solo deberías incorporar información empresarial real si cuentas con autorización y se cumplen los requisitos de confidencialidad y protección de datos aplicables.",
+    a: "Sí, en dos etapas. Mientras construyes y pruebas la aplicación trabajaremos con datos sintéticos, para corregir errores sin riesgo. Cuando tu aplicación esté validada, cargarás tus datos empresariales reales en tu propia base de datos. Para ese paso necesitas la autorización de tu empresa, y no debes compartir contraseñas ni información confidencial en los prompts de las herramientas de IA.",
   },
   {
     q: "¿Qué ocurre si mi proyecto resulta demasiado grande?",
@@ -506,8 +508,8 @@ export const FAQS: { q: string; a: string }[] = [
     a: "La ruta propuesta continúa con automatización de procesos, agentes de IA empresariales, integración y arquitectura de sistemas, y consolidación de soluciones. Así podrás evolucionar el mismo proyecto en lugar de comenzar desde cero.",
   },
   {
-    q: "¿Recibiré una certificación universitaria?",
-    a: "No se ofrece una certificación universitaria por este curso.",
+    q: "¿Recibiré un certificado?",
+    a: "Sí. Al culminar el curso recibirás un certificado emitido por TIDEO Tech & Strategy y avalado por el docente, Cristhian Balvin. No se trata de una certificación universitaria.",
   },
 ];
 

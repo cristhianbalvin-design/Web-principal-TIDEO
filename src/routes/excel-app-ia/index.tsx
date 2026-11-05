@@ -15,6 +15,7 @@ import { ExcelAppSyllabus } from "@/components/excel-app-ia/ExcelAppSyllabus";
 import { ExcelAppProjects } from "@/components/excel-app-ia/ExcelAppProjects";
 import { ExcelAppRoadmap } from "@/components/excel-app-ia/ExcelAppRoadmap";
 import { ExcelAppPricing } from "@/components/excel-app-ia/ExcelAppPricing";
+import { ExcelAppInstructor } from "@/components/excel-app-ia/ExcelAppInstructor";
 import { ExcelAppFaq } from "@/components/excel-app-ia/ExcelAppFaq";
 import { ExcelAppLeadForm } from "@/components/excel-app-ia/ExcelAppLeadForm";
 import { ExcelAppConversionBar } from "@/components/excel-app-ia/ExcelAppConversionBar";
@@ -53,6 +54,7 @@ const excelAppCourseJsonLd = {
     endDate: COURSE.endDate,
     courseWorkload: `PT${COURSE.hours}H`,
     maximumAttendeeCapacity: COURSE.maxSeats,
+    instructor: { "@type": "Person", name: "Cristhian Balvin" },
     location: { "@type": "VirtualLocation", url: EXCEL_APP_URL },
     courseSchedule: {
       "@type": "Schedule",
@@ -103,6 +105,7 @@ function ExcelAppLanding() {
           <ExcelAppProjects />
           <ExcelAppRoadmap />
           <ExcelAppPricing />
+          <ExcelAppInstructor />
           <ExcelAppFaq />
           <ExcelAppLeadForm />
         </TracingBeam>
