@@ -66,7 +66,7 @@ const APP_ROWS: {
 /** Hoja de cálculo "antes": estados inconsistentes, duplicados y errores. */
 function Spreadsheet() {
   const cols = ["A", "B", "C", "D", "E"];
-  const widths = [64, 82, 132, 86, 70];
+  const widths = [56, 78, 120, 82, 70]; // + 24 px de la columna de filas = 430 px
   const flag = (v: string) =>
     v.startsWith("#")
       ? "text-red-300 font-semibold"
@@ -74,15 +74,15 @@ function Spreadsheet() {
         ? "bg-amber/20"
         : "";
   return (
-    <div className="overflow-hidden rounded-xl border border-hairline bg-[#0d1420] shadow-2xl shadow-black/70">
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-hairline bg-[#0d1420] shadow-2xl shadow-black/70">
       <div className="flex items-center gap-2 border-b border-hairline px-3 py-2 text-[11px] text-muted-foreground">
         <FileSpreadsheet className="h-3.5 w-3.5 text-primary/80" />
         <span className="font-mono">Solicitudes_compras_FINAL_v3.xlsx</span>
       </div>
-      <table className="w-full border-collapse font-mono text-[10.5px] text-foreground/75">
+      <table className="w-full table-fixed border-collapse font-mono text-[10.5px] text-foreground/75">
         <thead>
           <tr className="bg-foreground/[0.04] text-muted-foreground">
-            <th className="w-6 border border-hairline" />
+            <th className="w-6 border border-hairline" style={{ width: 24 }} />
             {cols.map((c, i) => (
               <th
                 key={c}
@@ -119,9 +119,20 @@ function Spreadsheet() {
               ))}
             </tr>
           ))}
+          {/* Filas vacías: completan la hoja hasta el pie, como en Excel. */}
+          {[10, 11, 12, 13].map((n) => (
+            <tr key={n}>
+              <td className="border border-hairline py-1 text-center text-muted-foreground">{n}</td>
+              {cols.map((c) => (
+                <td key={c} className="border border-hairline py-1">
+                  &nbsp;
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
-      <div className="flex gap-1 border-t border-hairline px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
+      <div className="mt-auto flex gap-1 border-t border-hairline px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
         <span className="rounded bg-foreground/10 px-2 py-0.5">Hoja1</span>
         <span className="px-2 py-0.5">Hoja1 (2)</span>
         <span className="px-2 py-0.5">NO BORRAR</span>
@@ -189,30 +200,40 @@ export function PurchasesApp() {
 export function ExcelToApp() {
   return (
     <figure>
-      {/* Escritorio: composición antes → después. */}
+      {/* Escritorio: composición antes → después, en tres columnas alineadas. */}
       <div className="hidden md:block">
-        <ScaleToFit width={1180} height={560}>
-          <div className="relative h-full w-full">
-            <div className="absolute left-6 top-20 w-[460px] -rotate-3 opacity-80">
-              <p className="mb-2 text-xs font-mono uppercase tracking-widest text-muted-foreground">
-                Antes
-              </p>
+        <ScaleToFit width={1180} height={500}>
+          <div className="grid h-full grid-cols-[430px_110px_640px] grid-rows-[28px_1fr]">
+            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              Antes · Hoja de cálculo
+            </p>
+            <span />
+            <p className="font-mono text-xs uppercase tracking-widest text-academy">
+              Después · Tu aplicación
+            </p>
+
+            <div className="opacity-85">
               <Spreadsheet />
             </div>
-            <div className="absolute left-[400px] top-[372px] z-20 flex items-center gap-2 rounded-full border border-academy/50 bg-background px-4 py-2 text-sm font-semibold text-academy shadow-[0_0_40px_-6px_rgba(249,115,22,0.7)]">
-              <Sparkles className="h-4 w-4" /> Con IA →
+            <div className="relative flex items-center justify-center">
+              <span
+                aria-hidden
+                className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-hairline via-academy/70 to-academy"
+              />
+              <span className="relative z-10 flex flex-col items-center gap-1 rounded-2xl border border-academy/50 bg-background px-3 py-2.5 text-xs font-semibold text-academy shadow-[0_0_40px_-6px_rgba(249,115,22,0.7)]">
+                <Sparkles className="h-4 w-4" />
+                Con IA
+              </span>
             </div>
-            <div className="absolute right-0 top-0 h-[560px] w-[700px]">
-              <BrowserFrame url="compras.tuempresa.app/solicitudes">
-                <PurchasesApp />
-              </BrowserFrame>
-            </div>
+            <BrowserFrame url="compras.tuempresa.app/solicitudes">
+              <PurchasesApp />
+            </BrowserFrame>
           </div>
         </ScaleToFit>
       </div>
       {/* Móvil: solo la app, para que el texto siga siendo legible. */}
       <div className="md:hidden">
-        <ScaleToFit width={640} height={500}>
+        <ScaleToFit width={640} height={472}>
           <BrowserFrame url="compras.tuempresa.app">
             <PurchasesApp />
           </BrowserFrame>
