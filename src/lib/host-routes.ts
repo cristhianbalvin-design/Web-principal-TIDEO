@@ -25,6 +25,7 @@ export type LandingHost = {
 export const LANDING_HOSTS: readonly LandingHost[] = [
   { host: "opera.tideo.tech", path: "/opera" },
   { host: "powerbi-ia.tideo.tech", path: "/powerbi-ia" },
+  { host: "excel-app.tideo.tech", path: "/excel-app-ia" },
 ];
 
 /** Landing que corresponde a un hostname, o null si es el sitio principal. */

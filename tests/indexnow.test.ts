@@ -14,7 +14,12 @@ describe("IndexNow", () => {
     const xml = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
     const payloads = buildPayloads(urlsFromSitemap(xml), "k".repeat(32));
     const hosts = payloads.map((p) => p.host).sort();
-    expect(hosts).toEqual(["opera.tideo.tech", "powerbi-ia.tideo.tech", "www.tideo.tech"]);
+    expect(hosts).toEqual([
+      "excel-app.tideo.tech",
+      "opera.tideo.tech",
+      "powerbi-ia.tideo.tech",
+      "www.tideo.tech",
+    ]);
     for (const p of payloads) {
       expect(p.keyLocation).toBe(`https://${p.host}/${"k".repeat(32)}.txt`);
       for (const u of p.urlList) expect(new URL(u).host).toBe(p.host);

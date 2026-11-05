@@ -108,6 +108,7 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     ["privacidad/index.html", "https://www.tideo.tech/privacidad"],
     ["opera/index.html", "https://opera.tideo.tech/"],
     ["powerbi-ia/index.html", "https://powerbi-ia.tideo.tech/"],
+    ["excel-app-ia/index.html", "https://excel-app.tideo.tech/"],
   ])("%s tiene un único canonical %s", (file, href) => {
     const canonicals = [...page(file).matchAll(/<link rel="canonical" href="([^"]+)"/g)].map(
       (m) => m[1],
@@ -151,7 +152,9 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
   ])("%s lleva la etiqueta de verificación de dominio de Meta dentro del head", (file) => {
     const head = page(file).match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? "";
     const tags = head.match(/<meta name="facebook-domain-verification" content="[a-z0-9]+"/g);
-    expect(tags).toEqual(['<meta name="facebook-domain-verification" content="r7j4k3g6yfyerg5lee0jj0tp8m4929"']);
+    expect(tags).toEqual([
+      '<meta name="facebook-domain-verification" content="r7j4k3g6yfyerg5lee0jj0tp8m4929"',
+    ]);
   });
 
   it("la política de privacidad declara el uso del Píxel de Meta", () => {

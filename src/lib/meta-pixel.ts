@@ -3,7 +3,7 @@
  *
  * El conjunto de datos "TIDEO Tech & Strategy" vive en el portafolio comercial de Meta.
  * El código base se inyecta en el <head> desde __root.tsx, así que cubre todas las páginas
- * (www.tideo.tech y las landings opera.tideo.tech y powerbi-ia.tideo.tech comparten app).
+ * (www.tideo.tech y las landings opera., powerbi-ia. y excel-app.tideo.tech comparten app).
  *
  * Reglas de privacidad: los eventos se envían SIN datos personales (nada del contenido de
  * los formularios). Si se cambia esto, hay que actualizar /privacidad.
@@ -46,7 +46,9 @@ export function trackPageView() {
 }
 
 /** Alguien envió un formulario con éxito. `source` identifica cuál (sin datos personales). */
-export function trackLead(source: "contacto" | "diagnostico" | "opera" | "powerbi_ia") {
+export function trackLead(
+  source: "contacto" | "diagnostico" | "opera" | "powerbi_ia" | "excel_app_ia",
+) {
   track("Lead", { content_name: source });
 }
 

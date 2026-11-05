@@ -97,6 +97,8 @@ export function jsonLdScript(data: unknown) {
 
 export const OPERA_URL = "https://opera.tideo.tech/";
 export const POWERBI_URL = "https://powerbi-ia.tideo.tech/";
+/** AI Business Builder · Nivel 1 — "De Excel a tu Propia App con IA". */
+export const EXCEL_APP_URL = "https://excel-app.tideo.tech/";
 
 /**
  * Agrega parámetros UTM a un enlace hacia otro subdominio.
@@ -119,6 +121,11 @@ export function operaUrl(campaign: string, path = ""): string {
 /** Enlace al programa Power BI + IA con UTM por ubicación. */
 export function powerbiUrl(campaign: string): string {
   return trackedUrl(POWERBI_URL, "", campaign);
+}
+
+/** Enlace al curso "De Excel a tu Propia App con IA" con UTM por ubicación. */
+export function excelAppUrl(campaign: string): string {
+  return trackedUrl(EXCEL_APP_URL, "", campaign);
 }
 
 /** Etiquetas sociales (Open Graph / Twitter) y de app propias de las páginas de OPERA. */
