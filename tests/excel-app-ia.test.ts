@@ -115,6 +115,7 @@ describe("contenido publicado", () => {
 
   it("el stack incluye las plataformas y agentes del curso", () => {
     expect(content.STACK.map((t) => t.name)).toEqual(["Lovable", "Supabase", "GitHub", "Vercel"]);
+    expect(content.STACK[0]).toMatchObject({ alt: "Claude Design" });
     expect(content.AGENTS.map((a) => a.name)).toEqual(["Claude Code", "Codex", "Gemini"]);
   });
 

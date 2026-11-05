@@ -16,11 +16,11 @@ const modality = [
   ],
   [
     "Herramientas",
-    "Lovable, Supabase, GitHub y Vercel para construir y publicar, y agentes de desarrollo como Claude Code, Codex y Gemini. Algunas herramientas requieren cuentas personales y pueden tener límites o costos según el uso.",
+    "Lovable o Claude Design, Supabase, GitHub y Vercel para construir y publicar, y agentes de desarrollo como Claude Code, Codex y Gemini. Algunas herramientas requieren cuentas personales y pueden tener límites o costos según el uso.",
   ],
 ] as const;
 
-/** Secciones 12 (fechas), 13 (inversión), 14 (requisitos) y 15 (quién te acompaña). */
+/** Secciones 12 (fechas), 13 (inversión) y 14 (requisitos). */
 export function ExcelAppPricing() {
   return (
     <>
@@ -148,10 +148,11 @@ export function ExcelAppPricing() {
             <div className="mt-8 flex items-start gap-4 rounded-2xl border border-amber/30 bg-amber/[0.06] p-6">
               <ShieldAlert className="h-5 w-5 shrink-0 text-amber mt-0.5" />
               <p className="text-sm text-foreground/90 leading-relaxed">
-                <strong className="text-foreground">Importante sobre tus datos:</strong> utiliza
-                información sintética o anonimizada durante la formación. No subas contraseñas,
-                datos personales sensibles, archivos confidenciales ni información reservada de tu
-                empresa a herramientas de IA sin autorización y controles adecuados.
+                <strong className="text-foreground">Importante sobre tus datos:</strong> construirás
+                y probarás tu aplicación con datos sintéticos. Cuando esté validada, cargarás tus
+                datos empresariales en tu propia base de datos, con autorización de tu empresa.
+                Nunca compartas contraseñas ni información confidencial en los prompts de las
+                herramientas de IA.
               </p>
             </div>
           </div>
@@ -168,39 +169,6 @@ export function ExcelAppPricing() {
               ))}
             </ul>
           </div>
-        </div>
-      </Section>
-
-      <Section id="docente" className="border-t border-hairline" width="max-w-4xl">
-        <SectionHeader
-          align="center"
-          eyebrow="Quién te acompaña"
-          title={
-            <>
-              Aprende con experiencia de implementación, no solo con{" "}
-              <span className="font-serif-italic text-academy">ejemplos académicos</span>
-            </>
-          }
-        />
-        <div className="mt-12 rounded-2xl border border-hairline bg-surface/40 p-6 sm:p-10 text-center">
-          <p className="text-base sm:text-lg text-foreground/90 leading-relaxed">
-            <strong className="text-foreground">
-              Docencia y mentoría a cargo de un consultor de TIDEO Tech &amp; Strategy
-            </strong>
-            , con experiencia en procesos empresariales, operaciones, transformación digital,
-            Business Intelligence, automatización y desarrollo de software apoyado en IA.
-          </p>
-          <p className="mt-5 text-sm sm:text-base text-muted-foreground leading-relaxed">
-            La metodología recoge aprendizajes de proyectos reales: cómo formular requerimientos,
-            evitar soluciones sobredimensionadas, estructurar información, probar funcionalidades y
-            decidir qué desarrollar primero.
-          </p>
-          <p className="mt-8 text-lg sm:text-xl font-medium text-foreground">
-            En TIDEO creemos en una idea clara:{" "}
-            <span className="font-serif-italic text-academy">
-              primero entendemos el proceso; después elegimos y construimos la tecnología.
-            </span>
-          </p>
         </div>
       </Section>
     </>

@@ -53,7 +53,7 @@ Un agente no puede contratar ni agendar en nombre de alguien: lo correcto es dir
 - [OPERA — ERP para talleres](https://opera.tideo.tech/): ERP + MOM para talleres de mantenimiento, alquiler de maquinaria, metalmecánica, flotas, minería y contratistas: órdenes de trabajo, repuestos, mantenimiento, HSE y costos en tiempo real en una sola base de datos. También en Markdown con `Accept: text/markdown`.
 - [OPERA para metalmecánica](https://opera.tideo.tech/metalmecanica): ERP para talleres metalmecánicos de reparación y fabricación en Perú: diagnóstico técnico, hoja de costeo, cotización, órdenes de trabajo y de fabricación, almacén, partes diarios móviles y facturación con detracciones SPOT. También en Markdown.
 - [Power BI + IA Agéntica](https://powerbi-ia.tideo.tech/): programa de formación de TIDEO Academy.
-- [De Excel a tu Propia App con IA](https://excel-app.tideo.tech/): AI Business Builder · Nivel 1. Curso en vivo (24 h, 6 sábados, máximo 12 participantes) para que profesionales de negocio construyan un MVP de aplicación empresarial con IA y mentoría individual, usando Lovable, Supabase, GitHub, Vercel y agentes de desarrollo (Claude Code, Codex, Gemini). Primera cohorte: 5 dic. 2026 – 23 ene. 2027.
+- [De Excel a tu Propia App con IA](https://excel-app.tideo.tech/): AI Business Builder · Nivel 1. Curso en vivo (24 h, 6 sábados, máximo 12 participantes) para que profesionales de negocio construyan su propia aplicación empresarial con IA, lista para usarse, y mentoría individual, usando Lovable o Claude Design, Supabase, GitHub, Vercel y agentes de desarrollo (Claude Code, Codex, Gemini). Primera cohorte: 5 dic. 2026 – 23 ene. 2027.
 
 ## Optional
 

@@ -35,7 +35,15 @@ export function ExcelAppStack() {
                 </span>
                 <span className="font-mono text-xs text-muted-foreground">0{i + 1}</span>
               </div>
-              <h3 className="mt-5 text-xl font-semibold text-foreground">{t.name}</h3>
+              <h3 className="mt-5 flex flex-wrap items-baseline gap-x-2 text-xl font-semibold text-foreground">
+                {t.name}
+                {"alt" in t && (
+                  <>
+                    <span className="text-base font-normal text-muted-foreground">/</span>
+                    {t.alt}
+                  </>
+                )}
+              </h3>
               <p className="mt-1 text-xs font-mono uppercase tracking-wider text-academy">
                 {t.role}
               </p>
