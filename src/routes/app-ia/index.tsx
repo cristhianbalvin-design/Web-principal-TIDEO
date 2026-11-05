@@ -68,7 +68,7 @@ const excelAppCourseJsonLd = {
   },
 } as const;
 
-export const Route = createFileRoute("/excel-app-ia/")({
+export const Route = createFileRoute("/app-ia/")({
   component: ExcelAppLanding,
   head: () => ({
     meta: [
@@ -84,7 +84,7 @@ export const Route = createFileRoute("/excel-app-ia/")({
       { name: "twitter:description", content: SEO.ogDescription },
       { name: "theme-color", content: "#060B14" },
     ],
-    // La landing vive en su subdominio; /excel-app-ia en www es la misma página.
+    // La landing vive en su subdominio; /app-ia en www es la misma página.
     links: [{ rel: "canonical", href: EXCEL_APP_URL }],
     scripts: [jsonLdScript(excelAppCourseJsonLd)],
   }),

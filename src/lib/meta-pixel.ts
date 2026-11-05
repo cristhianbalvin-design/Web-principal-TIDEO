@@ -3,7 +3,7 @@
  *
  * El conjunto de datos "TIDEO Tech & Strategy" vive en el portafolio comercial de Meta.
  * El código base se inyecta en el <head> desde __root.tsx, así que cubre todas las páginas
- * (www.tideo.tech y las landings opera., powerbi-ia. y excel-app.tideo.tech comparten app).
+ * (www.tideo.tech y las landings opera., powerbi-ia. y app-ia.tideo.tech comparten app).
  *
  * Reglas de privacidad: los eventos se envían SIN datos personales (nada del contenido de
  * los formularios). Si se cambia esto, hay que actualizar /privacidad.

@@ -34,7 +34,7 @@ describe("public/sitemap.xml", () => {
       "https://opera.tideo.tech/",
       "https://opera.tideo.tech/metalmecanica",
       "https://powerbi-ia.tideo.tech/",
-      "https://excel-app.tideo.tech/",
+      "https://app-ia.tideo.tech/",
     ]);
   });
 });

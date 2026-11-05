@@ -13,22 +13,35 @@ function req(path: string, host: string) {
   });
 }
 
-describe("excel-app.tideo.tech (subdominio)", () => {
-  it("la raíz se reescribe a /excel-app-ia conservando el query string", () => {
-    const res = middleware(req("/?utm_campaign=meta_dic", "excel-app.tideo.tech"));
+describe("app-ia.tideo.tech (subdominio)", () => {
+  it("la raíz se reescribe a /app-ia conservando el query string", () => {
+    const res = middleware(req("/?utm_campaign=meta_dic", "app-ia.tideo.tech"));
     expect(res.headers.get("x-middleware-rewrite")).toBe(
-      "https://excel-app.tideo.tech/excel-app-ia?utm_campaign=meta_dic",
+      "https://app-ia.tideo.tech/app-ia?utm_campaign=meta_dic",
     );
   });
 
-  it("/excel-app-ia en el subdominio redirige con 308 a la URL limpia", () => {
-    const res = middleware(req("/excel-app-ia", "www.excel-app.tideo.tech"));
+  it("/app-ia en el subdominio redirige con 308 a la URL limpia", () => {
+    const res = middleware(req("/app-ia", "www.app-ia.tideo.tech"));
     expect(res.status).toBe(308);
-    expect(res.headers.get("location")).toBe("https://www.excel-app.tideo.tech/");
+    expect(res.headers.get("location")).toBe("https://www.app-ia.tideo.tech/");
   });
 
-  it("en www la ruta /excel-app-ia pasa directo (misma página)", () => {
-    const res = middleware(req("/excel-app-ia", "www.tideo.tech"));
+  it("vercel.json redirige la ruta anterior /excel-app-ia a /app-ia", () => {
+    const cfg = JSON.parse(readFileSync(new URL("../vercel.json", import.meta.url), "utf8"));
+    expect(cfg.redirects).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          source: "/excel-app-ia",
+          destination: "/app-ia",
+          permanent: true,
+        }),
+      ]),
+    );
+  });
+
+  it("en www la ruta /app-ia pasa directo (misma página)", () => {
+    const res = middleware(req("/app-ia", "www.tideo.tech"));
     expect(res.headers.get("x-middleware-next")).toBe("1");
   });
 });
@@ -53,7 +66,7 @@ describe("notas del lead para el CRM", () => {
     expect(notes).toContain("Experiencia con IA: Básica");
     expect(notes).toContain("Disponibilidad 6 fechas: Sí");
     expect(notes).toContain("Acepta comunicaciones comerciales: No");
-    expect(notes).toContain("Origen: excel-app.tideo.tech");
+    expect(notes).toContain("Origen: app-ia.tideo.tech");
   });
 
   it("marca 'Necesita consultar' cuando no confirma las fechas", () => {

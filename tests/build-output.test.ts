@@ -108,7 +108,7 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     ["privacidad/index.html", "https://www.tideo.tech/privacidad"],
     ["opera/index.html", "https://opera.tideo.tech/"],
     ["powerbi-ia/index.html", "https://powerbi-ia.tideo.tech/"],
-    ["excel-app-ia/index.html", "https://excel-app.tideo.tech/"],
+    ["app-ia/index.html", "https://app-ia.tideo.tech/"],
   ])("%s tiene un único canonical %s", (file, href) => {
     const canonicals = [...page(file).matchAll(/<link rel="canonical" href="([^"]+)"/g)].map(
       (m) => m[1],

@@ -98,7 +98,7 @@ export function jsonLdScript(data: unknown) {
 export const OPERA_URL = "https://opera.tideo.tech/";
 export const POWERBI_URL = "https://powerbi-ia.tideo.tech/";
 /** AI Business Builder · Nivel 1 — "De Excel a tu Propia App con IA". */
-export const EXCEL_APP_URL = "https://excel-app.tideo.tech/";
+export const EXCEL_APP_URL = "https://app-ia.tideo.tech/";
 
 /**
  * Agrega parámetros UTM a un enlace hacia otro subdominio.

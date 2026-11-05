@@ -14,7 +14,7 @@ import { Route as R404RouteImport } from './routes/404'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as NosotrosRouteImport } from './routes/nosotros'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
-import { Route as ExcelAppIaIndexRouteImport } from './routes/excel-app-ia/index'
+import { Route as AppIaIndexRouteImport } from './routes/app-ia/index'
 import { Route as GuiasIndexRouteImport } from './routes/guias/index'
 import { Route as GuiasDelTableroAlAgenteRouteImport } from './routes/guias/del-tablero-al-agente'
 import { Route as OperaIndexRouteImport } from './routes/opera/index'
@@ -46,9 +46,9 @@ const PrivacidadRoute = PrivacidadRouteImport.update({
   path: '/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ExcelAppIaIndexRoute = ExcelAppIaIndexRouteImport.update({
-  id: '/excel-app-ia/',
-  path: '/excel-app-ia/',
+const AppIaIndexRoute = AppIaIndexRouteImport.update({
+  id: '/app-ia/',
+  path: '/app-ia/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuiasIndexRoute = GuiasIndexRouteImport.update({
@@ -85,7 +85,7 @@ export interface FileRoutesByFullPath {
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
-  '/excel-app-ia/': typeof ExcelAppIaIndexRoute
+  '/app-ia/': typeof AppIaIndexRoute
   '/guias/': typeof GuiasIndexRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
@@ -98,7 +98,7 @@ export interface FileRoutesByTo {
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
-  '/excel-app-ia': typeof ExcelAppIaIndexRoute
+  '/app-ia': typeof AppIaIndexRoute
   '/guias': typeof GuiasIndexRoute
   '/opera': typeof OperaIndexRoute
   '/powerbi-ia': typeof PowerbiIaIndexRoute
@@ -112,7 +112,7 @@ export interface FileRoutesById {
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
-  '/excel-app-ia/': typeof ExcelAppIaIndexRoute
+  '/app-ia/': typeof AppIaIndexRoute
   '/guias/': typeof GuiasIndexRoute
   '/opera/': typeof OperaIndexRoute
   '/powerbi-ia/': typeof PowerbiIaIndexRoute
@@ -127,7 +127,7 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
     | '/opera/metalmecanica'
-    | '/excel-app-ia/'
+    | '/app-ia/'
     | '/guias/'
     | '/opera/'
     | '/powerbi-ia/'
@@ -140,7 +140,7 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
     | '/opera/metalmecanica'
-    | '/excel-app-ia'
+    | '/app-ia'
     | '/guias'
     | '/opera'
     | '/powerbi-ia'
@@ -153,7 +153,7 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
     | '/opera/metalmecanica'
-    | '/excel-app-ia/'
+    | '/app-ia/'
     | '/guias/'
     | '/opera/'
     | '/powerbi-ia/'
@@ -167,7 +167,7 @@ export interface RootRouteChildren {
   PrivacidadRoute: typeof PrivacidadRoute
   GuiasDelTableroAlAgenteRoute: typeof GuiasDelTableroAlAgenteRoute
   OperaMetalmecanicaRoute: typeof OperaMetalmecanicaRoute
-  ExcelAppIaIndexRoute: typeof ExcelAppIaIndexRoute
+  AppIaIndexRoute: typeof AppIaIndexRoute
   GuiasIndexRoute: typeof GuiasIndexRoute
   OperaIndexRoute: typeof OperaIndexRoute
   PowerbiIaIndexRoute: typeof PowerbiIaIndexRoute
@@ -210,11 +210,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/excel-app-ia/': {
-      id: '/excel-app-ia/'
-      path: '/excel-app-ia'
-      fullPath: '/excel-app-ia/'
-      preLoaderRoute: typeof ExcelAppIaIndexRouteImport
+    '/app-ia/': {
+      id: '/app-ia/'
+      path: '/app-ia'
+      fullPath: '/app-ia/'
+      preLoaderRoute: typeof AppIaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guias/': {
@@ -263,7 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadRoute: PrivacidadRoute,
   GuiasDelTableroAlAgenteRoute: GuiasDelTableroAlAgenteRoute,
   OperaMetalmecanicaRoute: OperaMetalmecanicaRoute,
-  ExcelAppIaIndexRoute: ExcelAppIaIndexRoute,
+  AppIaIndexRoute: AppIaIndexRoute,
   GuiasIndexRoute: GuiasIndexRoute,
   OperaIndexRoute: OperaIndexRoute,
   PowerbiIaIndexRoute: PowerbiIaIndexRoute,

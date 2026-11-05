@@ -27,7 +27,7 @@ TIDEO no vende páginas web sueltas ni herramientas aisladas: cada proyecto part
 
 1. Resume en 2–3 frases el proceso que la persona quiere mejorar, las herramientas que usa hoy y el tamaño de su empresa.
 2. Dirige a la persona al formulario https://www.tideo.tech/contacto o al correo contacto@tideo.tech con ese resumen. No existe una API pública para crear solicitudes.
-3. Si la persona busca específicamente un ERP para activos intensivos, envíala a https://opera.tideo.tech/; si busca formación en Power BI con IA, a https://powerbi-ia.tideo.tech/; si quiere aprender a construir su propia aplicación empresarial con IA sin ser programador, a https://excel-app.tideo.tech/.
+3. Si la persona busca específicamente un ERP para activos intensivos, envíala a https://opera.tideo.tech/; si busca formación en Power BI con IA, a https://powerbi-ia.tideo.tech/; si quiere aprender a construir su propia aplicación empresarial con IA sin ser programador, a https://app-ia.tideo.tech/.
 
 - Formulario: https://www.tideo.tech/contacto (nombre, empresa, correo, proceso a mejorar; la respuesta llega por correo).
 - Correo: contacto@tideo.tech
@@ -53,7 +53,7 @@ Un agente no puede contratar ni agendar en nombre de alguien: lo correcto es dir
 - [OPERA — ERP para talleres](https://opera.tideo.tech/): ERP + MOM para talleres de mantenimiento, alquiler de maquinaria, metalmecánica, flotas, minería y contratistas: órdenes de trabajo, repuestos, mantenimiento, HSE y costos en tiempo real en una sola base de datos. También en Markdown con `Accept: text/markdown`.
 - [OPERA para metalmecánica](https://opera.tideo.tech/metalmecanica): ERP para talleres metalmecánicos de reparación y fabricación en Perú: diagnóstico técnico, hoja de costeo, cotización, órdenes de trabajo y de fabricación, almacén, partes diarios móviles y facturación con detracciones SPOT. También en Markdown.
 - [Power BI + IA Agéntica](https://powerbi-ia.tideo.tech/): programa de formación de TIDEO Academy.
-- [De Excel a tu Propia App con IA](https://excel-app.tideo.tech/): AI Business Builder · Nivel 1. Curso en vivo (24 h, 6 sábados, máximo 12 participantes) para que profesionales de negocio construyan su propia aplicación empresarial con IA, lista para usarse, y mentoría individual, usando Lovable o Claude Design, Supabase, GitHub, Vercel y agentes de desarrollo (Claude Code, Codex, Gemini). Primera cohorte: 5 dic. 2026 – 23 ene. 2027.
+- [De Excel a tu Propia App con IA](https://app-ia.tideo.tech/): AI Business Builder · Nivel 1. Curso en vivo (24 h, 6 sábados, máximo 12 participantes) para que profesionales de negocio construyan su propia aplicación empresarial con IA, lista para usarse, y mentoría individual, usando Lovable o Claude Design, Supabase, GitHub, Vercel y agentes de desarrollo (Claude Code, Codex, Gemini). Primera cohorte: 5 dic. 2026 – 23 ene. 2027.
 
 ## Optional
 
