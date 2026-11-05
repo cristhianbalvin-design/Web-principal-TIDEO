@@ -111,8 +111,8 @@ export function ExcelAppLeadForm() {
           </p>
           <p className="mt-4 text-base text-muted-foreground leading-relaxed">
             En <strong className="text-foreground">{COURSE.name}</strong> tendrás una metodología
-            clara, una miniaplicación guiada, espacio para desarrollar tu propio MVP y asesoría
-            individual dentro de un grupo reducido.
+            clara, una aplicación de referencia guiada, espacio para desarrollar tu propio MVP y
+            asesoría individual dentro de un grupo reducido.
           </p>
           <ul className="mt-8 grid grid-cols-2 gap-3 text-sm">
             {[

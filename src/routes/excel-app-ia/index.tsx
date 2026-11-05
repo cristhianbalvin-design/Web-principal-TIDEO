@@ -10,6 +10,7 @@ import { ExcelAppStory } from "@/components/excel-app-ia/ExcelAppStory";
 import { ExcelAppAudience } from "@/components/excel-app-ia/ExcelAppAudience";
 import { ExcelAppDifference } from "@/components/excel-app-ia/ExcelAppDifference";
 import { ExcelAppMethod } from "@/components/excel-app-ia/ExcelAppMethod";
+import { ExcelAppStack } from "@/components/excel-app-ia/ExcelAppStack";
 import { ExcelAppSyllabus } from "@/components/excel-app-ia/ExcelAppSyllabus";
 import { ExcelAppProjects } from "@/components/excel-app-ia/ExcelAppProjects";
 import { ExcelAppRoadmap } from "@/components/excel-app-ia/ExcelAppRoadmap";
@@ -97,6 +98,7 @@ function ExcelAppLanding() {
           <ExcelAppAudience />
           <ExcelAppDifference />
           <ExcelAppMethod />
+          <ExcelAppStack />
           <ExcelAppSyllabus />
           <ExcelAppProjects />
           <ExcelAppRoadmap />

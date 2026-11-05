@@ -63,7 +63,7 @@ export function ExcelAppMethod() {
               </thead>
               <tbody className="divide-y divide-hairline">
                 <tr>
-                  <td className="px-5 py-3 text-foreground/90">Miniaplicación guiada</td>
+                  <td className="px-5 py-3 text-foreground/90">Aplicación de referencia guiada</td>
                   <td className="px-5 py-3 text-right font-mono">6</td>
                 </tr>
                 <tr>

@@ -29,7 +29,7 @@ export function ExcelAppDifference() {
           ))}
         </ol>
         <p className="mt-10 text-center text-base sm:text-lg text-foreground/90 max-w-3xl mx-auto">
-          El diferencial de TIDEO es sencillo:{" "}
+          El diferencial de TIDEO es claro:{" "}
           <strong className="text-foreground">
             menos teoría desconectada y más construcción acompañada, con criterio empresarial.
           </strong>

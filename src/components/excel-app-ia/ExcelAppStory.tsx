@@ -54,7 +54,7 @@ export function ExcelAppStory() {
                 <strong className="text-foreground">
                   Ahí es donde comienza la diferencia de TIDEO:
                 </strong>{" "}
-                te ayudamos a transformar un problema empresarial acotado en un MVP funcional,
+                te ayudamos a transformar un problema empresarial concreto en un MVP funcional,
                 siguiendo una metodología que combina procesos, datos, construcción asistida por IA,
                 pruebas y acompañamiento experto.
               </p>
@@ -78,7 +78,7 @@ export function ExcelAppStory() {
               <span className="font-serif-italic text-academy">Acompañamiento real.</span>
             </>
           }
-          description="Al finalizar el programa, habrás recorrido un proceso completo de creación de una aplicación empresarial pequeña."
+          description="Al finalizar el programa, habrás recorrido un proceso completo de creación de una aplicación empresarial."
         />
         <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {PROMISE.map((p, i) => (
@@ -96,11 +96,13 @@ export function ExcelAppStory() {
           <Target className="w-5 h-5 text-academy shrink-0 mt-0.5" />
           <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
             <strong className="text-foreground">
-              El objetivo es que termines con un MVP pequeño y demostrable, no con un ERP completo
-              ni con una plataforma empresarial lista para operar sin validaciones adicionales.
+              El objetivo es que termines con un MVP funcional y demostrable: una aplicación real
+              que resuelve un proceso de tu negocio.
             </strong>{" "}
-            El alcance de cada proyecto se revisará antes de la etapa personalizada para hacerlo
-            viable dentro de las 24 horas.
+            Los temas más avanzados —automatizaciones, agentes de IA, integraciones con otros
+            sistemas y operación productiva— quedan para los siguientes niveles de la ruta. El
+            alcance de cada proyecto se revisará antes de la etapa personalizada para hacerlo viable
+            dentro de las 24 horas.
           </p>
         </div>
       </Section>

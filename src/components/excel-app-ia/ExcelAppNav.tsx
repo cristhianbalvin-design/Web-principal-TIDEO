@@ -3,6 +3,7 @@ import isotipo from "@/assets/tideo-isotipo.png";
 
 const navLinks = [
   { href: "#metodo", label: "Método" },
+  { href: "#stack", label: "Stack" },
   { href: "#temario", label: "Temario" },
   { href: "#proyectos", label: "Proyectos" },
   { href: "#ruta", label: "Ruta" },

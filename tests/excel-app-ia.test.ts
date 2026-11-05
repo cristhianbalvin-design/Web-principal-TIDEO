@@ -95,6 +95,29 @@ describe("contenido publicado", () => {
     expect(dates.at(-1)!.toISOString().slice(0, 10)).toBe(content.COURSE.endDate);
   });
 
+  it("no usa lenguaje que minimice lo que se construye", () => {
+    const strings: string[] = [];
+    const walk = (v: unknown) => {
+      if (typeof v === "string") strings.push(v);
+      else if (v && typeof v === "object") Object.values(v).forEach(walk);
+    };
+    // AI_EXPERIENCE describe la experiencia del alumno ("Básica"), no el MVP.
+    const { AI_EXPERIENCE: _skip, ...rest } = content;
+    walk(rest);
+    const MINIMIZING = /b[aá]sic|sencill|simple|pequeñ|mini ?app|miniaplic|acotad/i;
+    for (const s of strings) expect(s).not.toMatch(MINIMIZING);
+    const dir = new URL("../src/components/excel-app-ia/", import.meta.url);
+    for (const file of readdirSync(dir)) {
+      const src = readFileSync(new URL(file, dir), "utf8");
+      expect(src, file).not.toMatch(MINIMIZING);
+    }
+  });
+
+  it("el stack incluye las plataformas y agentes del curso", () => {
+    expect(content.STACK.map((t) => t.name)).toEqual(["Lovable", "Supabase", "GitHub", "Vercel"]);
+    expect(content.AGENTS.map((a) => a.name)).toEqual(["Claude Code", "Codex", "Gemini"]);
+  });
+
   it("las horas por fase suman las 24 anunciadas", () => {
     expect(content.PHASES.reduce((s, p) => s + p.hours, 0)).toBe(content.COURSE.hours);
   });
