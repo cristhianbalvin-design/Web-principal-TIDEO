@@ -105,7 +105,7 @@ export function AppShell({
   appName: string;
   nav: NavItem[];
   user: { initials: string; name: string; role: string };
-  /** Barra lateral más angosta, para maquetas pequeñas. */
+  /** Barra lateral más angosta, para maquetas de menor tamaño. */
   compact?: boolean;
   children: ReactNode;
 }) {
