@@ -11,7 +11,7 @@ const facts = [
 
 /**
  * El copy pide no mostrar pantallas ficticias como resultados reales. Mientras no exista la
- * demo real de la miniapp, el visual del hero muestra datos verdaderos del programa.
+ * demo real de la app de referencia, el visual del hero muestra datos verdaderos del programa.
  */
 function CohortCard() {
   const total = PHASES.reduce((s, p) => s + p.hours, 0);
@@ -132,8 +132,8 @@ export function ExcelAppHero() {
               En este programa no vienes solamente a mirar cómo se construye una app: construyes la
               tuya.
             </strong>{" "}
-            Primero desarrollamos juntos una miniaplicación, paso a paso y con prompts guiados.
-            Después trabajas en tu propio MVP, con asesoría individual de un consultor que
+            Primero desarrollamos juntos una aplicación de referencia, paso a paso y con prompts
+            guiados. Después trabajas en tu propio MVP, con asesoría individual de un consultor que
             desarrolla soluciones para empresas.
           </p>
 

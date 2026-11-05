@@ -35,10 +35,10 @@ export const formatPEN = (n: number) => `S/ ${n.toLocaleString("es-PE")}`;
 export const SEO = {
   title: "De Excel a tu Propia App con IA | TIDEO AI Business Builder",
   description:
-    "Aprende a construir tu primera app empresarial con inteligencia artificial. 24 horas en vivo, miniapp guiada, MVP propio y mentoría individual. Inicio 5 de diciembre de 2026.",
+    "Aprende a construir tu primera app empresarial con inteligencia artificial. 24 horas en vivo, app de referencia guiada, MVP funcional propio y mentoría individual. Inicio 5 de diciembre de 2026.",
   ogTitle: "Construye tu propia App Empresarial con IA | TIDEO",
   ogDescription:
-    "No solo aprendas prompts: construye una miniapp guiada y desarrolla tu propio MVP con mentoría personalizada. Primera cohorte, diciembre 2026.",
+    "No solo aprendas prompts: construye una app de referencia guiada y desarrolla tu propio MVP funcional con mentoría personalizada. Primera cohorte, diciembre 2026.",
 } as const;
 
 export const WHATSAPP_MESSAGE =
@@ -48,7 +48,7 @@ export const WHATSAPP_MESSAGE =
 
 export const PROMISE = [
   {
-    title: "Construir una miniapp en grupo",
+    title: "Construir una app de referencia en grupo",
     text: "Seguirás una ruta guiada, con prompts y explicaciones compartidas, para comprender el proceso de principio a fin.",
   },
   {
@@ -57,7 +57,7 @@ export const PROMISE = [
   },
   {
     title: "Crear tu aplicación con apoyo de IA",
-    text: "Desarrollarás pantallas, formularios, estructura de datos y operaciones básicas de tu caso.",
+    text: "Desarrollarás pantallas, formularios, estructura de datos, reglas de negocio y operaciones de tu caso.",
   },
   {
     title: "Revisar y corregir",
@@ -72,11 +72,11 @@ export const PROMISE = [
 /* ───────────────────────── 4 · Para quién ───────────────────────── */
 
 export const AUDIENCE_YES = [
-  "Trabajas en operaciones, logística, compras, administración, mantenimiento, servicios, ventas o gestión de proyectos.",
+  "Trabajas en operaciones, logística, compras, finanzas, recursos humanos, administración, calidad, mantenimiento, servicios, ventas o gestión de proyectos.",
   "Eres ingeniero industrial, administrador, analista, coordinador, supervisor o jefe de área y quieres resolver una necesidad de tu equipo.",
-  "Eres emprendedor o diriges una pequeña empresa y necesitas ordenar una parte de tu operación mediante una aplicación propia.",
+  "Eres emprendedor o diriges una pyme y necesitas ordenar una parte de tu operación mediante una aplicación propia.",
   "Eres consultor y quieres incorporar el desarrollo asistido por IA a tu capacidad de resolver problemas empresariales.",
-  "Utilizas Excel para gestionar procesos y te interesa dar el siguiente paso hacia una aplicación web sencilla.",
+  "Utilizas Excel para gestionar procesos y te interesa dar el siguiente paso hacia una aplicación web propia.",
   "Quieres aprender construyendo, con orientación individual para tu caso y no únicamente observando ejercicios del instructor.",
 ] as const;
 
@@ -88,7 +88,7 @@ export const AUDIENCE_NO =
 export const DIFFERENCES = [
   {
     title: "Empiezas construyendo, no acumulando teoría",
-    text: "En las primeras seis horas desarrollamos juntos una miniaplicación funcional. Aprendes viendo cómo un requerimiento se convierte en interfaz, datos y funcionalidades.",
+    text: "En las primeras seis horas desarrollamos juntos una aplicación de referencia funcional. Aprendes viendo cómo un requerimiento se convierte en interfaz, datos y funcionalidades.",
   },
   {
     title: "Después, el proyecto es tuyo",
@@ -99,7 +99,7 @@ export const DIFFERENCES = [
     text: "Cada participante recibe 60 minutos de atención exclusiva, distribuidos en tres turnos de 20 minutos durante los laboratorios. Tu asesoría se concentra en tus decisiones, bloqueos y mejoras; no se diluye en una clase masiva.",
   },
   {
-    title: "Aprendes junto a una comunidad pequeña",
+    title: "Aprendes en un grupo reducido",
     text: "Máximo 12 participantes por cohorte. Los doce asisten a las mismas sesiones. Mientras el instructor asesora individualmente a algunos, el resto continúa avanzando en su aplicación con guías e hitos de trabajo.",
   },
   {
@@ -120,7 +120,7 @@ export const PHASES = [
     title: "Construcción guiada",
     hours: 6,
     when: "Sesiones 1 y 2",
-    text: "Construiremos una miniaplicación empresarial de referencia siguiendo la misma metodología y secuencia de prompts. Verás cómo definir el alcance, diseñar las primeras pantallas, organizar la información y conectar las funciones esenciales.",
+    text: "Construiremos una aplicación empresarial de referencia siguiendo la misma metodología y secuencia de prompts. Verás cómo definir el alcance, diseñar las primeras pantallas, organizar la información y conectar las funciones esenciales.",
   },
   {
     tag: "Fase 2",
@@ -134,7 +134,7 @@ export const PHASES = [
     title: "Complementos y preguntas grupales",
     hours: 6,
     when: "2 h en la sesión 2 y 1 h en cada sesión 3 a 6",
-    text: "Conceptos prácticos sobre alcance del MVP, datos, prompts, depuración, pruebas, seguridad básica, publicación de demostraciones y siguientes pasos. También resolvemos dudas que pueden beneficiar a todo el grupo.",
+    text: "Conceptos prácticos sobre alcance del MVP, datos, prompts, depuración, pruebas, fundamentos de seguridad, publicación de demostraciones y siguientes pasos. También resolvemos dudas que pueden beneficiar a todo el grupo.",
   },
 ] as const;
 
@@ -168,10 +168,10 @@ export const SESSIONS: Session[] = [
     phase: 1,
     topics: [
       "Qué es un MVP y cómo evitar que el alcance crezca sin control.",
-      "Cómo expresar una necesidad empresarial en requerimientos simples.",
+      "Cómo expresar una necesidad empresarial en requerimientos claros.",
       "Cómo conversar con la IA para construir una aplicación por etapas.",
-      "Diseño de pantallas, formularios y flujo básico de uso.",
-      "Construcción conjunta de la primera versión de la miniapp.",
+      "Diseño de pantallas, formularios y flujo de uso.",
+      "Construcción conjunta de la primera versión de la app de referencia.",
     ],
     deliverable: "Primera versión funcional de la aplicación guiada.",
   },
@@ -179,16 +179,16 @@ export const SESSIONS: Session[] = [
     n: 2,
     date: "Sábado 12 de diciembre de 2026",
     dateShort: "12 dic.",
-    title: "Miniapp terminada + diseño de tu propio MVP",
+    title: "App de referencia terminada + diseño de tu propio MVP",
     phase: 1,
     topics: [
-      "Finalización de la miniapp guiada: datos, creación, consulta y actualización de registros.",
+      "Finalización de la app de referencia: datos, creación, consulta y actualización de registros.",
       "Pruebas de funcionamiento y corrección de errores frecuentes.",
-      "Cómo traducir un problema propio a una aplicación pequeña.",
+      "Cómo traducir un problema propio a una aplicación concreta.",
       "Definición del alcance, pantallas, datos y funcionalidades de cada MVP.",
       "Revisión de criterios para seleccionar un proyecto realizable dentro del curso.",
     ],
-    deliverable: "Miniapp de referencia terminada y ficha de alcance del proyecto personal.",
+    deliverable: "App de referencia terminada y ficha de alcance del proyecto personal.",
     plural: true,
   },
   {
@@ -213,7 +213,7 @@ export const SESSIONS: Session[] = [
     topics: [
       "3 horas de laboratorio con avance autónomo y turnos de asesoría individual.",
       "Construcción de funcionalidades esenciales, formularios y consultas.",
-      "1 hora grupal: modelamiento de datos, depuración y validaciones básicas.",
+      "1 hora grupal: modelamiento de datos, depuración y validación de datos.",
     ],
     deliverable: "Flujo principal del MVP en funcionamiento.",
   },
@@ -226,7 +226,7 @@ export const SESSIONS: Session[] = [
     topics: [
       "3 horas de laboratorio con avance autónomo y turnos de asesoría individual.",
       "Corrección de errores, mejora del flujo de usuario y revisión de datos.",
-      "1 hora grupal: pruebas funcionales, permisos y seguridad básica.",
+      "1 hora grupal: pruebas funcionales, permisos y fundamentos de seguridad.",
     ],
     deliverable: "MVP preparado para pruebas y demostración.",
   },
@@ -250,36 +250,119 @@ export const SESSIONS: Session[] = [
 
 export const PROJECT_EXAMPLES = [
   {
+    area: "Logística",
     title: "Control de inventarios",
-    text: "Catálogo de productos, movimientos simples, consulta de existencias y filtros.",
+    text: "Catálogo de productos, entradas y salidas, existencias actualizadas e indicadores de stock mínimo.",
   },
   {
+    area: "Operaciones",
     title: "Seguimiento de solicitudes internas",
-    text: "Registro de requerimientos, responsables, estados e historial básico.",
+    text: "Registro de requerimientos, responsables, prioridades, estados e historial de cambios.",
   },
   {
-    title: "Gestión comercial sencilla",
-    text: "Clientes, oportunidades, estados de seguimiento y actividades.",
+    area: "Ventas",
+    title: "Gestión comercial (CRM)",
+    text: "Clientes, oportunidades, etapas de venta, actividades y seguimiento por vendedor.",
   },
   {
-    title: "Control de servicios u órdenes de trabajo",
-    text: "Registro, asignación, seguimiento de avances y consulta por estado.",
+    area: "Mantenimiento y servicios",
+    title: "Órdenes de trabajo",
+    text: "Registro, asignación a técnicos, avance por estado e historial por cliente o equipo.",
   },
   {
-    title: "Gestión de compras o requerimientos",
-    text: "Solicitudes, prioridades, responsables y trazabilidad simple.",
+    area: "Compras",
+    title: "Requerimientos y compras",
+    text: "Solicitudes de compra, aprobación por responsable, prioridades y trazabilidad de cada pedido.",
   },
   {
-    title: "Registro de incidencias operativas",
-    text: "Creación de incidencias, categorización, responsables y estado de atención.",
+    area: "Recursos humanos",
+    title: "Gestión de personal",
+    text: "Legajo del colaborador, solicitudes de vacaciones y permisos, y seguimiento del onboarding.",
+  },
+  {
+    area: "Finanzas",
+    title: "Cuentas por cobrar",
+    text: "Facturas pendientes, vencimientos, compromisos de pago y seguimiento de cobranza por cliente.",
+  },
+  {
+    area: "Calidad y SST",
+    title: "Inspecciones y no conformidades",
+    text: "Registro de inspecciones, hallazgos, acciones correctivas e incidentes de seguridad.",
+  },
+  {
+    area: "Proyectos",
+    title: "Control de proyectos",
+    text: "Tareas, responsables, hitos, avance por etapa y registro de entregables.",
   },
 ] as const;
 
-export const MVP_IN =
-  "Un solo proceso, hasta tres tablas o entidades principales, aproximadamente cuatro o cinco pantallas y funcionalidades básicas de registro, consulta y edición, con validaciones sencillas. El despliegue se orienta a demostración y pruebas, no a uso productivo crítico.";
+/** Qué tiene un MVP funcional al cerrar el curso. */
+export const MVP_FEATURES = [
+  "Un proceso real de tu negocio resuelto de punta a punta, desde el registro hasta el seguimiento.",
+  "Base de datos en la nube con la estructura de información de tu caso.",
+  "Acceso con usuarios y permisos según el rol de cada persona.",
+  "Formularios, consultas, filtros y reglas de negocio que validan la información.",
+  "Aplicación publicada en la web y código versionado, lista para demostrarla y probarla con usuarios.",
+] as const;
 
-export const MVP_OUT =
-  "Un ERP integral, módulos contables complejos, pagos reales, integraciones corporativas profundas, arquitecturas multitenant, agentes autónomos avanzados y requisitos exigentes de producción. Si tu proyecto necesita esas capacidades, podrás incorporarlas posteriormente mediante formación adicional o un proyecto de implementación especializado.";
+/** Temas avanzados que no forman parte del MVP del Nivel 1. */
+export const ADVANCED_TOPICS = [
+  "Automatizaciones, aprobaciones en cadena y alertas entre procesos.",
+  "Agentes de IA que consultan información y ejecutan acciones.",
+  "Integraciones con ERP, contabilidad u otros sistemas corporativos.",
+  "Pagos en línea y módulos contables o tributarios.",
+  "Arquitecturas multiempresa (multitenant) y alta concurrencia.",
+  "Endurecimiento de seguridad, monitoreo y soporte para operación productiva crítica.",
+] as const;
+
+/* ───────────────────────── Stack tecnológico ───────────────────────── */
+
+export const STACK = [
+  {
+    name: "Lovable",
+    role: "Construye la aplicación",
+    text: "Genera la interfaz y la lógica de tu aplicación web a partir de instrucciones en lenguaje natural. Aquí das forma a pantallas, formularios y flujos de trabajo.",
+  },
+  {
+    name: "Supabase",
+    role: "Guarda los datos y gestiona usuarios",
+    text: "Backend en la nube sobre PostgreSQL: almacena la información de tu app, maneja el inicio de sesión y controla quién puede ver o modificar cada dato.",
+  },
+  {
+    name: "GitHub",
+    role: "Versiona el código",
+    text: "Repositorio donde vive el código de tu aplicación. Registra cada cambio, permite volver a versiones anteriores y conecta el proyecto con los agentes y con la publicación.",
+  },
+  {
+    name: "Vercel",
+    role: "Publica en la web",
+    text: "Despliega tu aplicación en internet con su propia URL, para demostrarla y probarla con usuarios reales.",
+  },
+] as const;
+
+export const AGENTS_INTRO =
+  "Trabajan directamente sobre el código de tu proyecto: leen el repositorio, proponen y aplican cambios, corrigen errores y explican lo que hicieron. Los usamos cuando la aplicación necesita ajustes que van más allá de lo que conviene pedir en Lovable.";
+
+export const AGENTS = [
+  {
+    name: "Claude Code",
+    maker: "Anthropic",
+    text: "Entiende el proyecto completo, implementa funcionalidades que tocan varios archivos y depura errores paso a paso.",
+  },
+  {
+    name: "Codex",
+    maker: "OpenAI",
+    text: "Ejecuta tareas de desarrollo y revisiones de código: útil para resolver cambios concretos y validar lo que ya se construyó.",
+  },
+  {
+    name: "Gemini",
+    maker: "Google",
+    text: "Analiza código con un contexto amplio, genera componentes y explica cómo funciona cada parte de la aplicación.",
+  },
+] as const;
+
+export const STACK_NOTE =
+  "Varias de estas herramientas tienen planes gratuitos o de prueba con límites que cambian, y algunas funciones o agentes requieren un plan de pago. Antes del inicio te indicaremos qué cuentas crear y qué costos externos, si los hubiera, debes considerar.";
 
 /* ───────────────────────── 10 · No solo prompts ───────────────────────── */
 
@@ -298,7 +381,7 @@ export const SKILLS = [
   },
   {
     title: "Validar lo que la IA genera",
-    text: "Una respuesta convincente no garantiza software correcto. Tendrás criterios sencillos para probar el flujo principal, detectar fallas y reconocer limitaciones.",
+    text: "Una respuesta convincente no garantiza software correcto. Tendrás criterios claros para probar el flujo principal, detectar fallas y reconocer limitaciones.",
   },
   {
     title: "Prepararte para evolucionar",
@@ -345,7 +428,7 @@ export const LEVELS = [
 
 export const INCLUDES = [
   "24 horas de formación y laboratorio en vivo.",
-  "Construcción guiada de una miniaplicación de referencia.",
+  "Construcción guiada de una aplicación de referencia.",
   "Desarrollo de un MVP personal, sujeto a alcance validado.",
   "60 minutos de asesoría individual exclusiva, distribuidos en tres turnos.",
   "Guía de prompts y metodología de trabajo utilizada durante el curso.",
@@ -356,8 +439,8 @@ export const INCLUDES = [
 
 export const REQUIREMENTS = [
   "Computadora personal con navegador actualizado, conexión estable y posibilidad de instalar o autorizar herramientas cuando sea necesario.",
-  "Manejo básico de archivos, hojas de cálculo y aplicaciones web.",
-  "Una cuenta activa en las plataformas que TIDEO confirme antes del inicio.",
+  "Manejo habitual de archivos, hojas de cálculo y aplicaciones web.",
+  "Cuentas en Lovable, Supabase, GitHub y Vercel; te indicaremos cómo crearlas antes del inicio.",
   "Una idea de proceso, registro o problema empresarial que te interese convertir en aplicación.",
   "Disponibilidad para trabajar en tu MVP durante las sesiones y, si lo deseas, seguir avanzando entre clases.",
   "Disposición para realizar pruebas, corregir errores y adaptar tu proyecto al alcance permitido por el curso.",
@@ -368,19 +451,19 @@ export const REQUIREMENTS = [
 export const FAQS: { q: string; a: string }[] = [
   {
     q: "¿Necesito saber programar?",
-    a: "No necesitas dominar un lenguaje de programación. El curso está diseñado para profesionales de negocio. Sí necesitarás familiarizarte con conceptos básicos de aplicaciones, datos y pruebas, que trabajaremos durante las sesiones.",
+    a: "No necesitas dominar un lenguaje de programación. El curso está diseñado para profesionales de negocio. Sí necesitarás familiarizarte con conceptos de aplicaciones, datos y pruebas, que trabajaremos durante las sesiones.",
   },
   {
     q: "¿Todos construiremos la misma aplicación?",
-    a: "Durante las primeras seis horas construiremos juntos una miniaplicación de referencia. Después cada participante desarrollará su propio MVP, de acuerdo con el alcance validado.",
+    a: "Durante las primeras seis horas construiremos juntos una aplicación de referencia. Después cada participante desarrollará su propio MVP, de acuerdo con el alcance validado.",
   },
   {
     q: "¿Puedo desarrollar una idea completamente diferente a la del instructor?",
-    a: "Sí, siempre que sea viable dentro del tiempo y los recursos disponibles. Antes de iniciar el laboratorio personalizado revisaremos tu idea y definiremos una versión pequeña y funcional.",
+    a: "Sí, siempre que sea viable dentro del tiempo y los recursos disponibles. Antes de iniciar el laboratorio personalizado revisaremos tu idea y definiremos un MVP funcional y viable dentro del curso.",
   },
   {
     q: "¿Puedo construir un ERP o un sistema de ventas completo?",
-    a: "Puedes trabajar un proceso específico —por ejemplo, registrar solicitudes, controlar un inventario básico o dar seguimiento a servicios—, pero no un ERP completo. El primer nivel está enfocado en un MVP acotado.",
+    a: "Puedes trabajar un proceso específico —por ejemplo, gestionar solicitudes, controlar inventarios o dar seguimiento a servicios—, pero no un ERP completo. El Nivel 1 se enfoca en un MVP funcional de un proceso de negocio; los módulos integrados y las capacidades avanzadas llegan en los siguientes niveles.",
   },
   {
     q: "¿Cuántas horas de asesoría personalizada tendré?",
@@ -404,7 +487,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "¿Tengo que pagar licencias aparte?",
-    a: "Algunas herramientas pueden ofrecer planes gratuitos o de prueba, pero sus condiciones y límites cambian. Antes de comenzar informaremos cuáles utilizaremos y qué costos externos, si los hubiera, deberá asumir cada participante. No se incluyen licencias o servicios de terceros que no estén indicados expresamente.",
+    a: "Trabajaremos con Lovable, Supabase, GitHub y Vercel, y con agentes de desarrollo como Claude Code, Codex y Gemini. Varias ofrecen planes gratuitos o de prueba, pero sus condiciones y límites cambian, y algunas funciones requieren un plan de pago. Antes de comenzar informaremos qué costos externos, si los hubiera, deberá asumir cada participante. No se incluyen licencias o servicios de terceros que no estén indicados expresamente.",
   },
   {
     q: "¿Puedo utilizar datos reales de mi empresa?",

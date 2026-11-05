@@ -16,7 +16,7 @@ const modality = [
   ],
   [
     "Herramientas",
-    "Se comunicarán las plataformas y requisitos técnicos concretos antes de iniciar. El enfoque es desarrollo asistido por IA y trabajo con aplicaciones web; algunas herramientas pueden requerir cuentas personales y tener límites o costos adicionales según el uso.",
+    "Lovable, Supabase, GitHub y Vercel para construir y publicar, y agentes de desarrollo como Claude Code, Codex y Gemini. Algunas herramientas requieren cuentas personales y pueden tener límites o costos según el uso.",
   ],
 ] as const;
 
@@ -196,7 +196,7 @@ export function ExcelAppPricing() {
             decidir qué desarrollar primero.
           </p>
           <p className="mt-8 text-lg sm:text-xl font-medium text-foreground">
-            En TIDEO creemos en una idea sencilla:{" "}
+            En TIDEO creemos en una idea clara:{" "}
             <span className="font-serif-italic text-academy">
               primero entendemos el proceso; después elegimos y construimos la tecnología.
             </span>
