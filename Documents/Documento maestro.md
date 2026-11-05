@@ -582,11 +582,13 @@ Este diseño es una solución de ingeniería a un problema conocido de TanStack 
   3. **Prerender en `vite.config.ts`**: Asegurar que la ruta esté en `tanstackStart.pages` (`[{ path: "/" }, { path: "/contacto" }, { path: "/opera" }, { path: "/powerbi-ia" }]`).
   4. **CORS en Edge Functions**: En caso de procesar formularios/leads desde el subdominio, agregar el subdominio a `ALLOWED_ORIGINS` en `supabase/functions/submit-lead/index.ts`.
 
-> **Patrón a replicar para futuros subdominios:**
-> 1. Agregar el hostname y el rewrite en `middleware.ts`.
-> 2. Agregar la función de host (`isXHost`) y las reglas en `rewrite.input` y `rewrite.output` de `src/router.tsx`.
-> 3. Agregar la ruta al array `pages` en `vite.config.ts`.
-> 4. Asegurar que los orígenes estén autorizados en CORS de las Supabase Functions correspondientes.
+> **Mapa único host → landing (nov-2026).** La tabla `LANDING_HOSTS` de `src/lib/host-routes.ts` es la única fuente de verdad: `middleware.ts` y `src/router.tsx` la consumen (vía `landingForHost`, `isUnderLanding`, `toLandingPath` y `fromLandingPath`), así que ya no hay funciones `isXHost` ni reglas de rewrite duplicadas por subdominio. El alias `www.<host>` se acepta automáticamente. Los helpers comparan por segmento, de modo que `/operaciones` no se confunde con `/opera`.
+>
+> **Patrón a replicar para futuros subdominios (cursos o productos):**
+> 1. Agregar una línea a `LANDING_HOSTS` en `src/lib/host-routes.ts`.
+> 2. Crear la ruta en `src/routes/<slug>/` y registrarla en `pages` de `vite.config.ts`, en `KNOWN_PATHS` (`src/lib/agent-content.ts`) y en `public/sitemap.xml`. El test `tests/host-routes.test.ts` falla si falta `KNOWN_PATHS` o `pages`.
+> 3. Configurar el DNS y agregar el dominio al proyecto de Vercel.
+> 4. CORS de las Edge Functions: `_shared/guard.ts` ya acepta cualquier subdominio de un nivel de `tideo.tech` por regex, así que normalmente no hay que tocar nada ni redesplegar. Si se crean hosts de dos niveles (p. ej. `www.opera.tideo.tech`), la regex actual no los cubre.
 
 ---
 

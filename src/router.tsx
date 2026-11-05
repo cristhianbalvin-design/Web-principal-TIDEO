@@ -2,12 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { createNotFoundRewrite, detectServedNotFoundPath } from "./lib/not-found-rewrite";
-
-const isOperaHost = (hostname: string) =>
-  hostname === 'opera.tideo.tech' || hostname === 'www.opera.tideo.tech';
-
-const isPowerBiHost = (hostname: string) =>
-  hostname === 'powerbi-ia.tideo.tech' || hostname === 'www.powerbi-ia.tideo.tech';
+import { fromLandingPath, isUnderLanding, landingForHost, toLandingPath } from "./lib/host-routes";
 
 export const getRouter = () => {
   const queryClient = new QueryClient();
@@ -21,24 +16,22 @@ export const getRouter = () => {
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+    // Subdominio ↔ landing: la tabla vive en src/lib/host-routes.ts y es la misma que usa
+    // middleware.ts, para que servidor y cliente resuelvan siempre la misma ruta.
     rewrite: {
       input: ({ url }) => {
         if (notFound.input(url)) return url;
-        if (isOperaHost(url.hostname) && !url.pathname.startsWith('/opera')) {
-          url.pathname = url.pathname === '/' ? '/opera' : `/opera${url.pathname}`;
-        }
-        if (isPowerBiHost(url.hostname) && !url.pathname.startsWith('/powerbi-ia')) {
-          url.pathname = url.pathname === '/' ? '/powerbi-ia' : `/powerbi-ia${url.pathname}`;
+        const landing = landingForHost(url.hostname);
+        if (landing && !isUnderLanding(landing, url.pathname)) {
+          url.pathname = toLandingPath(landing, url.pathname);
         }
         return url;
       },
       output: ({ url }) => {
         if (notFound.output(url)) return url;
-        if (isOperaHost(url.hostname) && url.pathname.startsWith('/opera')) {
-          url.pathname = url.pathname.replace(/^\/opera/, '') || '/';
-        }
-        if (isPowerBiHost(url.hostname) && url.pathname.startsWith('/powerbi-ia')) {
-          url.pathname = url.pathname.replace(/^\/powerbi-ia/, '') || '/';
+        const landing = landingForHost(url.hostname);
+        if (landing && isUnderLanding(landing, url.pathname)) {
+          url.pathname = fromLandingPath(landing, url.pathname);
         }
         return url;
       },

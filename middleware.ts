@@ -10,6 +10,12 @@ import {
   normalizePath,
   prefersMarkdown,
 } from "./src/lib/agent-content";
+import {
+  fromLandingPath,
+  isUnderLanding,
+  landingForHost,
+  toLandingPath,
+} from "./src/lib/host-routes";
 
 export const config = {
   matcher: "/:path*",
@@ -17,15 +23,6 @@ export const config = {
 
 const isStaticAsset = (pathname: string) => {
   return pathname.startsWith("/assets/") || /\.[a-zA-Z0-9]+$/.test(pathname);
-};
-
-/** Landing que corresponde a cada subdominio (null = sitio principal). */
-const landingForHost = (hostname: string): "/opera" | "/powerbi-ia" | null => {
-  if (hostname === "opera.tideo.tech" || hostname === "www.opera.tideo.tech") return "/opera";
-  if (hostname === "powerbi-ia.tideo.tech" || hostname === "www.powerbi-ia.tideo.tech") {
-    return "/powerbi-ia";
-  }
-  return null;
 };
 
 /** La respuesta depende del header Accept (HTML vs Markdown). */
@@ -54,18 +51,14 @@ export default function middleware(request: Request) {
   if (!isStaticAsset(url.pathname)) {
     // En el subdominio, /opera/… (o /powerbi-ia/…) es la misma página que su URL limpia:
     // redirigir evita URLs duplicadas (p. ej. opera.tideo.tech/opera/metalmecanica).
-    if (landing && (url.pathname === landing || url.pathname.startsWith(`${landing}/`))) {
-      const clean = url.pathname.slice(landing.length) || "/";
+    if (landing && isUnderLanding(landing, url.pathname)) {
+      const clean = fromLandingPath(landing, url.pathname);
       return Response.redirect(new URL(clean + url.search, request.url), 308);
     }
 
     // Ruta efectiva tras el mapeo de subdominio (mismo criterio que el rewrite de abajo).
     // (Las rutas bajo el prefijo ya se redirigieron arriba.)
-    const effectivePath = landing
-      ? url.pathname === "/"
-        ? landing
-        : `${landing}${url.pathname}`
-      : url.pathname;
+    const effectivePath = landing ? toLandingPath(landing, url.pathname) : url.pathname;
 
     if (prefersMarkdown(request.headers.get("accept"))) {
       if (normalizePath(effectivePath) === "/") return markdown(HOME_MARKDOWN, 200);
