@@ -46,6 +46,8 @@ describe("landingForHost", () => {
     ["www.opera.tideo.tech", "/opera"],
     ["powerbi-ia.tideo.tech", "/powerbi-ia"],
     ["www.powerbi-ia.tideo.tech", "/powerbi-ia"],
+    ["excel-app.tideo.tech", "/excel-app-ia"],
+    ["www.excel-app.tideo.tech", "/excel-app-ia"],
   ])("%s → %s", (host, landing) => {
     expect(landingForHost(host)).toBe(landing);
   });

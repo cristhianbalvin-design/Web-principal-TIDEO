@@ -51,8 +51,9 @@ function Privacidad() {
             <p>
               {ORG.name} (en adelante, "TIDEO"), con domicilio en Lima, Perú, es responsable del
               tratamiento de los datos personales que nos entregas a través de www.tideo.tech y de
-              sus landings opera.tideo.tech y powerbi-ia.tideo.tech. Tratamos tus datos conforme a
-              la Ley N.º 29733, Ley de Protección de Datos Personales del Perú, y su reglamento.
+              sus landings opera.tideo.tech, powerbi-ia.tideo.tech y excel-app.tideo.tech. Tratamos
+              tus datos conforme a la Ley N.º 29733, Ley de Protección de Datos Personales del Perú,
+              y su reglamento.
             </p>
             <p>
               Para cualquier consulta sobre esta política escríbenos a{" "}

@@ -1,6 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import tideoLogoVertical from "@/assets/tideo-logo-vertical.png";
-import { OPERA_URL, ORG, POWERBI_URL, SITE_URL, WHATSAPP_URL, operaUrl } from "@/lib/site";
+import {
+  EXCEL_APP_URL,
+  OPERA_URL,
+  ORG,
+  POWERBI_URL,
+  SITE_URL,
+  WHATSAPP_URL,
+  operaUrl,
+} from "@/lib/site";
 
 type FooterLink =
   | { label: string; to: "/" | "/nosotros" | "/contacto" | "/guias" }
@@ -23,6 +31,7 @@ const subdomainLinks: FooterLink[] = [
   { label: "OPERA (ERP)", href: OPERA_URL },
   { label: "ERP para metalmecánica", href: `${OPERA_URL}metalmecanica` },
   { label: "Power BI + IA", href: POWERBI_URL },
+  { label: "De Excel a tu App con IA", href: EXCEL_APP_URL },
   { label: "Guías", href: `${SITE_URL}/guias` },
   { label: "Nosotros", href: `${SITE_URL}/nosotros` },
   { label: "Contacto", href: `${SITE_URL}/contacto` },
@@ -79,7 +88,10 @@ export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } 
               </a>
             </li>
             <li>
-              <a href="https://www.tideo.tech" className="text-muted-foreground hover:text-primary transition-colors">
+              <a
+                href="https://www.tideo.tech"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
                 www.tideo.tech
               </a>
             </li>
@@ -92,7 +104,16 @@ export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } 
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"
               aria-label="Facebook"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
               </svg>
             </a>
@@ -103,7 +124,16 @@ export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } 
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"
               aria-label="Instagram"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                 <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
@@ -116,7 +146,16 @@ export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } 
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"
               aria-label="LinkedIn"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
                 <rect width="4" height="12" x="2" y="9" />
                 <circle cx="4" cy="4" r="2" />
