@@ -1,5 +1,6 @@
 import { ArrowRight, CalendarDays, Clock, Users, UserCheck, ListChecks } from "lucide-react";
-import { COURSE, PHASES, SESSIONS, formatPEN } from "@/content/excel-app-ia";
+import { COURSE, formatPEN } from "@/content/excel-app-ia";
+import { ExcelToApp } from "./mockups/ExcelToApp";
 import { PrimaryCta } from "./shared";
 
 const facts = [
@@ -8,84 +9,6 @@ const facts = [
   { icon: Users, label: "Máximo 12 participantes" },
   { icon: UserCheck, label: "60 min de asesoría individual" },
 ];
-
-/**
- * El copy pide no mostrar pantallas ficticias como resultados reales. Mientras no exista la
- * demo real de la app de referencia, el visual del hero muestra datos verdaderos del programa.
- */
-function CohortCard() {
-  const total = PHASES.reduce((s, p) => s + p.hours, 0);
-  const tones = ["bg-academy", "bg-amber", "bg-foreground/40"];
-  return (
-    <div className="relative rounded-2xl border border-hairline bg-surface/60 backdrop-blur-xl p-5 sm:p-7 shadow-2xl shadow-black/70">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline pb-4">
-        <div>
-          <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
-            {COURSE.cohort}
-          </p>
-          <p className="mt-1 text-lg font-semibold text-foreground">Tu proyecto en 6 sábados</p>
-        </div>
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-academy/10 border border-academy/30 text-academy font-mono text-[11px]">
-          {COURSE.scheduleShort} · Perú
-        </span>
-      </div>
-
-      <ol className="mt-5 grid grid-cols-3 sm:grid-cols-6 gap-2.5">
-        {SESSIONS.map((s) => (
-          <li
-            key={s.n}
-            className={`rounded-xl border p-3 text-center ${
-              s.phase === 1
-                ? "border-academy/40 bg-academy/[0.08]"
-                : "border-hairline bg-background/60"
-            }`}
-          >
-            <span className="block text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-              Sesión {s.n}
-            </span>
-            <span className="mt-1 block text-sm font-semibold text-foreground whitespace-nowrap">
-              {s.dateShort}
-            </span>
-          </li>
-        ))}
-      </ol>
-      <p className="mt-3 text-[11px] text-muted-foreground">
-        Sin clases el 26 de diciembre ni el 2 de enero.
-      </p>
-
-      <div className="mt-6">
-        <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-          <span className="font-mono uppercase tracking-wider">Cómo se reparten las 24 h</span>
-          <span className="font-mono">{total} h</span>
-        </div>
-        <div
-          className="flex h-3 w-full overflow-hidden rounded-full bg-background/70"
-          role="img"
-          aria-label="6 horas de construcción guiada, 12 de laboratorio con asesoría y 6 de complementos grupales"
-        >
-          {PHASES.map((p, i) => (
-            <span
-              key={p.tag}
-              className={tones[i]}
-              style={{ width: `${(p.hours / total) * 100}%` }}
-            />
-          ))}
-        </div>
-        <ul className="mt-4 grid gap-2.5 sm:grid-cols-3">
-          {PHASES.map((p, i) => (
-            <li key={p.tag} className="flex items-start gap-2.5 text-xs">
-              <span className={`mt-1 h-2.5 w-2.5 rounded-full shrink-0 ${tones[i]}`} />
-              <span>
-                <span className="block font-semibold text-foreground">{p.hours} h</span>
-                <span className="text-muted-foreground leading-snug">{p.title}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
 
 export function ExcelAppHero() {
   return (
@@ -182,8 +105,8 @@ export function ExcelAppHero() {
           </p>
         </div>
 
-        <div className="mt-16 md:mt-20 max-w-4xl mx-auto">
-          <CohortCard />
+        <div className="mt-16 md:mt-20 max-w-6xl mx-auto">
+          <ExcelToApp />
         </div>
       </div>
     </section>

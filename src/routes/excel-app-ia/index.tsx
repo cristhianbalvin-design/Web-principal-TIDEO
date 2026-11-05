@@ -12,6 +12,7 @@ import { ExcelAppDifference } from "@/components/excel-app-ia/ExcelAppDifference
 import { ExcelAppMethod } from "@/components/excel-app-ia/ExcelAppMethod";
 import { ExcelAppStack } from "@/components/excel-app-ia/ExcelAppStack";
 import { ExcelAppSyllabus } from "@/components/excel-app-ia/ExcelAppSyllabus";
+import { ExcelAppShowcase } from "@/components/excel-app-ia/ExcelAppShowcase";
 import { ExcelAppProjects } from "@/components/excel-app-ia/ExcelAppProjects";
 import { ExcelAppRoadmap } from "@/components/excel-app-ia/ExcelAppRoadmap";
 import { ExcelAppPricing } from "@/components/excel-app-ia/ExcelAppPricing";
@@ -102,6 +103,7 @@ function ExcelAppLanding() {
           <ExcelAppMethod />
           <ExcelAppStack />
           <ExcelAppSyllabus />
+          <ExcelAppShowcase />
           <ExcelAppProjects />
           <ExcelAppRoadmap />
           <ExcelAppPricing />

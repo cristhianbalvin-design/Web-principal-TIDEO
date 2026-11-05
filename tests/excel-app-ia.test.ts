@@ -75,7 +75,8 @@ describe("contenido publicado", () => {
     expect(strings.length).toBeGreaterThan(50);
     for (const s of strings) expect(s).not.toMatch(/[[\]]/);
     const dir = new URL("../src/components/excel-app-ia/", import.meta.url);
-    for (const file of readdirSync(dir)) {
+    for (const file of readdirSync(dir, { recursive: true }) as string[]) {
+      if (!/\.tsx?$/.test(file)) continue;
       const src = readFileSync(new URL(file, dir), "utf8");
       expect(src, file).not.toMatch(
         /\[(Diseño|Nota operativa|Completar|Indicar|Definir|Confirmar|BOTÓN)/i,
@@ -107,7 +108,8 @@ describe("contenido publicado", () => {
     const MINIMIZING = /b[aá]sic|sencill|simple|pequeñ|mini ?app|miniaplic|acotad/i;
     for (const s of strings) expect(s).not.toMatch(MINIMIZING);
     const dir = new URL("../src/components/excel-app-ia/", import.meta.url);
-    for (const file of readdirSync(dir)) {
+    for (const file of readdirSync(dir, { recursive: true }) as string[]) {
+      if (!/\.tsx?$/.test(file)) continue;
       const src = readFileSync(new URL(file, dir), "utf8");
       expect(src, file).not.toMatch(MINIMIZING);
     }
@@ -117,6 +119,16 @@ describe("contenido publicado", () => {
     expect(content.STACK.map((t) => t.name)).toEqual(["Lovable", "Supabase", "GitHub", "Vercel"]);
     expect(content.STACK[0]).toMatchObject({ alt: "Claude Design" });
     expect(content.AGENTS.map((a) => a.name)).toEqual(["Claude Code", "Codex", "Gemini"]);
+  });
+
+  it("las maquetas van rotuladas como ejemplo ilustrativo", () => {
+    const dir = new URL("../src/components/excel-app-ia/", import.meta.url);
+    const frame = readFileSync(new URL("mockups/frame.tsx", dir), "utf8");
+    expect(frame).toContain('ILLUSTRATIVE_LABEL = "Ejemplo ilustrativo"');
+    expect(frame).toMatch(/\{ILLUSTRATIVE_LABEL\}/);
+    for (const f of ["mockups/ExcelToApp.tsx", "ExcelAppShowcase.tsx"]) {
+      expect(readFileSync(new URL(f, dir), "utf8"), f).toContain("<BrowserFrame");
+    }
   });
 
   it("las horas por fase suman las 24 anunciadas", () => {
