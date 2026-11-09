@@ -2,12 +2,13 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import isotipo from "@/assets/tideo-isotipo.png";
-import { operaUrl } from "@/lib/site";
+import { excelAppUrl, operaUrl } from "@/lib/site";
 
 const links = [
   { to: "/", label: "Inicio" },
   { to: "/", label: "Trabajo", hash: "#trabajo" },
   { to: "/", label: "OPERA", external: operaUrl("home_nav") },
+  { to: "/", label: "Curso App IA", external: excelAppUrl("home_nav") },
   { to: "/", label: "Ecosistema", hash: "#ecosistema" },
   { to: "/", label: "Insights", hash: "#insights" },
   { to: "/guias", label: "Guías" },
@@ -42,10 +43,10 @@ export function Nav() {
           />
           <span className="font-semibold tracking-tight text-foreground">
             TIDEO
-            <span className="text-muted-foreground font-normal"> / Tech & Strategy</span>
+            <span className="hidden xl:inline text-muted-foreground font-normal"> / Tech & Strategy</span>
           </span>
         </Link>
-        <nav className="hidden md:flex items-center gap-8 text-sm">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-8 whitespace-nowrap text-sm">
           {links.map((l) =>
             "external" in l && l.external ? (
               <a
@@ -91,7 +92,7 @@ export function Nav() {
         </HoverBorderGradient>
         <button
           type="button"
-          className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-foreground"
+          className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-foreground"
           aria-label={open ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={open}
           aria-controls="menu-movil"
@@ -105,7 +106,7 @@ export function Nav() {
       {open && (
         <nav
           id="menu-movil"
-          className="md:hidden border-t border-hairline bg-background/95 backdrop-blur-xl px-6 py-4 flex flex-col gap-1 text-base"
+          className="lg:hidden border-t border-hairline bg-background/95 backdrop-blur-xl px-6 py-4 flex flex-col gap-1 text-base"
         >
           {links.map((l) => {
             const href =
