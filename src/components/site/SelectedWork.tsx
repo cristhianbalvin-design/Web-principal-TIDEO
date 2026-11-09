@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { operaUrl, powerbiUrl } from "@/lib/site";
+import { excelAppUrl, operaUrl, powerbiUrl } from "@/lib/site";
 import type { CSSProperties } from "react";
 
 // Coloca el archivo de video en /public/demo-tideo.mp4
@@ -155,6 +155,10 @@ const services: Service[] = [
     color: "var(--color-studio)",
     slug: "ia",
     cta: "Cuéntanos tu caso",
+    extra: {
+      label: "Ver curso De Excel a tu App con IA",
+      href: excelAppUrl("home_card_app_ia"),
+    },
   },
   {
     n: "07",
