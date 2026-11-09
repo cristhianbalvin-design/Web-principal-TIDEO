@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import isotipo from "@/assets/tideo-isotipo.png";
 import { excelAppUrl, operaUrl } from "@/lib/site";
+import { COURSE } from "@/content/excel-app-ia";
 
 const links = [
   { to: "/", label: "Inicio" },
@@ -15,7 +16,28 @@ const links = [
   { to: "/contacto", label: "Contacto" },
 ] as const;
 
-export function Nav() {
+/** Franja de anuncio del curso, sobre el menú (solo en la home, para el tráfico de campañas). */
+function CourseBanner() {
+  return (
+    <a
+      href={excelAppUrl("home_banner")}
+      className="group flex h-10 items-center justify-center gap-2 bg-academy px-4 text-xs sm:text-sm font-medium text-background transition-colors hover:bg-academy/90"
+    >
+      <span className="font-semibold">Nuevo curso:</span>
+      <span className="truncate">
+        <span className="sm:hidden">De Excel a tu App con IA</span>
+        <span className="hidden sm:inline">
+          {COURSE.name} · Inicio {COURSE.startShort} · Cupos limitados
+        </span>
+      </span>
+      <span className="shrink-0 font-semibold underline underline-offset-2 decoration-background/40 group-hover:decoration-background">
+        Ver curso →
+      </span>
+    </a>
+  );
+}
+
+export function Nav({ courseBanner = false }: { courseBanner?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -33,6 +55,7 @@ export function Nav() {
           : "bg-transparent"
       }`}
     >
+      {courseBanner && <CourseBanner />}
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
           <img
@@ -43,7 +66,10 @@ export function Nav() {
           />
           <span className="font-semibold tracking-tight text-foreground">
             TIDEO
-            <span className="hidden xl:inline text-muted-foreground font-normal"> / Tech & Strategy</span>
+            <span className="hidden xl:inline text-muted-foreground font-normal">
+              {" "}
+              / Tech & Strategy
+            </span>
           </span>
         </Link>
         <nav className="hidden lg:flex items-center gap-5 xl:gap-8 whitespace-nowrap text-sm">

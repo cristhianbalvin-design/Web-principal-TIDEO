@@ -2,11 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import heroImg from "@/assets/hero-tideo.jpg";
 import heroVideo from "@/assets/hero-tideo-animated.webm";
-import { operaUrl } from "@/lib/site";
+import { excelAppUrl, operaUrl } from "@/lib/site";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-24 overflow-hidden bg-hero">
+    <section className="relative min-h-screen flex items-center pt-32 overflow-hidden bg-hero">
       <div className="absolute inset-0 grid-bg opacity-60 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
       <div
         aria-hidden
@@ -76,6 +76,12 @@ export function Hero() {
           >
             Ver soluciones <span aria-hidden>→</span>
           </HoverBorderGradient>
+          <a
+            href={excelAppUrl("home_hero_cta")}
+            className="inline-flex items-center gap-2 rounded-full bg-academy px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-academy/90 shadow-[0_0_30px_-6px_rgba(249,115,22,0.6)]"
+          >
+            Ver curso De Excel a tu App con IA <span aria-hidden>→</span>
+          </a>
           <HoverBorderGradient
             as={Link}
             to="/contacto"
