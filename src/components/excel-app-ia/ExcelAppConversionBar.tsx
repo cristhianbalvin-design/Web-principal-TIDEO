@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { COURSE, formatPEN } from "@/content/excel-app-ia";
-import { WA_URL, WhatsAppIcon } from "./shared";
+import { WA_URL, WhatsAppIcon, onWhatsAppClick } from "./shared";
 
 /**
  * Sección 19: barra fija de conversión + botón flotante de WhatsApp.
@@ -51,7 +51,7 @@ export function ExcelAppConversionBar() {
             </span>
             <span className="block md:inline">
               <strong className="text-academy">{formatPEN(COURSE.priceFounder)}</strong> precio
-              fundador
+              fundador hasta el {COURSE.founderDeadlineLabel}
             </span>
           </p>
           <a
@@ -66,6 +66,7 @@ export function ExcelAppConversionBar() {
 
       <a
         href={WA_URL}
+        onClick={onWhatsAppClick}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Consultar por WhatsApp sobre el curso De Excel a tu Propia App con IA"
