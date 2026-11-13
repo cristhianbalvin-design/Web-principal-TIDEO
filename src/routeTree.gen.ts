@@ -17,6 +17,7 @@ import { Route as PrivacidadRouteImport } from './routes/privacidad'
 import { Route as AppIaIndexRouteImport } from './routes/app-ia/index'
 import { Route as GuiasIndexRouteImport } from './routes/guias/index'
 import { Route as GuiasDelTableroAlAgenteRouteImport } from './routes/guias/del-tablero-al-agente'
+import { Route as GuiasDondeEstanTusDatosRouteImport } from './routes/guias/donde-estan-tus-datos'
 import { Route as OperaIndexRouteImport } from './routes/opera/index'
 import { Route as OperaMetalmecanicaRouteImport } from './routes/opera/metalmecanica'
 import { Route as PowerbiIaIndexRouteImport } from './routes/powerbi-ia/index'
@@ -61,6 +62,11 @@ const GuiasDelTableroAlAgenteRoute = GuiasDelTableroAlAgenteRouteImport.update({
   path: '/guias/del-tablero-al-agente',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuiasDondeEstanTusDatosRoute = GuiasDondeEstanTusDatosRouteImport.update({
+  id: '/guias/donde-estan-tus-datos',
+  path: '/guias/donde-estan-tus-datos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OperaIndexRoute = OperaIndexRouteImport.update({
   id: '/opera/',
   path: '/opera/',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
+  '/guias/donde-estan-tus-datos': typeof GuiasDondeEstanTusDatosRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
   '/app-ia/': typeof AppIaIndexRoute
   '/guias/': typeof GuiasIndexRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
+  '/guias/donde-estan-tus-datos': typeof GuiasDondeEstanTusDatosRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
   '/app-ia': typeof AppIaIndexRoute
   '/guias': typeof GuiasIndexRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/nosotros': typeof NosotrosRoute
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
+  '/guias/donde-estan-tus-datos': typeof GuiasDondeEstanTusDatosRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
   '/app-ia/': typeof AppIaIndexRoute
   '/guias/': typeof GuiasIndexRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/nosotros'
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
+    | '/guias/donde-estan-tus-datos'
     | '/opera/metalmecanica'
     | '/app-ia/'
     | '/guias/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/nosotros'
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
+    | '/guias/donde-estan-tus-datos'
     | '/opera/metalmecanica'
     | '/app-ia'
     | '/guias'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/nosotros'
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
+    | '/guias/donde-estan-tus-datos'
     | '/opera/metalmecanica'
     | '/app-ia/'
     | '/guias/'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   NosotrosRoute: typeof NosotrosRoute
   PrivacidadRoute: typeof PrivacidadRoute
   GuiasDelTableroAlAgenteRoute: typeof GuiasDelTableroAlAgenteRoute
+  GuiasDondeEstanTusDatosRoute: typeof GuiasDondeEstanTusDatosRoute
   OperaMetalmecanicaRoute: typeof OperaMetalmecanicaRoute
   AppIaIndexRoute: typeof AppIaIndexRoute
   GuiasIndexRoute: typeof GuiasIndexRoute
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuiasDelTableroAlAgenteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guias/donde-estan-tus-datos': {
+      id: '/guias/donde-estan-tus-datos'
+      path: '/guias/donde-estan-tus-datos'
+      fullPath: '/guias/donde-estan-tus-datos'
+      preLoaderRoute: typeof GuiasDondeEstanTusDatosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/opera/': {
       id: '/opera/'
       path: '/opera'
@@ -262,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   NosotrosRoute: NosotrosRoute,
   PrivacidadRoute: PrivacidadRoute,
   GuiasDelTableroAlAgenteRoute: GuiasDelTableroAlAgenteRoute,
+  GuiasDondeEstanTusDatosRoute: GuiasDondeEstanTusDatosRoute,
   OperaMetalmecanicaRoute: OperaMetalmecanicaRoute,
   AppIaIndexRoute: AppIaIndexRoute,
   GuiasIndexRoute: GuiasIndexRoute,

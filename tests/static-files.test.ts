@@ -30,6 +30,7 @@ describe("public/sitemap.xml", () => {
         "/privacidad",
         "/guias",
         "/guias/del-tablero-al-agente",
+        "/guias/donde-estan-tus-datos",
       ].map((p) => (p === "/" ? `${SITE_URL}/` : SITE_URL + p)),
       "https://opera.tideo.tech/",
       "https://opera.tideo.tech/metalmecanica",

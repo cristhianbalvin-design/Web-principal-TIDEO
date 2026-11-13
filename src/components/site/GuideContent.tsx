@@ -200,7 +200,9 @@ export function GuideContent({ guide }: { guide: Publicacion }) {
       </p>
       <aside className="mt-14 max-w-3xl rounded-2xl border border-primary/30 bg-surface p-7 sm:p-10">
         <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          ¿Quieres que revisemos tu modelo de datos?
+          {guide.slug === "donde-estan-tus-datos"
+            ? "¿Quieres ordenar dónde viven los datos de tu empresa?"
+            : "¿Quieres que revisemos tu modelo de datos?"}
         </h2>
         <a
           href="/contacto?servicio=datos-bi"
@@ -229,7 +231,9 @@ export function GuideContent({ guide }: { guide: Publicacion }) {
         >
           LinkedIn
         </a>{" "}
-        para más casos de BI con IA agéntica.
+        {guide.slug === "donde-estan-tus-datos"
+          ? "para más guías sobre datos."
+          : "para más casos de BI con IA agéntica."}
       </p>
       <section
         className="mt-16 max-w-[68ch] border-t border-hairline pt-8"

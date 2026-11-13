@@ -4,6 +4,8 @@
  * Reglas: sin cifras inventadas, sin clientes ni testimonios no autorizados.
  */
 
+import { dondeEstanTusDatos } from "./donde-estan-tus-datos";
+
 /** Bloques compartidos por guías, series de prompts, tutoriales y herramientas. */
 export type BloqueContenido =
   | { tipo: "parrafo"; texto: string }
@@ -274,4 +276,6 @@ export const delTableroAlAgente: Publicacion = {
   ],
 };
 
-export const publicaciones: Publicacion[] = [delTableroAlAgente];
+export { dondeEstanTusDatos };
+
+export const publicaciones: Publicacion[] = [dondeEstanTusDatos, delTableroAlAgente];
