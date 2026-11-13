@@ -20,6 +20,11 @@ export const COURSE = {
   mentoringMinutes: 60,
   priceFounder: 790,
   priceRegular: 890,
+  /** Último día del precio fundador (después rige priceRegular). */
+  founderDeadline: "2026-11-25",
+  founderDeadlineLabel: "25 de noviembre",
+  installments: 2,
+  installmentAmount: 395,
   currency: "PEN",
   startDate: "2026-12-05",
   endDate: "2027-01-23",
@@ -451,6 +456,10 @@ export const REQUIREMENTS = [
 /* ───────────────────────── 16 · FAQ ───────────────────────── */
 
 export const FAQS: { q: string; a: string }[] = [
+  {
+    q: "¿Hasta cuándo rige el precio fundador? ¿Puedo pagar en cuotas?",
+    a: "El precio fundador de S/ 790 rige hasta el 25 de noviembre; desde el 26 de noviembre el precio es S/ 890. Puedes pagarlo completo o en 2 cuotas de S/ 395. Aceptamos Plin y transferencia bancaria a nombre de TIDEO Tech & Strategy; te enviamos los datos al confirmar tu vacante.",
+  },
   {
     q: "¿Necesito saber programar?",
     a: "No necesitas dominar un lenguaje de programación. El curso está diseñado para profesionales de negocio. Sí necesitarás familiarizarte con conceptos de aplicaciones, datos y pruebas, que trabajaremos durante las sesiones.",

@@ -77,7 +77,9 @@ export function ExcelAppHero() {
               Precio fundador ·{" "}
               <strong className="text-2xl font-semibold text-foreground align-middle">
                 {formatPEN(COURSE.priceFounder)}
-              </strong>
+              </strong>{" "}
+              hasta el {COURSE.founderDeadlineLabel} · o {COURSE.installments} cuotas de{" "}
+              {formatPEN(COURSE.installmentAmount)}
             </p>
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground font-medium">Inicio:</strong> {COURSE.startLabel}.{" "}

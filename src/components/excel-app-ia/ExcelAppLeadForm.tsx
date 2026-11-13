@@ -6,7 +6,7 @@ import { trackLead } from "@/lib/meta-pixel";
 import { SITE_URL } from "@/lib/site";
 import { AI_EXPERIENCE, COURSE, formatPEN } from "@/content/excel-app-ia";
 import { buildLeadNotes, type ExcelAppFormState as FormState } from "./lead-notes";
-import { WA_URL, WhatsAppIcon } from "./shared";
+import { WA_URL, WhatsAppIcon, onWhatsAppClick } from "./shared";
 
 const initial: FormState = {
   nombre: "",
@@ -129,6 +129,7 @@ export function ExcelAppLeadForm() {
           </ul>
           <a
             href={WA_URL}
+            onClick={onWhatsAppClick}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-academy transition-colors"
@@ -157,6 +158,7 @@ export function ExcelAppLeadForm() {
               </p>
               <a
                 href={WA_URL}
+                onClick={onWhatsAppClick}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 inline-flex items-center justify-center gap-3 rounded-2xl bg-[#25D366] hover:bg-[#20bd5a] px-6 py-3.5 text-sm font-semibold text-white transition-colors"
@@ -378,6 +380,7 @@ export function ExcelAppLeadForm() {
                     <p>{error}</p>
                     <a
                       href={WA_URL}
+                      onClick={onWhatsAppClick}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-2 inline-block text-white underline font-semibold"

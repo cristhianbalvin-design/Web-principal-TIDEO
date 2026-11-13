@@ -100,8 +100,16 @@ export function ExcelAppPricing() {
             <p className="mt-4 text-5xl sm:text-6xl font-semibold tracking-tight text-foreground">
               {formatPEN(COURSE.priceFounder)}
             </p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Precio regular de referencia: {formatPEN(COURSE.priceRegular)}
+            <p className="mt-3 text-sm text-foreground/90">
+              Hasta el <strong>{COURSE.founderDeadlineLabel}</strong>. Desde el día siguiente:{" "}
+              {formatPEN(COURSE.priceRegular)}.
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              O en{" "}
+              <strong className="text-foreground">
+                {COURSE.installments} cuotas de {formatPEN(COURSE.installmentAmount)}
+              </strong>
+              . Pago por Plin o transferencia.
             </p>
             <p className="mt-6 text-sm text-foreground/90">
               <strong>Vacantes limitadas a 12 personas</strong> para preservar la atención

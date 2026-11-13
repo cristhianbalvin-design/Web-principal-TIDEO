@@ -52,6 +52,11 @@ export function trackLead(
   track("Lead", { content_name: source });
 }
 
+/** Clic en un botón de WhatsApp (intención de contacto, sin datos personales). */
+export function trackContact(source: "excel_app_ia") {
+  track("Contact", { content_name: source, content_category: "whatsapp" });
+}
+
 /** Alguien abrió una guía (para audiencias de remarketing, sin datos personales). */
 export function trackGuideViewContent(slug: string) {
   track("ViewContent", { content_name: slug, content_category: "guia" });

@@ -1,8 +1,12 @@
 import type { ReactNode } from "react";
 import { whatsappUrl } from "@/lib/site";
 import { WHATSAPP_MESSAGE } from "@/content/excel-app-ia";
+import { trackContact } from "@/lib/meta-pixel";
 
 export const WA_URL = whatsappUrl(WHATSAPP_MESSAGE);
+
+/** Registra en el píxel de Meta el clic en cualquier botón de WhatsApp de la landing. */
+export const onWhatsAppClick = () => trackContact("excel_app_ia");
 
 /** Logotipo oficial de WhatsApp (trazo vectorial). */
 export function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
