@@ -44,7 +44,11 @@ function Guias() {
           {publicaciones.map((item) => (
             <Link
               key={item.slug}
-              to="/guias/del-tablero-al-agente"
+              to={
+                item.slug === "donde-estan-tus-datos"
+                  ? "/guias/donde-estan-tus-datos"
+                  : "/guias/del-tablero-al-agente"
+              }
               className="group rounded-2xl border border-hairline bg-surface p-7 transition-colors hover:border-primary/50 sm:p-9"
             >
               <div className="flex flex-wrap gap-3 text-xs uppercase tracking-widest text-primary">

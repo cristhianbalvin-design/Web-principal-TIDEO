@@ -2,9 +2,20 @@ import type { CSSProperties } from "react";
 import { Link } from "@tanstack/react-router";
 import { SectionHeader } from "./SectionHeader";
 
-type Article = { cat: string; title: string; color: string; href?: "/guias/del-tablero-al-agente" };
+type Article = {
+  cat: string;
+  title: string;
+  color: string;
+  href?: "/guias/del-tablero-al-agente" | "/guias/donde-estan-tus-datos";
+};
 
 const articles: Article[] = [
+  {
+    cat: "Datos",
+    title: "¿Dónde están tus datos? Guía de la nube para pymes",
+    color: "var(--color-academy)",
+    href: "/guias/donde-estan-tus-datos",
+  },
   {
     cat: "Procesos",
     title: "Por qué digitalizar no es automatizar el caos",

@@ -23,6 +23,7 @@ export default defineConfig({
       { path: "/privacidad" },
       { path: "/guias" },
       { path: "/guias/del-tablero-al-agente" },
+      { path: "/guias/donde-estan-tus-datos" },
       { path: "/opera" },
       { path: "/powerbi-ia" },
       { path: "/app-ia" },

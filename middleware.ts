@@ -3,6 +3,7 @@ import { rewrite, next } from "@vercel/functions";
 import {
   HOME_MARKDOWN,
   GUIA_MARKDOWN,
+  NUBE_MARKDOWN,
   METALMECANICA_MARKDOWN,
   NOT_FOUND_MARKDOWN,
   OPERA_MARKDOWN,
@@ -65,6 +66,8 @@ export default function middleware(request: Request) {
       if (normalizePath(effectivePath) === "/opera") return markdown(OPERA_MARKDOWN, 200);
       if (normalizePath(effectivePath) === "/guias/del-tablero-al-agente")
         return markdown(GUIA_MARKDOWN, 200);
+      if (normalizePath(effectivePath) === "/guias/donde-estan-tus-datos")
+        return markdown(NUBE_MARKDOWN, 200);
       if (normalizePath(effectivePath) === "/opera/metalmecanica") {
         return markdown(METALMECANICA_MARKDOWN, 200);
       }

@@ -8,7 +8,7 @@
  * Si agregas una ruta, agrégala a KNOWN_PATHS, a public/sitemap.xml y a vite.config.ts.
  */
 import { METALMECANICA_URL, metalmecanica as mm } from "./metalmecanica-content";
-import { delTableroAlAgente, type BloqueContenido } from "../content/guias";
+import { delTableroAlAgente, dondeEstanTusDatos, type BloqueContenido } from "../content/guias";
 import { OPERA_URL, ORG, SITE_URL } from "./site";
 
 export const KNOWN_PATHS = [
@@ -18,6 +18,7 @@ export const KNOWN_PATHS = [
   "/privacidad",
   "/guias",
   "/guias/del-tablero-al-agente",
+  "/guias/donde-estan-tus-datos",
   "/opera",
   "/opera/metalmecanica",
   "/powerbi-ia",
@@ -65,6 +66,22 @@ export const GUIA_MARKDOWN = [
   "Síguenos en Instagram y LinkedIn para más casos de BI con IA agéntica.",
   "### Fuentes",
   ...delTableroAlAgente.fuentes.map((source) => `- ${source.titulo}: ${source.url}`),
+].join("\n\n");
+
+export const NUBE_MARKDOWN = [
+  `# ${dondeEstanTusDatos.titulo}`,
+  dondeEstanTusDatos.bajada,
+  `Serie: ${dondeEstanTusDatos.serie} · Fecha: ${dondeEstanTusDatos.fecha} · Lectura: ${dondeEstanTusDatos.lectura}`,
+  ...dondeEstanTusDatos.introduccion.map(blockMarkdown),
+  ...dondeEstanTusDatos.secciones.flatMap((section) => [
+    `## ${section.numero} — ${section.titulo}`,
+    ...section.bloques.map(blockMarkdown),
+  ]),
+  `*${dondeEstanTusDatos.nota}*`,
+  `**¿Quieres ordenar dónde viven los datos de tu empresa?** Conversemos → ${SITE_URL}/contacto?servicio=datos-bi`,
+  "Síguenos en Instagram y LinkedIn para más guías sobre datos.",
+  "### Fuentes",
+  ...dondeEstanTusDatos.fuentes.map((source) => `- ${source.titulo}: ${source.url}`),
 ].join("\n\n");
 
 /** Calidad (q) que el header Accept asigna a un media type exacto; 0 si no aparece. */
