@@ -33,9 +33,9 @@ export function whatsappUrl(message: string): string {
 }
 
 /** Chat de WhatsApp del botón flotante de la home. */
-export const WHATSAPP_URL = whatsappUrl(
-  "Hola TIDEO, quiero contarles un proceso de mi empresa que me gustaría mejorar.",
-);
+export const WHATSAPP_HOME_MESSAGE =
+  "Hola TIDEO, quiero contarles un proceso de mi empresa que me gustaría mejorar.";
+export const WHATSAPP_URL = whatsappUrl(WHATSAPP_HOME_MESSAGE);
 
 /** URL absoluta para una ruta del sitio principal (www). */
 export function canonicalUrl(path: string): string {

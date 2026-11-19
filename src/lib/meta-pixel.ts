@@ -52,9 +52,16 @@ export function trackLead(
   track("Lead", { content_name: source });
 }
 
-/** Clic en un botón de WhatsApp (intención de contacto, sin datos personales). */
-export function trackContact(source: "excel_app_ia") {
-  track("Contact", { content_name: source, content_category: "whatsapp" });
+/**
+ * Clic en un botón de WhatsApp (intención de contacto, sin datos personales).
+ * `button` dice qué botón fue y `origin` de dónde llegó la visita (ver lib/whatsapp-origin).
+ */
+export function trackContact(source: "excel_app_ia", detail?: { button: string; origin: string }) {
+  track("Contact", {
+    content_name: source,
+    content_category: "whatsapp",
+    ...(detail ? { wa_button: detail.button, wa_origin: detail.origin } : {}),
+  });
 }
 
 /** Alguien abrió una guía (para audiencias de remarketing, sin datos personales). */

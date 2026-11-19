@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import tideoLogoVertical from "@/assets/tideo-logo-vertical.png";
 import {
@@ -41,7 +42,14 @@ const subdomainLinks: FooterLink[] = [
  * variant "main": sitio principal (www). variant "subdomain": landings en subdominio,
  * con enlaces absolutos para que Contacto, Nosotros y Privacidad no den 404.
  */
-export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } = {}) {
+export function Footer({
+  variant = "main",
+  whatsapp,
+}: {
+  variant?: "main" | "subdomain";
+  /** Enlace de WhatsApp propio (p. ej. la landing app-ia con su mensaje y marca de origen). */
+  whatsapp?: { href: string; onClick?: (e: MouseEvent<HTMLAnchorElement>) => void };
+} = {}) {
   const links = variant === "subdomain" ? subdomainLinks : mainLinks;
   const linkClass = "hover:text-primary transition-colors";
   return (
@@ -162,7 +170,8 @@ export function Footer({ variant = "main" }: { variant?: "main" | "subdomain" } 
               </svg>
             </a>
             <a
-              href={WHATSAPP_URL}
+              href={whatsapp?.href ?? WHATSAPP_URL}
+              onClick={whatsapp?.onClick}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-background hover:opacity-80 transition-opacity"

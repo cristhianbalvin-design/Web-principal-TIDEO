@@ -1,12 +1,26 @@
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { whatsappUrl } from "@/lib/site";
 import { WHATSAPP_MESSAGE } from "@/content/excel-app-ia";
 import { trackContact } from "@/lib/meta-pixel";
+import { captureOrigin, messageWithRef, type WhatsAppButton } from "@/lib/whatsapp-origin";
 
 export const WA_URL = whatsappUrl(WHATSAPP_MESSAGE);
 
-/** Registra en el píxel de Meta el clic en cualquier botón de WhatsApp de la landing. */
-export const onWhatsAppClick = () => trackContact("excel_app_ia");
+/**
+ * Props para un enlace de WhatsApp de la landing: el href base (igual en servidor y cliente)
+ * y un onClick que, antes de abrir el chat, agrega al mensaje el código de origen
+ * («[ref: meta-leads/flotante]») y registra el clic en el píxel con el botón y el origen.
+ */
+export function whatsAppLink(button: WhatsAppButton, message: string = WHATSAPP_MESSAGE) {
+  return {
+    href: whatsappUrl(message),
+    onClick: (e: MouseEvent<HTMLAnchorElement>) => {
+      const origin = captureOrigin();
+      e.currentTarget.href = whatsappUrl(messageWithRef(message, origin, button));
+      trackContact("excel_app_ia", { button, origin });
+    },
+  };
+}
 
 /** Logotipo oficial de WhatsApp (trazo vectorial). */
 export function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {

@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { Footer } from "@/components/site/Footer";
-import { EXCEL_APP_URL, SITE_URL, jsonLdScript } from "@/lib/site";
+import { EXCEL_APP_URL, SITE_URL, WHATSAPP_HOME_MESSAGE, jsonLdScript } from "@/lib/site";
+import { captureOrigin } from "@/lib/whatsapp-origin";
+import { whatsAppLink } from "@/components/excel-app-ia/shared";
 import { COURSE, SEO } from "@/content/excel-app-ia";
 
 import { ExcelAppNav } from "@/components/excel-app-ia/ExcelAppNav";
@@ -91,6 +94,11 @@ export const Route = createFileRoute("/app-ia/")({
 });
 
 function ExcelAppLanding() {
+  // Guarda el origen de la visita (UTM, fbclid o referencia) para los botones de WhatsApp.
+  useEffect(() => {
+    captureOrigin();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-academy/30 selection:text-foreground">
       <ExcelAppNav />
@@ -113,7 +121,7 @@ function ExcelAppLanding() {
         </TracingBeam>
       </main>
       <ExcelAppConversionBar />
-      <Footer variant="subdomain" />
+      <Footer variant="subdomain" whatsapp={whatsAppLink("footer", WHATSAPP_HOME_MESSAGE)} />
     </div>
   );
 }
