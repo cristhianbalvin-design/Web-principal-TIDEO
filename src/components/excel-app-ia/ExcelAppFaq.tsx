@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { FAQS } from "@/content/excel-app-ia";
-import { Section, WA_URL, onWhatsAppClick } from "./shared";
+import { Section, whatsAppLink } from "./shared";
 
 /** Sección 16: preguntas frecuentes. */
 export function ExcelAppFaq() {
@@ -46,8 +46,7 @@ export function ExcelAppFaq() {
       <p className="mt-10 text-center text-sm text-muted-foreground">
         ¿Tienes una pregunta sobre tu proyecto?{" "}
         <a
-          href={WA_URL}
-          onClick={onWhatsAppClick}
+          {...whatsAppLink("faq")}
           target="_blank"
           rel="noopener noreferrer"
           className="text-academy font-medium hover:underline"
