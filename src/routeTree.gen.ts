@@ -19,7 +19,9 @@ import { Route as GuiasIndexRouteImport } from './routes/guias/index'
 import { Route as GuiasDelTableroAlAgenteRouteImport } from './routes/guias/del-tablero-al-agente'
 import { Route as GuiasDondeEstanTusDatosRouteImport } from './routes/guias/donde-estan-tus-datos'
 import { Route as OperaIndexRouteImport } from './routes/opera/index'
+import { Route as OperaEliminacionDeDatosRouteImport } from './routes/opera/eliminacion-de-datos'
 import { Route as OperaMetalmecanicaRouteImport } from './routes/opera/metalmecanica'
+import { Route as OperaPrivacidadRouteImport } from './routes/opera/privacidad'
 import { Route as PowerbiIaIndexRouteImport } from './routes/powerbi-ia/index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -72,9 +74,19 @@ const OperaIndexRoute = OperaIndexRouteImport.update({
   path: '/opera/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OperaEliminacionDeDatosRoute = OperaEliminacionDeDatosRouteImport.update({
+  id: '/opera/eliminacion-de-datos',
+  path: '/opera/eliminacion-de-datos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OperaMetalmecanicaRoute = OperaMetalmecanicaRouteImport.update({
   id: '/opera/metalmecanica',
   path: '/opera/metalmecanica',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperaPrivacidadRoute = OperaPrivacidadRouteImport.update({
+  id: '/opera/privacidad',
+  path: '/opera/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PowerbiIaIndexRoute = PowerbiIaIndexRouteImport.update({
@@ -91,7 +103,9 @@ export interface FileRoutesByFullPath {
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/guias/donde-estan-tus-datos': typeof GuiasDondeEstanTusDatosRoute
+  '/opera/eliminacion-de-datos': typeof OperaEliminacionDeDatosRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
+  '/opera/privacidad': typeof OperaPrivacidadRoute
   '/app-ia/': typeof AppIaIndexRoute
   '/guias/': typeof GuiasIndexRoute
   '/opera/': typeof OperaIndexRoute
@@ -105,7 +119,9 @@ export interface FileRoutesByTo {
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/guias/donde-estan-tus-datos': typeof GuiasDondeEstanTusDatosRoute
+  '/opera/eliminacion-de-datos': typeof OperaEliminacionDeDatosRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
+  '/opera/privacidad': typeof OperaPrivacidadRoute
   '/app-ia': typeof AppIaIndexRoute
   '/guias': typeof GuiasIndexRoute
   '/opera': typeof OperaIndexRoute
@@ -120,7 +136,9 @@ export interface FileRoutesById {
   '/privacidad': typeof PrivacidadRoute
   '/guias/del-tablero-al-agente': typeof GuiasDelTableroAlAgenteRoute
   '/guias/donde-estan-tus-datos': typeof GuiasDondeEstanTusDatosRoute
+  '/opera/eliminacion-de-datos': typeof OperaEliminacionDeDatosRoute
   '/opera/metalmecanica': typeof OperaMetalmecanicaRoute
+  '/opera/privacidad': typeof OperaPrivacidadRoute
   '/app-ia/': typeof AppIaIndexRoute
   '/guias/': typeof GuiasIndexRoute
   '/opera/': typeof OperaIndexRoute
@@ -136,7 +154,9 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
     | '/guias/donde-estan-tus-datos'
+    | '/opera/eliminacion-de-datos'
     | '/opera/metalmecanica'
+    | '/opera/privacidad'
     | '/app-ia/'
     | '/guias/'
     | '/opera/'
@@ -150,7 +170,9 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
     | '/guias/donde-estan-tus-datos'
+    | '/opera/eliminacion-de-datos'
     | '/opera/metalmecanica'
+    | '/opera/privacidad'
     | '/app-ia'
     | '/guias'
     | '/opera'
@@ -164,7 +186,9 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/guias/del-tablero-al-agente'
     | '/guias/donde-estan-tus-datos'
+    | '/opera/eliminacion-de-datos'
     | '/opera/metalmecanica'
+    | '/opera/privacidad'
     | '/app-ia/'
     | '/guias/'
     | '/opera/'
@@ -179,7 +203,9 @@ export interface RootRouteChildren {
   PrivacidadRoute: typeof PrivacidadRoute
   GuiasDelTableroAlAgenteRoute: typeof GuiasDelTableroAlAgenteRoute
   GuiasDondeEstanTusDatosRoute: typeof GuiasDondeEstanTusDatosRoute
+  OperaEliminacionDeDatosRoute: typeof OperaEliminacionDeDatosRoute
   OperaMetalmecanicaRoute: typeof OperaMetalmecanicaRoute
+  OperaPrivacidadRoute: typeof OperaPrivacidadRoute
   AppIaIndexRoute: typeof AppIaIndexRoute
   GuiasIndexRoute: typeof GuiasIndexRoute
   OperaIndexRoute: typeof OperaIndexRoute
@@ -258,11 +284,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OperaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/opera/eliminacion-de-datos': {
+      id: '/opera/eliminacion-de-datos'
+      path: '/opera/eliminacion-de-datos'
+      fullPath: '/opera/eliminacion-de-datos'
+      preLoaderRoute: typeof OperaEliminacionDeDatosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/opera/metalmecanica': {
       id: '/opera/metalmecanica'
       path: '/opera/metalmecanica'
       fullPath: '/opera/metalmecanica'
       preLoaderRoute: typeof OperaMetalmecanicaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/opera/privacidad': {
+      id: '/opera/privacidad'
+      path: '/opera/privacidad'
+      fullPath: '/opera/privacidad'
+      preLoaderRoute: typeof OperaPrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/powerbi-ia/': {
@@ -283,7 +323,9 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadRoute: PrivacidadRoute,
   GuiasDelTableroAlAgenteRoute: GuiasDelTableroAlAgenteRoute,
   GuiasDondeEstanTusDatosRoute: GuiasDondeEstanTusDatosRoute,
+  OperaEliminacionDeDatosRoute: OperaEliminacionDeDatosRoute,
   OperaMetalmecanicaRoute: OperaMetalmecanicaRoute,
+  OperaPrivacidadRoute: OperaPrivacidadRoute,
   AppIaIndexRoute: AppIaIndexRoute,
   GuiasIndexRoute: GuiasIndexRoute,
   OperaIndexRoute: OperaIndexRoute,

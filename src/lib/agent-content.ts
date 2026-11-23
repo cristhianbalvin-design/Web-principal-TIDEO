@@ -21,6 +21,8 @@ export const KNOWN_PATHS = [
   "/guias/donde-estan-tus-datos",
   "/opera",
   "/opera/metalmecanica",
+  "/opera/privacidad",
+  "/opera/eliminacion-de-datos",
   "/powerbi-ia",
   "/app-ia",
   // Redirecciones definidas en vercel.json:

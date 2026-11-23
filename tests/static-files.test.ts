@@ -34,6 +34,8 @@ describe("public/sitemap.xml", () => {
       ].map((p) => (p === "/" ? `${SITE_URL}/` : SITE_URL + p)),
       "https://opera.tideo.tech/",
       "https://opera.tideo.tech/metalmecanica",
+      "https://opera.tideo.tech/privacidad",
+      "https://opera.tideo.tech/eliminacion-de-datos",
       "https://powerbi-ia.tideo.tech/",
       "https://app-ia.tideo.tech/",
     ]);
