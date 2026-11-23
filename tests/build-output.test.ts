@@ -235,4 +235,16 @@ describe.skipIf(!hasBuild)("HTML prerenderizado", () => {
     for (const f of ["robots.txt", "sitemap.xml", "llms.txt"])
       expect(existsSync(new URL(f, dist))).toBe(true);
   });
+  it.each([
+    ["opera/privacidad/index.html", "https://opera.tideo.tech/privacidad"],
+    ["opera/eliminacion-de-datos/index.html", "https://opera.tideo.tech/eliminacion-de-datos"],
+  ])(
+    "%s (revisión de Meta) es pública, canónica en opera.tideo.tech y da el correo",
+    (file, url) => {
+      const html = page(file);
+      expect(html).toContain(`<link rel="canonical" href="${url}"`);
+      expect(mainText(html)).toContain("OPERA by Tideo Tech & Strategy");
+      expect(mainText(html)).toContain("cristhian@tideo.tech");
+    },
+  );
 });

@@ -28,6 +28,8 @@ export default defineConfig({
       { path: "/powerbi-ia" },
       { path: "/app-ia" },
       { path: "/opera/metalmecanica" },
+      { path: "/opera/privacidad" },
+      { path: "/opera/eliminacion-de-datos" },
       // Se escribe como dist/client/404.html: Vercel lo sirve con estado 404
       // para cualquier ruta que no exista.
       { path: "/404", prerender: { outputPath: "/404", autoSubfolderIndex: false } },
