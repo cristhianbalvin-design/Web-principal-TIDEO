@@ -21,8 +21,8 @@ export const COURSE = {
   priceFounder: 790,
   priceRegular: 890,
   /** Último día del precio fundador (después rige priceRegular). */
-  founderDeadline: "2026-11-25",
-  founderDeadlineLabel: "25 de noviembre",
+  founderDeadline: "2026-11-30",
+  founderDeadlineLabel: "30 de noviembre",
   installments: 2,
   installmentAmount: 395,
   currency: "PEN",
@@ -458,7 +458,7 @@ export const REQUIREMENTS = [
 export const FAQS: { q: string; a: string }[] = [
   {
     q: "¿Hasta cuándo rige el precio fundador? ¿Puedo pagar en cuotas?",
-    a: "El precio fundador de S/ 790 rige hasta el 25 de noviembre; desde el 26 de noviembre el precio es S/ 890. Puedes pagarlo completo o en 2 cuotas de S/ 395. Aceptamos Plin y transferencia bancaria a nombre de TIDEO Tech & Strategy; te enviamos los datos al confirmar tu vacante.",
+    a: "El precio fundador de S/ 790 rige hasta el 30 de noviembre; desde el 1 de diciembre el precio es S/ 890. Puedes pagarlo completo o en 2 cuotas de S/ 395. Aceptamos Plin y transferencia bancaria a nombre de TIDEO Tech & Strategy; te enviamos los datos al confirmar tu vacante.",
   },
   {
     q: "¿Necesito saber programar?",
